@@ -1,3 +1,10 @@
-Index
+@extends('biomet::master')
 
-<a href="{{ route('logout') }}">Se déconnecter</a>
+@section('page-title')
+    {{ trans('biomet::index.seo_title') }}
+@endsection
+
+@section('main-content')
+    Index
+    <a href="{{ route('logout') }}">Se déconnecter</a>
+@endsection

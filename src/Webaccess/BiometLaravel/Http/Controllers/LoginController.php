@@ -95,8 +95,8 @@ class LoginController extends Controller
         Mail::send('biomet::emails.password', array('password' => $newPassword), function ($message) use ($userEmail) {
 
             $message->to($userEmail)
-                ->from('no-reply@projectsquare.fr')
-                ->subject('[projectsquare] Votre nouveau mot de passe pour accéder à votre compte');
+                ->from('no-reply@biomet.com')
+                ->subject('[Biomet] Votre nouveau mot de passe pour accéder à votre compte');
         });
     }
 
