@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Webaccess\BiometLaravel\Models\User;
 
 class LoginController extends Controller
 {
@@ -15,7 +16,7 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-        return view('biomet::auth.login', [
+        return view('biomet::pages.auth.login', [
             'error' => ($request->session()->has('error')) ? $request->session()->get('error') : null,
         ]);
     }
@@ -54,7 +55,7 @@ class LoginController extends Controller
      */
     public function forgotten_password(Request $request)
     {
-        return view('biomet::auth.forgotten_password', [
+        return view('biomet::pages.auth.forgotten_password', [
             'error' => ($request->session()->has('error')) ? $request->session()->get('error') : null,
             'message' => ($request->session()->has('message')) ? $request->session()->get('message') : null,
         ]);
@@ -66,11 +67,11 @@ class LoginController extends Controller
      */
     public function forgotten_password_handler(Request $request)
     {
-        /*$userEmail = $request->email;
+        $userEmail = $request->email;
 
         try {
-            $newPassword = self::generate(8);
-            if ($user = Administrator::where('email', '=', $userEmail)->first()) {
+            if ($user = User::where('email', '=', $userEmail)->first()) {
+                $newPassword = self::generate(8);
                 $user->password = bcrypt($newPassword);
                 $user->save();
                 $this->sendNewPasswordToUser($newPassword, $userEmail);
@@ -82,7 +83,7 @@ class LoginController extends Controller
             $request->session()->flash('error', $e->getMessage());
         }
 
-        return redirect()->route('forgotten_password');*/
+        return redirect()->route('forgotten_password');
     }
 
     /**
@@ -91,12 +92,12 @@ class LoginController extends Controller
      */
     private function sendNewPasswordToUser($newPassword, $userEmail)
     {
-        /*Mail::send('biomet::emails.password', array('password' => $newPassword), function ($message) use ($userEmail) {
+        Mail::send('biomet::emails.password', array('password' => $newPassword), function ($message) use ($userEmail) {
 
             $message->to($userEmail)
                 ->from('no-reply@projectsquare.fr')
                 ->subject('[projectsquare] Votre nouveau mot de passe pour accéder à votre compte');
-        });*/
+        });
     }
 
     /**

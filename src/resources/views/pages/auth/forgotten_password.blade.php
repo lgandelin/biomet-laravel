@@ -29,7 +29,7 @@
                 {{ trans('biomet::forgotten_password.send_new_password') }}
             </button>
 
-            <a href="javascript:history.back()" class="btn btn-dark-gray" title="{{ trans('biomet::forgotten_password.back_to_login') }}">{{ trans('biomet::forgotten_password.back_to_login') }}</a>
+            <a href="{{ route('login') }}" class="btn btn-dark-gray" title="{{ trans('biomet::forgotten_password.back_to_login') }}">{{ trans('biomet::forgotten_password.back_to_login') }}</a>
         </div>
 
         {!! csrf_field() !!}

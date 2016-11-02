@@ -3,6 +3,7 @@
 namespace Webaccess\BiometLaravel;
 
 use Illuminate\Support\ServiceProvider;
+use Webaccess\BiometLaravel\Commands\CreateUserCommand;
 
 class BiometLaravelServiceProvider extends ServiceProvider
 {
@@ -41,8 +42,8 @@ class BiometLaravelServiceProvider extends ServiceProvider
              );
         });*/
 
-        /*$this->commands([
-            SetNodeAvailable::class,
-        ]);*/
+        $this->commands([
+            CreateUserCommand::class,
+        ]);
     }
 }

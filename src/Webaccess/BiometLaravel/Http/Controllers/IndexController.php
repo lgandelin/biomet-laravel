@@ -20,7 +20,7 @@ class IndexController extends Controller
     {
         $user = auth()->user();
 
-        return view('biomet::my_account.index', [
+        return view('biomet::pages.index', [
             'user' => $user,
         ]);
     }
