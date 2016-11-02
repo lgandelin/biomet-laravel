@@ -1,0 +1,31 @@
+* { 
+	-webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box;    
+	box-sizing: border-box;         
+}
+
+/*@font-face {
+	font-family: "AvantGarde-Medium";
+	src: url('../fonts/AvantGarde-Medium.woff'),
+		 url('../fonts/AvantGarde-Medium.otf'),
+		 url('../fonts/AvantGarde-Medium.svg'),
+		 url('../fonts/AvantGarde-Medium.eot'),
+		 url('../fonts/AvantGarde-Medium.ttf');
+}*/
+
+em {
+	font-style: italic;
+}
+
+strong {
+	font-weight: bold;
+}
+
+ul {
+	list-style: none;
+}
+
+body {
+	color: $gray;
+	font-size: 14px;
+}
