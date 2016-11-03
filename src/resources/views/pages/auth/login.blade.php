@@ -1,8 +1,6 @@
 @extends('biomet::master')
 
-@section('page-title')
-    {{ trans('biomet::login.seo_title') }}
-@endsection
+@section('page-title'){{ trans('biomet::login.seo_title') }}@endsection
 
 @section('main-content')
 

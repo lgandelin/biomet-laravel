@@ -1,8 +1,6 @@
 @extends('biomet::master')
 
-@section('page-title')
-    {{ trans('biomet::forgotten_password.seo_title') }}
-@endsection
+@section('page-title'){{ trans('biomet::forgotten_password.seo_title') }}@endsection
 
 @section('main-content')
 
