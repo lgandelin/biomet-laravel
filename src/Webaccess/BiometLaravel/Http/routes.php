@@ -9,5 +9,8 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/forgotten_password', array('as' => 'forgotten_password', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\LoginController@forgotten_password'));
     Route::post('/forgotten_password_handler', array('as' => 'forgotten_password_handler', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\LoginController@forgotten_password_handler'));
 
-    Route::get('/', array('as' => 'index', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\IndexController@index'));
+    Route::get('/', array('as' => 'dashboard', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\DashboardController@index'));
+
+    //USERS
+    Route::get('/users', array('as' => 'users', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\UserController@index'));
 });

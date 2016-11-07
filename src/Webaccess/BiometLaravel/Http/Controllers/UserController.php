@@ -2,23 +2,24 @@
 
 namespace Webaccess\BiometLaravel\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Webaccess\BiometLaravel\Services\UserManager;
 
 class UserController
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('biomet::pages.index', [
+        return view('biomet::pages.users.index', [
             'users' => UserManager::getAll(),
-            'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
-            'confirmation' => ($this->request->session()->has('confirmation')) ? $this->request->session()->get('confirmation') : null,
+            'error' => ($request->session()->has('error')) ? $request->session()->get('error') : null,
+            'confirmation' => ($request->session()->has('confirmation')) ? $request->session()->get('confirmation') : null,
         ]);
     }
 
     public function add()
     {
-        return view('biomet::pages.add');
+        return view('biomet::pages.users.add');
     }
 
     public function store()
@@ -54,7 +55,7 @@ class UserController
             return redirect()->route('users_index');
         }
 
-        return view('biomet::pages.edit', [
+        return view('biomet::pages.users.edit', [
             'user' => $user,
             'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
             'confirmation' => ($this->request->session()->has('confirmation')) ? $this->request->session()->get('confirmation') : null,
