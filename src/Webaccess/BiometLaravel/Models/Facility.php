@@ -4,8 +4,9 @@ namespace Webaccess\BiometLaravel\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Unit extends Model
+class Facility extends Model
 {
+    protected $table = 'facilities';
     public $incrementing = false;
     public $casts = [
         'id' => 'string'

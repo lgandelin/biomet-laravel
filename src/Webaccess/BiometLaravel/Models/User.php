@@ -9,6 +9,7 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    protected $table = 'users';
     public $incrementing = false;
     public $casts = [
         'id' => 'string'
