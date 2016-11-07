@@ -18,4 +18,12 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/users/{id}', array('as' => 'users_edit', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\UserController@edit'));
     Route::post('/users', array('as' => 'users_update', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\UserController@update'));
     Route::get('/users/delete/{id}', array('as' => 'users_delete', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\UserController@delete'));
+    
+    //CLIENTS
+    Route::get('/clients', array('as' => 'clients', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\ClientController@index'));
+    Route::get('/clients/add', array('as' => 'clients_add', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\ClientController@add'));
+    Route::post('/clients/add', array('as' => 'clients_store', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\ClientController@store'));
+    Route::get('/clients/{id}', array('as' => 'clients_edit', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\ClientController@edit'));
+    Route::post('/clients', array('as' => 'clients_update', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\ClientController@update'));
+    Route::get('/clients/delete/{id}', array('as' => 'clients_delete', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\ClientController@delete'));
 });

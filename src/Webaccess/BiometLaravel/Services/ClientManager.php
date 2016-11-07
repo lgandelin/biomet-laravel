@@ -2,7 +2,6 @@
 
 namespace Webaccess\BiometLaravel\Services;
 
-use Illuminate\Support\Facades\Hash;
 use Ramsey\Uuid\Uuid;
 use Webaccess\BiometLaravel\Models\Client;
 
@@ -14,49 +13,34 @@ class ClientManager
         return Client::orderBy('created_at')->paginate(10);
     }
 
-    public static function getClient($userID)
+    public static function getClient($clientID)
     {
-        return Client::find($userID);
+        return Client::find($clientID);
     }
 
     /**
-     * @param $firstName
-     * @param $lastName
-     * @param $email
-     * @param $password
-     * @param bool $isAdministrator
+     * @param $name
      * @return Client
      */
-    public static function createClient($firstName, $lastName, $email, $password, $isAdministrator = false)
+    public static function createClient($name)
     {
-        $user = new Client();
-        $user->id = Uuid::uuid4()->toString();
-        $user->first_name = $firstName;
-        $user->last_name = $lastName;
-        $user->email = $email;
-        $user->password = Hash::make($password);
-        $user->is_administrator = $isAdministrator;
+        $client = new Client();
+        $client->id = Uuid::uuid4()->toString();
+        $client->name = $name;
 
-        return $user->save();
+        return $client->save();
     }
 
     /**
-     * @param $firstName
-     * @param $lastName
-     * @param $email
-     * @param $password
-     * @param bool $isAdministrator
+     * @param $clientID
+     * @param $name
      * @return bool
      */
-    public static function udpateClient($userID, $firstName, $lastName, $email, $password, $isAdministrator)
+    public static function udpateClient($clientID, $name)
     {
-        if ($user = Client::find($userID)) {
-            $user->first_name = $firstName;
-            $user->last_name = $lastName;
-            $user->email = $email;
-            $user->password = Hash::make($password);
-            $user->is_administrator = $isAdministrator;
-            $user->save();
+        if ($client = Client::find($clientID)) {
+            $client->name = $name;
+            $client->save();
 
             return true;
         }
@@ -65,13 +49,13 @@ class ClientManager
     }
 
     /**
-     * @param $userID
+     * @param $clientID
      * @return bool
      */
-    public static function deleteClient($userID)
+    public static function deleteClient($clientID)
     {
-        if ($user = Client::find($userID)) {
-            $user->delete();
+        if ($client = Client::find($clientID)) {
+            $client->delete();
 
             return true;
         }
