@@ -1,8 +1,7 @@
-@extends('biomet::master')
+@extends('biomet::default')
 
-@section('page-title'){{ trans('biomet::index.seo_title') }}@endsection
+@section('page-title'){{ trans('biomet::dashboard.meta_title') }}@endsection
 
-@section('main-content')
-    Index
-    <a href="{{ route('logout') }}">Se déconnecter</a>
+@section('page-content')
+    <h1>Dashboard</h1>
 @endsection
