@@ -28,8 +28,8 @@ class LoginController extends Controller
     public function authenticate(Request $request)
     {
         if (Auth::attempt([
-            'email' => $request->email,
-            'password' => $request->password,
+            'email' => $request->input('email'),
+            'password' => $request->input('password'),
         ])) {
             return redirect()->intended('/');
         }
@@ -67,7 +67,7 @@ class LoginController extends Controller
      */
     public function forgotten_password_handler(Request $request)
     {
-        $userEmail = $request->email;
+        $userEmail = $request->input('email');
 
         try {
             if ($user = User::where('email', '=', $userEmail)->first()) {

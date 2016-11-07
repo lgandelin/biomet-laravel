@@ -3,7 +3,6 @@
 namespace Webaccess\BiometLaravel\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
 use Webaccess\BiometLaravel\Services\UserManager;
 
 class UserController
@@ -17,87 +16,91 @@ class UserController
         ]);
     }
 
-    public function add()
+    public function add(Request $request)
     {
-        return view('biomet::pages.users.add');
+        return view('biomet::pages.users.add', [
+            'error' => ($request->session()->has('error')) ? $request->session()->get('error') : null,
+            'confirmation' => ($request->session()->has('confirmation')) ? $request->session()->get('confirmation') : null,
+        ]);
     }
 
-    public function store()
+    public function store(Request $request)
     {
         try {
-            if (Input::get('password') != '' && Input::get('password') != Input::get('password_confirmation')) {
+            if ($request->input('password') != '' && $request->input('password') != $request->input('password_confirmation')) {
+                $request->session()->flash('error', trans('biomet::users.update_password_confirmation_error'));
 
+                return redirect()->route('users_add');
             } else {
                 UserManager::createUser(
-                    Input::get('first_name'),
-                    Input::get('last_name'),
-                    Input::get('email'),
-                    Input::get('password'),
-                    Input::get('is_administrator')
-
+                    $request->input('first_name'),
+                    $request->input('last_name'),
+                    $request->input('email'),
+                    $request->input('password'),
+                    ($request->input('is_administrator') == 'y') ? true : false
                 );
-                $this->request->session()->flash('confirmation', trans('biomet::users.add_user_success'));
+                $request->session()->flash('confirmation', trans('biomet::users.add_user_success'));
+
+                return redirect()->route('users');
             }
         } catch (\Exception $e) {
-            $this->request->session()->flash('error', $e->getMessage());
-        }
+            $request->session()->flash('error', trans('biomet::users.add_user_error'));
 
-        return redirect()->route('users_index');
+            return redirect()->route('users_add');
+        }
     }
 
-    public function edit($userID)
+    public function edit(Request $request)
     {
         try {
-            $user = UserManager::getUser($userID);
+            $user = UserManager::getUser($request->id);
         } catch (\Exception $e) {
-            $this->request->session()->flash('error', trans('biomet::users.user_not_found'));
+            $request->session()->flash('error', trans('biomet::users.user_not_found_error'));
 
-            return redirect()->route('users_index');
+            return redirect()->route('users');
         }
 
         return view('biomet::pages.users.edit', [
             'user' => $user,
-            'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
-            'confirmation' => ($this->request->session()->has('confirmation')) ? $this->request->session()->get('confirmation') : null,
+            'error' => ($request->session()->has('error')) ? $request->session()->get('error') : null,
+            'confirmation' => ($request->session()->has('confirmation')) ? $request->session()->get('confirmation') : null,
         ]);
     }
 
-    public function update()
+    public function update(Request $request)
     {
         try {
-            UserManager::udpateUser(
-                Input::get('user_id'),
-                Input::get('first_name'),
-                Input::get('last_name'),
-                Input::get('email'),
-                Input::get('password'),
-                (Input::get('is_administrator') == 'y') ? true : false
-            );
-            $this->request->session()->flash('confirmation', trans('biomet::users.edit_user_success'));
+            if ($request->input('password') != '' && $request->input('password') != $request->input('password_confirmation')) {
+                $request->session()->flash('error', trans('biomet::users.update_password_confirmation_error'));
+
+                return redirect()->route('users_edit', ['id' => $request->input('user_id')]);
+            } else {
+                UserManager::udpateUser(
+                    $request->input('user_id'),
+                    $request->input('first_name'),
+                    $request->input('last_name'),
+                    $request->input('email'),
+                    $request->input('password'),
+                    ($request->input('is_administrator') == 'y') ? true : false
+                );
+                $request->session()->flash('confirmation', trans('biomet::users.edit_user_success'));
+            }
         } catch (\Exception $e) {
-            $this->request->session()->flash('error', $e->getMessage());
+            $request->session()->flash('error', $e->getMessage());
         }
 
-        return redirect()->route('users_edit', ['id' => Input::get('user_id')]);
+        return redirect()->route('users_edit', ['id' => $request->input('user_id')]);
     }
 
-    public function generate_password($userID)
-    {
-        app()->make('UserManager')->generateNewPassword($userID);
-        $this->request->session()->flash('confirmation', trans('biomet::users.password_generated_success'));
-
-        return redirect()->route('users_edit', ['id' => Input::get('user_id')]);
-    }
-
-    public function delete($userID)
+    public function delete(Request $request)
     {
         try {
-            app()->make('UserManager')->deleteUser($userID);
-            $this->request->session()->flash('confirmation', trans('biomet::users.delete_user_success'));
+            UserManager::deleteUser($request->id);
+            $request->session()->flash('confirmation', trans('biomet::users.delete_user_success'));
         } catch (\Exception $e) {
-            $this->request->session()->flash('error', trans('biomet::users.delete_user_error'));
+            $request->session()->flash('error', trans('biomet::users.delete_user_error'));
         }
 
-        return redirect()->route('users_index');
+        return redirect()->route('users');
     }
 }

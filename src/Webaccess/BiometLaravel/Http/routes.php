@@ -13,4 +13,9 @@ Route::group(['middleware' => ['web']], function () {
 
     //USERS
     Route::get('/users', array('as' => 'users', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\UserController@index'));
+    Route::get('/users/add', array('as' => 'users_add', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\UserController@add'));
+    Route::post('/users/add', array('as' => 'users_store', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\UserController@store'));
+    Route::get('/users/{id}', array('as' => 'users_edit', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\UserController@edit'));
+    Route::post('/users', array('as' => 'users_update', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\UserController@update'));
+    Route::get('/users/delete/{id}', array('as' => 'users_delete', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\UserController@delete'));
 });
