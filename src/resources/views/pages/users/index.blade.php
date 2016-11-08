@@ -22,6 +22,7 @@
         <tr>
             <th>{{ trans('biomet::users.name') }}</th>
             <th>{{ trans('biomet::users.email') }}</th>
+            <th>{{ trans('biomet::users.client') }}</th>
             <th>{{ trans('biomet::users.administrator') }}</th>
             <th>{{ trans('biomet::generic.action') }}</th>
         </tr>
@@ -32,6 +33,7 @@
             <tr>
                 <td>{{ $user->last_name }} {{ $user->first_name }}</td>
                 <td><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></td>
+                <td>{{ $user->client->name }}</td>
                 <td>@if ($user->is_administrator) Oui @else Non @endif</td>
                 <td align="right">
                     <a href="{{ route('users_edit', ['id' => $user->id]) }}">{{ trans('biomet::generic.edit') }}</a>

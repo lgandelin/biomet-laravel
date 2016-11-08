@@ -11,7 +11,7 @@ class UserManager
 
     public static function getAll()
     {
-        return User::orderBy('created_at')->paginate(10);
+        return User::with('client')->orderBy('created_at')->paginate(10);
     }
 
     public static function getUser($userID)
@@ -24,10 +24,11 @@ class UserManager
      * @param $lastName
      * @param $email
      * @param $password
+     * @param $clientID
      * @param bool $isAdministrator
      * @return User
      */
-    public static function createUser($firstName, $lastName, $email, $password, $isAdministrator = false)
+    public static function createUser($firstName, $lastName, $email, $password, $clientID, $isAdministrator = false)
     {
         $user = new User();
         $user->id = Uuid::uuid4()->toString();
@@ -35,26 +36,30 @@ class UserManager
         $user->last_name = $lastName;
         $user->email = $email;
         $user->password = Hash::make($password);
+        $user->client_id = $clientID;
         $user->is_administrator = $isAdministrator;
 
         return $user->save();
     }
 
     /**
+     * @param $userID
      * @param $firstName
      * @param $lastName
      * @param $email
      * @param $password
+     * @param $clientID
      * @param bool $isAdministrator
      * @return bool
      */
-    public static function udpateUser($userID, $firstName, $lastName, $email, $password, $isAdministrator)
+    public static function udpateUser($userID, $firstName, $lastName, $email, $password, $clientID, $isAdministrator)
     {
         if ($user = User::find($userID)) {
             $user->first_name = $firstName;
             $user->last_name = $lastName;
             $user->email = $email;
             $user->password = Hash::make($password);
+            $user->client_id = $clientID;
             $user->is_administrator = $isAdministrator;
             $user->save();
 

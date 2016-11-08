@@ -7,4 +7,5 @@ return [
     'edit' => 'Editer',
     'delete' => 'Supprimer',
     'back' => 'Retour',
+    'choose_value' => 'Choisir une valeur',
 ];

@@ -7,5 +7,6 @@
 
     <ul>
         <li><a href="{{ route('users') }}">Gestion des utilisateurs</a></li>
+        <li><a href="{{ route('clients') }}">Gestion des clients</a></li>
     </ul>
 @endsection
