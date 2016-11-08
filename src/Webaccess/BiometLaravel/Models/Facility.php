@@ -19,5 +19,15 @@ class Facility extends Model
      */
     protected $fillable = [
         'name',
+        'longitude',
+        'latitude',
+        'address',
+        'city',
+        'department',
     ];
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
+    }
 }

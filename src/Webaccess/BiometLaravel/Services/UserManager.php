@@ -28,7 +28,7 @@ class UserManager
      * @param bool $isAdministrator
      * @return User
      */
-    public static function createUser($firstName, $lastName, $email, $password, $clientID, $isAdministrator = false)
+    public static function createUser($firstName, $lastName, $email, $password, $clientID = null, $isAdministrator = false)
     {
         $user = new User();
         $user->id = Uuid::uuid4()->toString();

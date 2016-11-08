@@ -33,7 +33,7 @@
             <tr>
                 <td>{{ $user->last_name }} {{ $user->first_name }}</td>
                 <td><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></td>
-                <td>{{ $user->client->name }}</td>
+                <td>@if ($user->client){{ $user->client->name }}@else N/A @endif</td>
                 <td>@if ($user->is_administrator) Oui @else Non @endif</td>
                 <td align="right">
                     <a href="{{ route('users_edit', ['id' => $user->id]) }}">{{ trans('biomet::generic.edit') }}</a>

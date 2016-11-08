@@ -5,10 +5,8 @@
     </div>
 
     <div class="form-group">
-        <button type="submit" class="btn valid">
-            <i class="glyphicon glyphicon-ok"></i> {{ trans('biomet::generic.valid') }}
-        </button>
-        <a href="{{ route('clients') }}" class="btn back"><i class="glyphicon glyphicon-arrow-left"></i> {{ trans('biomet::generic.back') }}</a>
+        <button type="submit">{{ trans('biomet::generic.valid') }}</button>
+        <a href="{{ route('clients') }}">{{ trans('biomet::generic.back') }}</a>
     </div>
 
     @if (isset($client_id))
