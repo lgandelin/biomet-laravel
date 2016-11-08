@@ -5,7 +5,7 @@ namespace Webaccess\BiometLaravel\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
-class IndexController extends Controller
+class DashboardController extends Controller
 {
     public function __construct(Request $request)
     {
@@ -20,7 +20,7 @@ class IndexController extends Controller
     {
         $user = auth()->user();
 
-        return view('biomet::my_account.index', [
+        return view('biomet::pages.index', [
             'user' => $user,
         ]);
     }

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Webaccess\BiometLaravel\Models\User;
 
 class LoginController extends Controller
 {
@@ -15,7 +16,7 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-        return view('biomet::auth.login', [
+        return view('biomet::pages.auth.login', [
             'error' => ($request->session()->has('error')) ? $request->session()->get('error') : null,
         ]);
     }
@@ -27,14 +28,14 @@ class LoginController extends Controller
     public function authenticate(Request $request)
     {
         if (Auth::attempt([
-            'email' => $request->email,
-            'password' => $request->password,
+            'email' => $request->input('email'),
+            'password' => $request->input('password'),
         ])) {
             return redirect()->intended('/');
         }
 
         return redirect()->route('login')->with([
-            'error' => trans('biomet::login.error_login_or_password'),
+            'error' => trans('biomet::login.login_or_password_error'),
         ]);
     }
 
@@ -54,7 +55,7 @@ class LoginController extends Controller
      */
     public function forgotten_password(Request $request)
     {
-        return view('biomet::auth.forgotten_password', [
+        return view('biomet::pages.auth.forgotten_password', [
             'error' => ($request->session()->has('error')) ? $request->session()->get('error') : null,
             'message' => ($request->session()->has('message')) ? $request->session()->get('message') : null,
         ]);
@@ -66,23 +67,23 @@ class LoginController extends Controller
      */
     public function forgotten_password_handler(Request $request)
     {
-        /*$userEmail = $request->email;
+        $userEmail = $request->input('email');
 
         try {
-            $newPassword = self::generate(8);
-            if ($user = Administrator::where('email', '=', $userEmail)->first()) {
+            if ($user = User::where('email', '=', $userEmail)->first()) {
+                $newPassword = self::generate(8);
                 $user->password = bcrypt($newPassword);
                 $user->save();
                 $this->sendNewPasswordToUser($newPassword, $userEmail);
-                $request->session()->flash('message', 'Un email contenant votre nouveau mot de passe vous a été envoyé sur votre adresse.');
+                $request->session()->flash('message', trans('biomet::login.forgotten_password_email_success'));
             } else {
-                throw new \Exception('Aucun compte trouvé avec cette adresse');
+                $request->session()->flash('error', trans('biomet::login.forgotten_password_email_not_found_error'));
             }
         } catch (\Exception $e) {
-            $request->session()->flash('error', $e->getMessage());
+            $request->session()->flash('error', trans('biomet::login.forgotten_password_generic_error'));
         }
 
-        return redirect()->route('forgotten_password');*/
+        return redirect()->route('forgotten_password');
     }
 
     /**
@@ -91,12 +92,12 @@ class LoginController extends Controller
      */
     private function sendNewPasswordToUser($newPassword, $userEmail)
     {
-        /*Mail::send('biomet::emails.password', array('password' => $newPassword), function ($message) use ($userEmail) {
+        Mail::send('biomet::emails.password', array('password' => $newPassword), function ($message) use ($userEmail) {
 
             $message->to($userEmail)
-                ->from('no-reply@projectsquare.fr')
-                ->subject('[projectsquare] Votre nouveau mot de passe pour accéder à votre compte');
-        });*/
+                ->from('no-reply@biomet.com')
+                ->subject('[Biomet] Votre nouveau mot de passe pour accéder à votre compte');
+        });
     }
 
     /**
