@@ -58,7 +58,8 @@ class UserManager
             $user->first_name = $firstName;
             $user->last_name = $lastName;
             $user->email = $email;
-            $user->password = Hash::make($password);
+            if ($password != '')
+                $user->password = Hash::make($password);
             $user->client_id = $clientID;
             $user->is_administrator = $isAdministrator;
             $user->save();
