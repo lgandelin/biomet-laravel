@@ -72,7 +72,7 @@ class ClientController extends Controller
             );
             $request->session()->flash('confirmation', trans('biomet::clients.edit_client_success'));
         } catch (\Exception $e) {
-            $request->session()->flash('error', $e->getMessage());
+            $request->session()->flash('error', trans('biomet::clients.update_client_error'));
         }
 
         return redirect()->route('clients_edit', ['id' => $request->input('client_id')]);

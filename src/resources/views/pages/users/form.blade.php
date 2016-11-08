@@ -25,6 +25,16 @@
     </div>
 
     <div class="form-group">
+        <label for="email">{{ trans('biomet::users.client') }}</label>
+        <select class="form-control" placeholder="{{ trans('biomet::users.client') }}" name="client_id" autocomplete="off">
+            <option value="">{{ trans('biomet::generic.choose_value') }}</option>
+            @foreach ($clients as $client)
+                <option value="{{ $client->id }}" @if (isset($user) && $user->client_id == $client->id)selected="selected"@endif>{{ $client->name }}</option>
+            @endforeach
+        </select>
+    </div>
+
+    <div class="form-group">
         <label for="is_administrator">{{ trans('biomet::users.is_administrator') }}</label><br/>
         Oui <input type="radio" placeholder="{{ trans('biomet::users.is_administrator') }}" name="is_administrator" value="y" @if (isset($is_administrator) && $is_administrator) checked @endif autocomplete="off" />
         Non <input type="radio" placeholder="{{ trans('biomet::users.is_administrator') }}" name="is_administrator" value="n" @if (isset($is_administrator) && !$is_administrator) checked @endif @if (!isset($is_administrator)) checked @endif autocomplete="off" />

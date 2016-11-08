@@ -4,6 +4,7 @@ namespace Webaccess\BiometLaravel\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Webaccess\BiometLaravel\Services\ClientManager;
 use Webaccess\BiometLaravel\Services\UserManager;
 
 class UserController extends Controller
@@ -25,6 +26,7 @@ class UserController extends Controller
     public function add(Request $request)
     {
         return view('biomet::pages.users.add', [
+            'clients' => ClientManager::getAll(),
             'error' => ($request->session()->has('error')) ? $request->session()->get('error') : null,
             'confirmation' => ($request->session()->has('confirmation')) ? $request->session()->get('confirmation') : null,
         ]);
@@ -43,6 +45,7 @@ class UserController extends Controller
                     $request->input('last_name'),
                     $request->input('email'),
                     $request->input('password'),
+                    $request->input('client_id'),
                     ($request->input('is_administrator') == 'y') ? true : false
                 );
                 $request->session()->flash('confirmation', trans('biomet::users.add_user_success'));
@@ -68,6 +71,7 @@ class UserController extends Controller
 
         return view('biomet::pages.users.edit', [
             'user' => $user,
+            'clients' => ClientManager::getAll(),
             'error' => ($request->session()->has('error')) ? $request->session()->get('error') : null,
             'confirmation' => ($request->session()->has('confirmation')) ? $request->session()->get('confirmation') : null,
         ]);
@@ -87,6 +91,7 @@ class UserController extends Controller
                     $request->input('last_name'),
                     $request->input('email'),
                     $request->input('password'),
+                    $request->input('client_id'),
                     ($request->input('is_administrator') == 'y') ? true : false
                 );
                 $request->session()->flash('confirmation', trans('biomet::users.edit_user_success'));
