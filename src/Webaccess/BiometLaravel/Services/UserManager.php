@@ -11,7 +11,7 @@ class UserManager
 
     public static function getAll()
     {
-        return User::orderBy('created_at')->paginate(10);
+        return User::with('client')->orderBy('created_at')->paginate(10);
     }
 
     public static function getUser($userID)
