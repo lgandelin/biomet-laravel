@@ -3,10 +3,16 @@
 namespace Webaccess\BiometLaravel\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Webaccess\BiometLaravel\Services\UserManager;
 
-class UserController
+class UserController extends Controller
 {
+    public function __construct(Request $request)
+    {
+        $this->middleware('auth');
+    }
+
     public function index(Request $request)
     {
         return view('biomet::pages.users.index', [

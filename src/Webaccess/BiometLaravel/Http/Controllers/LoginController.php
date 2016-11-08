@@ -35,7 +35,7 @@ class LoginController extends Controller
         }
 
         return redirect()->route('login')->with([
-            'error' => trans('biomet::login.error_login_or_password'),
+            'error' => trans('biomet::login.login_or_password_error'),
         ]);
     }
 
@@ -75,12 +75,12 @@ class LoginController extends Controller
                 $user->password = bcrypt($newPassword);
                 $user->save();
                 $this->sendNewPasswordToUser($newPassword, $userEmail);
-                $request->session()->flash('message', 'Un email contenant votre nouveau mot de passe vous a été envoyé sur votre adresse.');
+                $request->session()->flash('message', trans('biomet::login.forgotten_password_email_success'));
             } else {
-                throw new \Exception('Aucun compte trouvé avec cette adresse');
+                $request->session()->flash('error', trans('biomet::login.forgotten_password_email_not_found_error'));
             }
         } catch (\Exception $e) {
-            $request->session()->flash('error', $e->getMessage());
+            $request->session()->flash('error', trans('biomet::login.forgotten_password_generic_error'));
         }
 
         return redirect()->route('forgotten_password');
