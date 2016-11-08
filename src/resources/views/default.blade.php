@@ -1,13 +1,20 @@
 @extends('biomet::master')
 
 @section('main-content')
-    <a href="{{ route('logout') }}">Se déconnecter</a>
+
+    <ul>
+        <li><a href="{{ route('dashboard') }}">Tableau de bord</a></li>
+        <li>
+            Administration
+            <ul>
+                <li><a href="{{ route('users') }}">Gestion des utilisateurs</a></li>
+                <li><a href="{{ route('clients') }}">Gestion des clients</a></li>
+                <li><a href="{{ route('facilities') }}">Gestion des sites</a></li>
+            </ul>
+        </li>
+        <li><a href="{{ route('logout') }}">Se déconnecter</a></li>
+    </ul>
 
     @yield('page-content')
 
-    <ul>
-        <li><a href="{{ route('users') }}">Gestion des utilisateurs</a></li>
-        <li><a href="{{ route('clients') }}">Gestion des clients</a></li>
-        <li><a href="{{ route('facilities') }}">Gestion des sites</a></li>
-    </ul>
 @endsection

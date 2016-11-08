@@ -20,7 +20,7 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
-        return view('biomet::pages.index', [
+        return view('biomet::pages.dashboard', [
             'user' => $user,
         ]);
     }
