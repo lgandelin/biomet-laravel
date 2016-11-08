@@ -5,13 +5,13 @@
     </div>
 
     <div class="form-group">
-        <label for="longitude">{{ trans('biomet::facilities.longitude') }}</label>
-        <input class="form-control" type="text" placeholder="{{ trans('biomet::facilities.longitude') }}" name="longitude" @if (isset($facility_longitude))value="{{ $facility_longitude }}"@endif autocomplete="off" />
+        <label for="latitude">{{ trans('biomet::facilities.latitude') }}</label>
+        <input class="form-control" type="text" placeholder="{{ trans('biomet::facilities.latitude') }}" name="latitude" @if (isset($facility_latitude))value="{{ $facility_latitude }}"@endif autocomplete="off" />
     </div>
 
     <div class="form-group">
-        <label for="latitude">{{ trans('biomet::facilities.latitude') }}</label>
-        <input class="form-control" type="text" placeholder="{{ trans('biomet::facilities.latitude') }}" name="latitude" @if (isset($facility_latitude))value="{{ $facility_latitude }}"@endif autocomplete="off" />
+        <label for="longitude">{{ trans('biomet::facilities.longitude') }}</label>
+        <input class="form-control" type="text" placeholder="{{ trans('biomet::facilities.longitude') }}" name="longitude" @if (isset($facility_longitude))value="{{ $facility_longitude }}"@endif autocomplete="off" />
     </div>
 
     <div class="form-group">

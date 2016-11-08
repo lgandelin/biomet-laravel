@@ -25,7 +25,9 @@ class FacilityController extends Controller
 
     public function view(Request $request)
     {
-
+        return view('biomet::pages.facility.index', [
+            'facility' => FacilityManager::getFacility($request->id),
+        ]);
     }
 
     public function add(Request $request)
