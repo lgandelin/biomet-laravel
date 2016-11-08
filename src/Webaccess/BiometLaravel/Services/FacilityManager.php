@@ -13,6 +13,11 @@ class FacilityManager
         return Facility::orderBy('created_at')->paginate(10);
     }
 
+    public static function getByClient($clientID)
+    {
+        return Facility::where('client_id', '=', $clientID)->get();
+    }
+
     public static function getFacility($facilityID)
     {
         return Facility::find($facilityID);

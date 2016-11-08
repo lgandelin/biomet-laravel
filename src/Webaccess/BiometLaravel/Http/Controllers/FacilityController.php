@@ -23,6 +23,11 @@ class FacilityController extends Controller
         ]);
     }
 
+    public function view(Request $request)
+    {
+
+    }
+
     public function add(Request $request)
     {
         return view('biomet::pages.facilities.add', [

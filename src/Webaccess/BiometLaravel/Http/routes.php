@@ -34,4 +34,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/facilities/{id}', array('as' => 'facilities_edit', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@edit'));
     Route::post('/facilities', array('as' => 'facilities_update', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@update'));
     Route::get('/facilities/delete/{id}', array('as' => 'facilities_delete', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@delete'));
+
+    //FACILITY
+    Route::get('facility/{id}', array('as' => 'facility', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@view'));
 });
