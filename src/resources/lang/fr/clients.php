@@ -2,6 +2,7 @@
 
 return [
     'name' => 'Nom du client',
+    'access_limit_date' => 'Date limite d\'accès',
 
     'add_client_success' => 'Ajout du client effectué avec succès',
 

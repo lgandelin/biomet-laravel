@@ -1,33 +1,30 @@
 @extends('biomet::master')
 
-@section('page-title'){{ trans('biomet::forgotten_password.seo_title') }}@endsection
+@section('page-title') Mot de passe oublié @endsection
 
 @section('main-content')
 
     @if ($message)
-        <div class="info bg-info">
+        <div class="bg-info">
             {{ $message }}
         </div>
     @endif
 
     @if ($error)
-        <div class="info bg-danger">
+        <div class="bg-danger">
             {{ $error }}
         </div>
     @endif
 
     <form class="form-horizontal" role="form" method="POST" action="{{ route('forgotten_password_handler') }}">
         <div class="form-group">
-            <label>{{ trans('biomet::forgotten_password.email') }}</label>
+            <label>{{ trans('biomet::login.email') }}</label>
             <input type="email" class="form-control" name="email" value="{{ old('email') }}" />
         </div>
 
         <div class="form-group">
-            <button type="submit" class="button button-valid" title="{{ trans('biomet::forgotten_password.title_password_forgotten') }}">
-                {{ trans('biomet::forgotten_password.send_new_password') }}
-            </button>
-
-            <a href="{{ route('login') }}" class="btn btn-dark-gray" title="{{ trans('biomet::forgotten_password.back_to_login') }}">{{ trans('biomet::forgotten_password.back_to_login') }}</a>
+            <button type="submit">{{ trans('biomet::login.send_new_password') }}</button>
+            <a href="{{ route('login') }}" title="{{ trans('biomet::generic.back') }}">{{ trans('biomet::generic.back') }}</a>
         </div>
 
         {!! csrf_field() !!}

@@ -2,26 +2,16 @@
 
 namespace Webaccess\BiometLaravel\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
+use Webaccess\BiometLaravel\Services\FacilityManager;
 
-class DashboardController extends Controller
+class DashboardController extends BaseController
 {
-    public function __construct(Request $request)
+    public function index()
     {
-        $this->middleware('auth');
-    }
-
-    /**
-     * @param Request $request
-     * @return mixed
-     */
-    public function index(Request $request)
-    {
-        $user = auth()->user();
-
-        return view('biomet::pages.index', [
-            'user' => $user,
+        return view('biomet::pages.dashboard', [
+            'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
+            'confirmation' => ($this->request->session()->has('confirmation')) ? $this->request->session()->get('confirmation') : null,
+            'facilities' => ($this->getUser()) ? FacilityManager::getByClient($this->getUser()->client_id) : []
         ]);
     }
 }

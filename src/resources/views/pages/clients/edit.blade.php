@@ -6,13 +6,13 @@
     <h1>Editer un client</h1>
 
     @if (isset($error))
-        <div class="info bg-danger">
+        <div class="bg-danger">
             {{ $error }}
         </div>
     @endif
 
     @if (isset($confirmation))
-        <div class="info bg-success">
+        <div class="bg-success">
             {{ $confirmation }}
         </div>
     @endif
@@ -21,5 +21,6 @@
         'form_action' => route('clients_update'),
         'client_id' => $client->id,
         'client_name' => $client->name,
+        'client_access_limit_date' => $client->access_limit_date,
     ])
 @endsection

@@ -13,7 +13,12 @@ class FacilityManager
         return Facility::orderBy('created_at')->paginate(10);
     }
 
-    public static function getFacility($facilityID)
+    public static function getByClient($clientID)
+    {
+        return Facility::where('client_id', '=', $clientID)->get();
+    }
+
+    public static function getByID($facilityID)
     {
         return Facility::find($facilityID);
     }
@@ -40,7 +45,9 @@ class FacilityManager
         $facility->department = $department;
         $facility->client_id = $clientID;
 
-        return $facility->save();
+        $facilityID = $facility->save();
+
+        return $facilityID;
     }
 
     /**

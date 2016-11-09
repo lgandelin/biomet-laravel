@@ -10,26 +10,27 @@ use Webaccess\BiometLaravel\Models\User;
 
 class LoginController extends Controller
 {
-    /**
-     * @param Request $request
-     * @return mixed
-     */
-    public function login(Request $request)
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
+
+    public function login()
     {
         return view('biomet::pages.auth.login', [
-            'error' => ($request->session()->has('error')) ? $request->session()->get('error') : null,
+            'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
         ]);
     }
 
     /**
-     * @param Request $request
+     * @param 
      * @return mixed
      */
-    public function authenticate(Request $request)
+    public function authenticate()
     {
         if (Auth::attempt([
-            'email' => $request->input('email'),
-            'password' => $request->input('password'),
+            'email' => $this->request->input('email'),
+            'password' => $this->request->input('password'),
         ])) {
             return redirect()->intended('/');
         }
@@ -50,24 +51,24 @@ class LoginController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param 
      * @return mixed
      */
-    public function forgotten_password(Request $request)
+    public function forgotten_password()
     {
         return view('biomet::pages.auth.forgotten_password', [
-            'error' => ($request->session()->has('error')) ? $request->session()->get('error') : null,
-            'message' => ($request->session()->has('message')) ? $request->session()->get('message') : null,
+            'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
+            'message' => ($this->request->session()->has('message')) ? $this->request->session()->get('message') : null,
         ]);
     }
 
     /**
-     * @param Request $request
+     * @param 
      * @return mixed
      */
-    public function forgotten_password_handler(Request $request)
+    public function forgotten_password_handler()
     {
-        $userEmail = $request->input('email');
+        $userEmail = $this->request->input('email');
 
         try {
             if ($user = User::where('email', '=', $userEmail)->first()) {
@@ -75,12 +76,12 @@ class LoginController extends Controller
                 $user->password = bcrypt($newPassword);
                 $user->save();
                 $this->sendNewPasswordToUser($newPassword, $userEmail);
-                $request->session()->flash('message', trans('biomet::login.forgotten_password_email_success'));
+                $this->request->session()->flash('message', trans('biomet::login.forgotten_password_email_success'));
             } else {
-                $request->session()->flash('error', trans('biomet::login.forgotten_password_email_not_found_error'));
+                $this->request->session()->flash('error', trans('biomet::login.forgotten_password_email_not_found_error'));
             }
         } catch (\Exception $e) {
-            $request->session()->flash('error', trans('biomet::login.forgotten_password_generic_error'));
+            $this->request->session()->flash('error', trans('biomet::login.forgotten_password_generic_error'));
         }
 
         return redirect()->route('forgotten_password');

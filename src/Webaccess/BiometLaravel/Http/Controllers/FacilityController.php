@@ -2,108 +2,43 @@
 
 namespace Webaccess\BiometLaravel\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
+use DateTime;
 use Webaccess\BiometLaravel\Services\ClientManager;
 use Webaccess\BiometLaravel\Services\FacilityManager;
 
-class FacilityController extends Controller
+class FacilityController extends BaseController
 {
-    public function __construct(Request $request)
+    public function index()
     {
-        $this->middleware('auth');
-    }
+        if (!$this->canViewFacility($this->request->id)) {
+            $this->request->session()->flash('error', trans('biomet::generic.no_permission_error'));
 
-    public function index(Request $request)
-    {
-        return view('biomet::pages.facilities.index', [
-            'facilities' => FacilityManager::getAll(),
-            'error' => ($request->session()->has('error')) ? $request->session()->get('error') : null,
-            'confirmation' => ($request->session()->has('confirmation')) ? $request->session()->get('confirmation') : null,
+            return redirect()->route('dashboard');
+        }
+
+        return view('biomet::pages.facility.index', [
+            'facility' => FacilityManager::getByID($this->request->id),
         ]);
     }
 
-    public function add(Request $request)
+    /**
+     * @param $facilityID
+     * @return bool
+     */
+    private function canViewFacility($facilityID)
     {
-        return view('biomet::pages.facilities.add', [
-            'clients' => ClientManager::getAll(),
-            'error' => ($request->session()->has('error')) ? $request->session()->get('error') : null,
-            'confirmation' => ($request->session()->has('confirmation')) ? $request->session()->get('confirmation') : null,
-        ]);
-    }
+        $user = auth()->user();
+        $facility = FacilityManager::getByID($facilityID);
 
-    public function store(Request $request)
-    {
-        try {
-            FacilityManager::createFacility(
-                $request->input('name'),
-                $request->input('longitude'),
-                $request->input('latitude'),
-                $request->input('address'),
-                $request->input('city'),
-                $request->input('department'),
-                $request->input('client_id')
-            );
-            $request->session()->flash('confirmation', trans('biomet::facilities.add_facility_success'));
-
-            return redirect()->route('facilities');
-        } catch (\Exception $e) {
-            dd($e->getMessage());
-            $request->session()->flash('error', trans('biomet::facilities.add_facility_error'));
-
-            return redirect()->route('facilities_add');
-        }
-    }
-
-    public function edit(Request $request)
-    {
-        try {
-            $facility = FacilityManager::getFacility($request->id);
-        } catch (\Exception $e) {
-            $request->session()->flash('error', trans('biomet::facilities.facility_not_found_error'));
-
-            return redirect()->route('facilities');
+        if (!$facility || $user->client_id !== $facility->client_id) {
+            return false;
         }
 
-        return view('biomet::pages.facilities.edit', [
-            'facility' => $facility,
-            'clients' => ClientManager::getAll(),
-            'error' => ($request->session()->has('error')) ? $request->session()->get('error') : null,
-            'confirmation' => ($request->session()->has('confirmation')) ? $request->session()->get('confirmation') : null,
-        ]);
-    }
-
-    public function update(Request $request)
-    {
-        try {
-            FacilityManager::udpateFacility(
-                $request->input('facility_id'),
-                $request->input('name'),
-                $request->input('longitude'),
-                $request->input('latitude'),
-                $request->input('address'),
-                $request->input('city'),
-                $request->input('department'),
-                $request->input('client_id')
-            );
-            $request->session()->flash('confirmation', trans('biomet::facilities.edit_facility_success'));
-        } catch (\Exception $e) {
-            dd($e->getMessage());
-            $request->session()->flash('error', trans('biomet::facilities.update_facility_error'));
+        $client = ClientManager::getByID($facility->client_id);
+        if (!$client || ($client->access_limit_date && DateTime::createFromFormat('Y-m-d', $client->access_limit_date) < new DateTime())) {
+            return false;
         }
 
-        return redirect()->route('facilities_edit', ['id' => $request->input('facility_id')]);
-    }
-
-    public function delete(Request $request)
-    {
-        try {
-            FacilityManager::deleteFacility($request->id);
-            $request->session()->flash('confirmation', trans('biomet::facilities.delete_facility_success'));
-        } catch (\Exception $e) {
-            $request->session()->flash('error', trans('biomet::facilities.delete_facility_error'));
-        }
-
-        return redirect()->route('facilities');
+        return true;
     }
 }
