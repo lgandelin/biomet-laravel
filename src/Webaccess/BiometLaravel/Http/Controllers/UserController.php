@@ -2,69 +2,62 @@
 
 namespace Webaccess\BiometLaravel\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Webaccess\BiometLaravel\Services\ClientManager;
 use Webaccess\BiometLaravel\Services\UserManager;
 
-class UserController extends Controller
+class UserController extends BaseController
 {
-    public function __construct(Request $request)
-    {
-        $this->middleware('auth');
-    }
-
-    public function index(Request $request)
+    public function index()
     {
         return view('biomet::pages.users.index', [
             'users' => UserManager::getAll(),
-            'error' => ($request->session()->has('error')) ? $request->session()->get('error') : null,
-            'confirmation' => ($request->session()->has('confirmation')) ? $request->session()->get('confirmation') : null,
+            'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
+            'confirmation' => ($this->request->session()->has('confirmation')) ? $this->request->session()->get('confirmation') : null,
         ]);
     }
 
-    public function add(Request $request)
+    public function add()
     {
         return view('biomet::pages.users.add', [
             'clients' => ClientManager::getAll(),
-            'error' => ($request->session()->has('error')) ? $request->session()->get('error') : null,
-            'confirmation' => ($request->session()->has('confirmation')) ? $request->session()->get('confirmation') : null,
+            'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
+            'confirmation' => ($this->request->session()->has('confirmation')) ? $this->request->session()->get('confirmation') : null,
         ]);
     }
 
-    public function store(Request $request)
+    public function store()
     {
         try {
-            if ($request->input('password') != '' && $request->input('password') != $request->input('password_confirmation')) {
-                $request->session()->flash('error', trans('biomet::users.update_password_confirmation_error'));
+            if ($this->request->input('password') != '' && $this->request->input('password') != $this->request->input('password_confirmation')) {
+                $this->request->session()->flash('error', trans('biomet::users.update_password_confirmation_error'));
 
                 return redirect()->route('users_add');
             } else {
                 UserManager::createUser(
-                    $request->input('first_name'),
-                    $request->input('last_name'),
-                    $request->input('email'),
-                    $request->input('password'),
-                    $request->input('client_id'),
-                    ($request->input('is_administrator') == 'y') ? true : false
+                    $this->request->input('first_name'),
+                    $this->request->input('last_name'),
+                    $this->request->input('email'),
+                    $this->request->input('password'),
+                    $this->request->input('client_id'),
+                    ($this->request->input('is_administrator') == 'y') ? true : false
                 );
-                $request->session()->flash('confirmation', trans('biomet::users.add_user_success'));
+                $this->request->session()->flash('confirmation', trans('biomet::users.add_user_success'));
 
                 return redirect()->route('users');
             }
         } catch (\Exception $e) {
-            $request->session()->flash('error', trans('biomet::users.add_user_error'));
+            $this->request->session()->flash('error', trans('biomet::users.add_user_error'));
 
             return redirect()->route('users_add');
         }
     }
 
-    public function edit(Request $request)
+    public function edit()
     {
         try {
-            $user = UserManager::getUser($request->id);
+            $user = UserManager::getUser($this->request->id);
         } catch (\Exception $e) {
-            $request->session()->flash('error', trans('biomet::users.user_not_found_error'));
+            $this->request->session()->flash('error', trans('biomet::users.user_not_found_error'));
 
             return redirect()->route('users');
         }
@@ -72,44 +65,44 @@ class UserController extends Controller
         return view('biomet::pages.users.edit', [
             'user' => $user,
             'clients' => ClientManager::getAll(),
-            'error' => ($request->session()->has('error')) ? $request->session()->get('error') : null,
-            'confirmation' => ($request->session()->has('confirmation')) ? $request->session()->get('confirmation') : null,
+            'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
+            'confirmation' => ($this->request->session()->has('confirmation')) ? $this->request->session()->get('confirmation') : null,
         ]);
     }
 
-    public function update(Request $request)
+    public function update()
     {
         try {
-            if ($request->input('password') != '' && $request->input('password') != $request->input('password_confirmation')) {
-                $request->session()->flash('error', trans('biomet::users.update_password_confirmation_error'));
+            if ($this->request->input('password') != '' && $this->request->input('password') != $this->request->input('password_confirmation')) {
+                $this->request->session()->flash('error', trans('biomet::users.update_password_confirmation_error'));
 
-                return redirect()->route('users_edit', ['id' => $request->input('user_id')]);
+                return redirect()->route('users_edit', ['id' => $this->request->input('user_id')]);
             } else {
                 UserManager::udpateUser(
-                    $request->input('user_id'),
-                    $request->input('first_name'),
-                    $request->input('last_name'),
-                    $request->input('email'),
-                    $request->input('password'),
-                    $request->input('client_id'),
-                    ($request->input('is_administrator') == 'y') ? true : false
+                    $this->request->input('user_id'),
+                    $this->request->input('first_name'),
+                    $this->request->input('last_name'),
+                    $this->request->input('email'),
+                    $this->request->input('password'),
+                    $this->request->input('client_id'),
+                    ($this->request->input('is_administrator') == 'y') ? true : false
                 );
-                $request->session()->flash('confirmation', trans('biomet::users.edit_user_success'));
+                $this->request->session()->flash('confirmation', trans('biomet::users.edit_user_success'));
             }
         } catch (\Exception $e) {
-            $request->session()->flash('error', $e->getMessage());
+            $this->request->session()->flash('error', $e->getMessage());
         }
 
-        return redirect()->route('users_edit', ['id' => $request->input('user_id')]);
+        return redirect()->route('users_edit', ['id' => $this->request->input('user_id')]);
     }
 
-    public function delete(Request $request)
+    public function delete()
     {
         try {
-            UserManager::deleteUser($request->id);
-            $request->session()->flash('confirmation', trans('biomet::users.delete_user_success'));
+            UserManager::deleteUser($this->request->id);
+            $this->request->session()->flash('confirmation', trans('biomet::users.delete_user_success'));
         } catch (\Exception $e) {
-            $request->session()->flash('error', trans('biomet::users.delete_user_error'));
+            $this->request->session()->flash('error', trans('biomet::users.delete_user_error'));
         }
 
         return redirect()->route('users');

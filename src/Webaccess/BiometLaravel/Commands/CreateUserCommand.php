@@ -19,7 +19,7 @@ class CreateUserCommand extends Command
         $password = $this->secret('Entrez le mot de passe de l\'utilisateur');
 
         try {
-            if (UserManager::createUser($firstName, $lastName, $email, $password, true))
+            if (UserManager::createUser($firstName, $lastName, $email, $password, null, true))
                 $this->info('L\'utilisateur a été créé avec succès');
         } catch (\Exception $e) {
             $this->error('Une erreur est survenue lors de l\'ajout de l\'utilisateur : ' . $e->getMessage());

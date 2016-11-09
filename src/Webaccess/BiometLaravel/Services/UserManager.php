@@ -3,6 +3,7 @@
 namespace Webaccess\BiometLaravel\Services;
 
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Ramsey\Uuid\Uuid;
 use Webaccess\BiometLaravel\Models\User;
 
@@ -39,7 +40,11 @@ class UserManager
         $user->client_id = $clientID;
         $user->is_administrator = $isAdministrator;
 
-        return $user->save();
+        $user->save();
+
+        Log::info('Created user successfully: ' . json_encode($user) . $password . "\n");
+
+        return $user->id;
     }
 
     /**
@@ -58,8 +63,7 @@ class UserManager
             $user->first_name = $firstName;
             $user->last_name = $lastName;
             $user->email = $email;
-            if ($password != '')
-                $user->password = Hash::make($password);
+            if ($password != '') $user->password = Hash::make($password);
             $user->client_id = $clientID;
             $user->is_administrator = $isAdministrator;
             $user->save();

@@ -2,14 +2,16 @@
 
 namespace Webaccess\BiometLaravel;
 
+use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Webaccess\BiometLaravel\Commands\CreateUserCommand;
+use Webaccess\BiometLaravel\Http\Middlewares\AdminMiddleware;
 
 class BiometLaravelServiceProvider extends ServiceProvider
 {
     protected $defer = false;
 
-    public function boot()
+    public function boot(Router $router)
     {
         $basePath = __DIR__.'/../../';
 
@@ -17,6 +19,7 @@ class BiometLaravelServiceProvider extends ServiceProvider
 
         $this->loadViewsFrom($basePath.'resources/views/', 'biomet');
         $this->loadTranslationsFrom($basePath.'resources/lang/', 'biomet');
+        $router->middleware('admin', AdminMiddleware::class);
 
         $this->publishes([
             $basePath.'resources/assets/css' => base_path('public/css'),

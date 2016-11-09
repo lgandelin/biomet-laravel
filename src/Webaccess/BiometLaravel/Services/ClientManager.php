@@ -28,7 +28,9 @@ class ClientManager
         $client->id = Uuid::uuid4()->toString();
         $client->name = $name;
 
-        return $client->save();
+        $client->save();
+
+        return $client->id;
     }
 
     /**
