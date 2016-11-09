@@ -1,7 +1,8 @@
 <?php
 
-namespace Webaccess\BiometLaravel\Http\Controllers;
+namespace Webaccess\BiometLaravel\Http\Controllers\Admin;
 
+use Webaccess\BiometLaravel\Http\Controllers\BaseController;
 use Webaccess\BiometLaravel\Services\ClientManager;
 use Webaccess\BiometLaravel\Services\UserManager;
 

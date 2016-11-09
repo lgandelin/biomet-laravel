@@ -5,6 +5,18 @@
 @section('page-content')
     <h1>Dashboard</h1>
 
+    @if (isset($error))
+        <div class="bg-danger">
+            {{ $error }}
+        </div>
+    @endif
+
+    @if (isset($confirmation))
+        <div class="bg-success">
+            {{ $confirmation }}
+        </div>
+    @endif
+
     <div id="map-canvas" style="width: 100%; height: 400px; border-bottom: 1px solid #d9dbde;"></div>
 
     <ul>
