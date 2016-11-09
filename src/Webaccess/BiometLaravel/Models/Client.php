@@ -19,5 +19,11 @@ class Client extends Model
      */
     protected $fillable = [
         'name',
+        'access_limit_date',
     ];
+
+    public function setAccessLimitDateAttribute($value)
+    {
+        $this->attributes['access_limit_date'] = implode('-', array_reverse(explode('/', $value)));
+    }
 }

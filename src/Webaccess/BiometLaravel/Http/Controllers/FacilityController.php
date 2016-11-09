@@ -2,6 +2,8 @@
 
 namespace Webaccess\BiometLaravel\Http\Controllers;
 
+use DateTime;
+use Webaccess\BiometLaravel\Services\ClientManager;
 use Webaccess\BiometLaravel\Services\FacilityManager;
 
 class FacilityController extends BaseController
@@ -26,10 +28,17 @@ class FacilityController extends BaseController
     private function canViewFacility($facilityID)
     {
         $user = auth()->user();
-        if ($facility = FacilityManager::getByID($facilityID)) {
-            return $user->client_id === $facility->client_id;
+        $facility = FacilityManager::getByID($facilityID);
+
+        if (!$facility || $user->client_id !== $facility->client_id) {
+            return false;
         }
 
-        return false;
+        $client = ClientManager::getByID($facility->client_id);
+        if (!$client || ($client->access_limit_date && DateTime::createFromFormat('Y-m-d', $client->access_limit_date) < new DateTime())) {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -28,7 +28,8 @@ class ClientController extends BaseController
     {
         try {
             ClientManager::createClient(
-                $this->request->input('name')
+                $this->request->input('name'),
+                $this->request->input('access_limit_date')
             );
             $this->request->session()->flash('confirmation', trans('biomet::clients.add_client_success'));
 
@@ -43,7 +44,7 @@ class ClientController extends BaseController
     public function edit()
     {
         try {
-            $client = ClientManager::getClient($this->request->id);
+            $client = ClientManager::getByID($this->request->id);
         } catch (\Exception $e) {
             $this->request->session()->flash('error', trans('biomet::clients.client_not_found_error'));
 
@@ -62,7 +63,8 @@ class ClientController extends BaseController
         try {
             ClientManager::udpateClient(
                 $this->request->input('client_id'),
-                $this->request->input('name')
+                $this->request->input('name'),
+                $this->request->input('access_limit_date')
             );
             $this->request->session()->flash('confirmation', trans('biomet::clients.edit_client_success'));
         } catch (\Exception $e) {

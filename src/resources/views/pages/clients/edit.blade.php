@@ -21,5 +21,6 @@
         'form_action' => route('clients_update'),
         'client_id' => $client->id,
         'client_name' => $client->name,
+        'client_access_limit_date' => $client->access_limit_date,
     ])
 @endsection

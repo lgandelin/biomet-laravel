@@ -13,20 +13,22 @@ class ClientManager
         return Client::orderBy('created_at')->paginate(10);
     }
 
-    public static function getClient($clientID)
+    public static function getByID($clientID)
     {
         return Client::find($clientID);
     }
 
     /**
      * @param $name
+     * @param $accessLimitDate
      * @return Client
      */
-    public static function createClient($name)
+    public static function createClient($name, $accessLimitDate)
     {
         $client = new Client();
         $client->id = Uuid::uuid4()->toString();
         $client->name = $name;
+        $client->accessLimitDate = $accessLimitDate;
 
         $client->save();
 
@@ -36,12 +38,14 @@ class ClientManager
     /**
      * @param $clientID
      * @param $name
+     * @param $accessLimitDate
      * @return bool
      */
-    public static function udpateClient($clientID, $name)
+    public static function udpateClient($clientID, $name, $accessLimitDate)
     {
         if ($client = Client::find($clientID)) {
             $client->name = $name;
+            $client->accessLimitDate = $accessLimitDate;
             $client->save();
 
             return true;
