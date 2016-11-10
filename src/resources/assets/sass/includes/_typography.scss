@@ -4,15 +4,6 @@
 	box-sizing: border-box;         
 }
 
-/*@font-face {
-	font-family: "AvantGarde-Medium";
-	src: url('../fonts/AvantGarde-Medium.woff'),
-		 url('../fonts/AvantGarde-Medium.otf'),
-		 url('../fonts/AvantGarde-Medium.svg'),
-		 url('../fonts/AvantGarde-Medium.eot'),
-		 url('../fonts/AvantGarde-Medium.ttf');
-}*/
-
 em {
 	font-style: italic;
 }
@@ -26,6 +17,5 @@ ul {
 }
 
 body {
-	color: $gray;
 	font-size: 14px;
 }

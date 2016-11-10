@@ -17,7 +17,7 @@
         </div>
     @endif
 
-    <table>
+    <table class="table table-stripped">
         <thead>
         <tr>
             <th>{{ trans('biomet::clients.name') }}</th>

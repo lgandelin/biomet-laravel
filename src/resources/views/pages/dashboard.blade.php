@@ -57,9 +57,7 @@
                     });
 
                     var infoWindow_{{ $i }} = new google.maps.InfoWindow({
-                        content: '<div class="map-info"><span class="name">{{ $facility->name }}</span>' +
-                        '<a href="{{ route('facility', array('id' => $facility->id)) }}">Accéder au site' +
-                        '</div>'
+                        content: '<div class="map-info"><span class="name">{{ $facility->name }}</span>' + '<a href="{{ route('facility', array('id' => $facility->id)) }}">Accéder au site' + '</div>'
                     });
 
                     google.maps.event.addListener(marker_{{ $i }}, 'click', function() {

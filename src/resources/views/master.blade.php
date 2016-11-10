@@ -1,6 +1,6 @@
 @include('biomet::includes.header')
 
-<div class="container">
+<div id="wrapper">
     @yield('main-content')
 </div>
 
