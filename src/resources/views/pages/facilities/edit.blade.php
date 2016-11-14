@@ -6,13 +6,13 @@
     <h1>Editer un site</h1>
 
     @if (isset($error))
-        <div class="bg-danger">
+        <div class="alert alert-danger">
             {{ $error }}
         </div>
     @endif
 
     @if (isset($confirmation))
-        <div class="bg-success">
+        <div class="alert alert-success">
             {{ $confirmation }}
         </div>
     @endif

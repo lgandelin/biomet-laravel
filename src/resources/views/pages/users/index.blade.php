@@ -6,13 +6,13 @@
     <h1>Gestion des utilisateurs</h1>
 
     @if (isset($error))
-        <div class="bg-danger">
+        <div class="alert alert-danger">
             {{ $error }}
         </div>
     @endif
 
     @if (isset($confirmation))
-        <div class="bg-success">
+        <div class="alert alert-success">
             {{ $confirmation }}
         </div>
     @endif
@@ -36,15 +36,15 @@
                 <td>@if ($user->client){{ $user->client->name }}@else N/A @endif</td>
                 <td>@if ($user->is_administrator) Oui @else Non @endif</td>
                 <td align="right">
-                    <a href="{{ route('users_edit', ['id' => $user->id]) }}">{{ trans('biomet::generic.edit') }}</a>
-                    <a href="{{ route('users_delete', ['id' => $user->id]) }}">{{ trans('biomet::generic.delete') }}</a>
+                    <a class="btn btn-primary" href="{{ route('users_edit', ['id' => $user->id]) }}">{{ trans('biomet::generic.edit') }}</a>
+                    <a class="btn btn-danger" href="{{ route('users_delete', ['id' => $user->id]) }}">{{ trans('biomet::generic.delete') }}</a>
                 </td>
             </tr>
         @endforeach
         </tbody>
     </table>
 
-    <a href="{{ route('users_add') }}">{{ trans('biomet::generic.add') }}</a>
+    <a class="btn btn-success" href="{{ route('users_add') }}">{{ trans('biomet::generic.add') }}</a>
 
     <div class="text-center">
         {!! $users->render() !!}
