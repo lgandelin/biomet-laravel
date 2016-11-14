@@ -7428,6 +7428,10 @@ ul.alert-dropdown {
 .fa-meanpath:before {
   content: "\f20c"; }
 
+.navbar-inverse .navbar-nav .active > a, .navbar-inverse .navbar-nav .active > a:focus, .navbar-inverse .navbar-nav .active > a:hover {
+  color: #fff;
+  background-color: #080808; }
+
 * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;

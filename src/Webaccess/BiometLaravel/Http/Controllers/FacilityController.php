@@ -8,8 +8,11 @@ use Webaccess\BiometLaravel\Services\FacilityManager;
 
 class FacilityController extends BaseController
 {
+
     public function index()
     {
+        parent::__construct($this->request);
+        
         if (!$this->canViewFacility($this->request->id)) {
             $this->request->session()->flash('error', trans('biomet::generic.no_permission_error'));
 
@@ -17,7 +20,7 @@ class FacilityController extends BaseController
         }
 
         return view('biomet::pages.facility.index', [
-            'facility' => FacilityManager::getByID($this->request->id),
+            'current_facility' => FacilityManager::getByID($this->request->id),
         ]);
     }
 
