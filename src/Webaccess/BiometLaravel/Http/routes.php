@@ -14,7 +14,9 @@ Route::group(['middleware' => ['web']], function () {
 
         Route::get('/', array('as' => 'dashboard', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\DashboardController@index'));
 
+        //FACILITY
         Route::get('/site/{id}/1', array('as' => 'facility_1', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@tab1'));
+        Route::post('/site/graph', array('as' => 'facility_get_graph', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@graph'));
 
         //ADMIN
         Route::group(['middleware' => ['admin']], function () {

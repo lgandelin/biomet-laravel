@@ -23,6 +23,14 @@ class FacilityController extends BaseController
         ]);
     }
 
+    public function graph()
+    {
+        //arguments : start_date, end_date, key
+        return view('biomet::pages.facility.includes.graph', [
+            'series' => json_encode(FacilityManager::getData()),
+        ])->render();
+    }
+
     /**
      * @param $facilityID
      * @return bool
@@ -30,16 +38,22 @@ class FacilityController extends BaseController
     private function canViewFacility($facilityID)
     {
         parent::__construct($this->request);
-        $user = auth()->user();
+
+        $user = $this->getUser();
         $facility = FacilityManager::getByID($facilityID);
 
-        if (!$facility || $user->client_id !== $facility->client_id) {
+        if (!$facility)
             return false;
-        }
 
-        $client = ClientManager::getByID($facility->client_id);
-        if (!$client || ($client->access_limit_date && DateTime::createFromFormat('Y-m-d', $client->access_limit_date) < new DateTime())) {
+        if ($facility && $facility->client_id && $user->client_id && $user->client_id !== $facility->client_id)
             return false;
+
+        if ($facility->client_id) {
+            $client = ClientManager::getByID($facility->client_id);
+
+            if (!$client || ($client->access_limit_date && DateTime::createFromFormat('Y-m-d', $client->access_limit_date) < new DateTime())) {
+                return false;
+            }
         }
 
         return true;

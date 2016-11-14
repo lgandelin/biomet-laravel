@@ -11,12 +11,23 @@ class BaseController extends Controller
     public function __construct(Request $request)
     {
         $this->request = $request;
-        view()->share('facilities', ($this->getUser()) ? FacilityManager::getByClient($this->getUser()->client_id) : []);
+        view()->share('facilities', $this->getFacilities());
         view()->share('current_route', $request->route()->getName());
     }
 
-    public function getUser()
+    protected function getUser()
     {
         return auth()->check() ? auth()->user() : false;
+    }
+
+    protected function getFacilities()
+    {
+        if (!$user = $this->getUser())
+            return [];
+
+        if ($user->client_id)
+            return FacilityManager::getByClient($this->getUser()->client_id);
+
+        return FacilityManager::getAll();
     }
 }
