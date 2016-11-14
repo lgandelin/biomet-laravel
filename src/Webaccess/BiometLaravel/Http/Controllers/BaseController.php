@@ -12,6 +12,7 @@ class BaseController extends Controller
     {
         $this->request = $request;
         view()->share('facilities', ($this->getUser()) ? FacilityManager::getByClient($this->getUser()->client_id) : []);
+        view()->share('current_route', $request->route()->getName());
     }
 
     public function getUser()

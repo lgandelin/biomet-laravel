@@ -5,6 +5,7 @@
 @section('page-content')
     <h1>{{ $current_facility->name }}</h1>
 
-    <a href="{{ route('dashboard') }}">{{ trans('biomet::generic.back') }}</a>
+    @include('biomet::pages.facility.menu')
 
+    <a style="margin-top: 50px" class="btn btn-default" href="{{ route('dashboard') }}">{{ trans('biomet::generic.back') }}</a>
 @endsection

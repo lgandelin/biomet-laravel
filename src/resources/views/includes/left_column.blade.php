@@ -24,7 +24,7 @@
                 <ul class="collapse in">
                     @if (count($facilities) > 0)
                         @foreach ($facilities as $f)
-                            <li @if(isset($current_facility) && isset($current_facility->id) && $f->id === $current_facility->id)class="active"@endif><a href="{{ route('facility', array('id' => $f->id)) }}">{{ $f->name }}</a></li>
+                            <li @if(isset($current_facility) && isset($current_facility->id) && $f->id === $current_facility->id)class="active"@endif><a href="{{ route('facility_1', array('id' => $f->id)) }}">{{ $f->name }}</a></li>
                         @endforeach
                     @endif
                 </ul>

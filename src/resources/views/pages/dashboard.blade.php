@@ -3,29 +3,33 @@
 @section('page-title'){{ trans('biomet::dashboard.meta_title') }}@endsection
 
 @section('page-content')
-    <h1>Dashboard</h1>
+    <h1>{{ trans('biomet::dashboard.title') }}</h1>
 
-    @if (isset($error))
-        <div class="alert alert-danger">
-            {{ $error }}
-        </div>
-    @endif
+    <div class="dashboard-template">
 
-    @if (isset($confirmation))
-        <div class="alert alert-success">
-            {{ $confirmation }}
-        </div>
-    @endif
-
-    <div id="map-canvas" style="width: 100%; height: 400px; border-bottom: 1px solid #d9dbde;"></div>
-
-    <ul>
-        @if (count($facilities) > 0)
-            @foreach ($facilities as $facilitiy)
-                <li><a href="{{ route('facility', array('id' => $facilitiy->id)) }}">{{ $facilitiy->name }}</a></li>
-            @endforeach
+        @if (isset($error))
+            <div class="alert alert-danger">
+                {{ $error }}
+            </div>
         @endif
-    </ul>
+
+        @if (isset($confirmation))
+            <div class="alert alert-success">
+                {{ $confirmation }}
+            </div>
+        @endif
+
+        <div id="map-canvas" class="google-map"></div>
+
+        <h2>{{ trans('biomet::dashboard.facilities_list') }}</h2>
+        <ul>
+            @if (count($facilities) > 0)
+                @foreach ($facilities as $facility)
+                    <li><i class="fa fa-fw fa-map-marker"></i><a href="{{ route('facility_1', array('id' => $facility->id)) }}">{{ $facility->name }}</a></li>
+                @endforeach
+            @endif
+        </ul>
+    </div>
 
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}"></script>
     <script type="text/javascript">
@@ -57,7 +61,7 @@
                     });
 
                     var infoWindow_{{ $i }} = new google.maps.InfoWindow({
-                        content: '<div class="map-info"><span class="name">{{ $facility->name }}</span>' + '<a href="{{ route('facility', array('id' => $facility->id)) }}">Accéder au site' + '</div>'
+                        content: '<div class="map-info"><span class="name">{{ $facility->name }}</span>' + '<a href="{{ route('facility_1', array('id' => $facility->id)) }}">Accéder au site' + '</div>'
                     });
 
                     google.maps.event.addListener(marker_{{ $i }}, 'click', function() {
