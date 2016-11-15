@@ -2,23 +2,45 @@
 
 namespace Webaccess\BiometLaravel\Http\Controllers;
 
-use DateTime;
-use Webaccess\BiometLaravel\Services\ClientManager;
+use Illuminate\Support\Facades\Gate;
 use Webaccess\BiometLaravel\Services\FacilityManager;
 
 class FacilityController extends BaseController
 {
+    public function index()
+    {
+        parent::__construct($this->request);
+
+        return view('biomet::pages.facility.index', [
+            'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
+            'current_facility' => FacilityManager::getByID($this->request->id),
+        ]);
+    }
+
     public function tab1()
     {
         parent::__construct($this->request);
 
-        if (!$this->canViewFacility($this->request->id)) {
+        if (!Gate::allows('can-view-facility-tab', [FacilityManager::getByID($this->request->id), 1])) {
             $this->request->session()->flash('error', trans('biomet::generic.no_permission_error'));
-
-            return redirect()->route('dashboard');
+            return redirect()->route('facility', ['id' => $this->request->id]);
         }
 
         return view('biomet::pages.facility.tabs.1', [
+            'current_facility' => FacilityManager::getByID($this->request->id),
+        ]);
+    }
+
+    public function tab10()
+    {
+        parent::__construct($this->request);
+
+        if (!Gate::allows('can-view-facility-tab', [FacilityManager::getByID($this->request->id), 10])) {
+            $this->request->session()->flash('error', trans('biomet::generic.no_permission_error'));
+            return redirect()->route('facility', ['id' => $this->request->id]);
+        }
+
+        return view('biomet::pages.facility.tabs.10', [
             'current_facility' => FacilityManager::getByID($this->request->id),
         ]);
     }
@@ -29,33 +51,5 @@ class FacilityController extends BaseController
         return view('biomet::pages.facility.includes.graph', [
             'series' => json_encode(FacilityManager::getData()),
         ])->render();
-    }
-
-    /**
-     * @param $facilityID
-     * @return bool
-     */
-    private function canViewFacility($facilityID)
-    {
-        parent::__construct($this->request);
-
-        $user = $this->getUser();
-        $facility = FacilityManager::getByID($facilityID);
-
-        if (!$facility)
-            return false;
-
-        if ($facility && $facility->client_id && $user->client_id && $user->client_id !== $facility->client_id)
-            return false;
-
-        if ($facility->client_id) {
-            $client = ClientManager::getByID($facility->client_id);
-
-            if (!$client || ($client->access_limit_date && DateTime::createFromFormat('Y-m-d', $client->access_limit_date) < new DateTime())) {
-                return false;
-            }
-        }
-
-        return true;
     }
 }

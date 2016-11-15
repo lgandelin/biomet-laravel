@@ -4,6 +4,7 @@ namespace Webaccess\BiometLaravel\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Webaccess\BiometLaravel\Models\User;
 use Webaccess\BiometLaravel\Services\FacilityManager;
 
 class BaseController extends Controller
@@ -11,7 +12,7 @@ class BaseController extends Controller
     public function __construct(Request $request)
     {
         $this->request = $request;
-        view()->share('facilities', $this->getFacilities());
+        view()->share('facilities', $this->getFacilities(false));
         view()->share('current_route', $request->route()->getName());
     }
 
@@ -25,9 +26,12 @@ class BaseController extends Controller
         if (!$user = $this->getUser())
             return [];
 
-        if ($user->client_id)
-            return FacilityManager::getByClient($this->getUser()->client_id);
+        if ($user->profile_id == User::PROFILE_ID_CLIENT || User::PROFILE_ID_PROVIDER && $user->client_id)
+            return FacilityManager::getByClient($user->client_id);
 
-        return FacilityManager::getAll();
+        if ($user->profile_id == User::PROFILE_ID_ADMINISTRATOR)
+            return FacilityManager::getAll(false);
+
+        return [];
     }
 }

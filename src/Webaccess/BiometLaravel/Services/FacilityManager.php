@@ -8,9 +8,11 @@ use Webaccess\BiometLaravel\Models\Facility;
 class FacilityManager
 {
 
-    public static function getAll()
+    public static function getAll($paginate = true)
     {
-        return Facility::orderBy('created_at')->paginate(10);
+        $facilities = Facility::orderBy('created_at');
+
+        return ($paginate === true) ? $facilities->paginate(10) : $facilities->get();
     }
 
     public static function getByClient($clientID)

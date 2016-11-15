@@ -35,18 +35,12 @@ class BiometLaravelServiceProvider extends ServiceProvider
 
     public function register()
     {
-        /*App::bind('SignupInteractor', function () {
-             return new SignupInteractor(
-                 new EloquentPlatformRepository(),
-                 new EloquentAdministratorRepository(),
-                 new EloquentNodeRepository(),
-                 new DigitalOceanService(),
-                 new LaravelLoggerService()
-             );
-        });*/
-
         $this->commands([
             CreateUserCommand::class,
         ]);
+
+        $this->app->register(
+            'Webaccess\BiometLaravel\AuthServiceProvider'
+        );
     }
 }

@@ -25,7 +25,7 @@
         <ul>
             @if (count($facilities) > 0)
                 @foreach ($facilities as $facility)
-                    <li><i class="fa fa-fw fa-map-marker"></i><a href="{{ route('facility_1', array('id' => $facility->id)) }}">{{ $facility->name }}</a></li>
+                    <li><i class="fa fa-fw fa-map-marker"></i><a href="{{ route('facility', array('id' => $facility->id)) }}">{{ $facility->name }}</a></li>
                 @endforeach
             @endif
         </ul>
@@ -61,7 +61,7 @@
                     });
 
                     var infoWindow_{{ $i }} = new google.maps.InfoWindow({
-                        content: '<div class="map-info"><span class="name">{{ $facility->name }}</span>' + '<a href="{{ route('facility_1', array('id' => $facility->id)) }}">Accéder au site' + '</div>'
+                        content: '<div class="map-info"><span class="name">{{ $facility->name }}</span>' + '<a href="{{ route('facility', array('id' => $facility->id)) }}">Accéder au site' + '</div>'
                     });
 
                     google.maps.event.addListener(marker_{{ $i }}, 'click', function() {

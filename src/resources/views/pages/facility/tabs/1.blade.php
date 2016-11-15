@@ -3,11 +3,11 @@
 @section('page-title'){{ $current_facility->name }}@endsection
 
 @section('page-content')
-    <h1>{{ $current_facility->name }}</h1>
+    <h1>{{ $current_facility->name }} - Débit</h1>
+
+    @include('biomet::pages.facility.menu')
 
     <div class="facility-template">
-
-        @include('biomet::pages.facility.menu')
 
         <script src="https://code.highcharts.com/stock/highstock.js"></script>
         <script src="https://code.highcharts.com/modules/exporting.js"></script>

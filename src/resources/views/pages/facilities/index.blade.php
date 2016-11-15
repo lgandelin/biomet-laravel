@@ -5,45 +5,48 @@
 @section('page-content')
     <h1>Gestion des sites</h1>
 
-    @if (isset($error))
-        <div class="alert alert-danger">
-            {{ $error }}
-        </div>
-    @endif
+    <div class="facility-template">
 
-    @if (isset($confirmation))
-        <div class="alert alert-success">
-            {{ $confirmation }}
-        </div>
-    @endif
+        @if (isset($error))
+            <div class="alert alert-danger">
+                {{ $error }}
+            </div>
+        @endif
 
-    <table class="table table-stripped">
-        <thead>
-        <tr>
-            <th>{{ trans('biomet::facilities.name') }}</th>
-            <th>{{ trans('biomet::facilities.client') }}</th>
-            <th>{{ trans('biomet::generic.action') }}</th>
-        </tr>
-        </thead>
+        @if (isset($confirmation))
+            <div class="alert alert-success">
+                {{ $confirmation }}
+            </div>
+        @endif
 
-        <tbody>
-        @foreach ($facilities as $facility)
+        <table class="table table-stripped">
+            <thead>
             <tr>
-                <td>{{ $facility->name }}</td>
-                <td>@if ($facility->client){{ $facility->client->name }}@else N/A @endif</td>
-                <td align="right">
-                    <a class="btn btn-primary" href="{{ route('facilities_edit', ['id' => $facility->id]) }}">{{ trans('biomet::generic.edit') }}</a>
-                    <a class="btn btn-danger" href="{{ route('facilities_delete', ['id' => $facility->id]) }}">{{ trans('biomet::generic.delete') }}</a>
-                </td>
+                <th>{{ trans('biomet::facilities.name') }}</th>
+                <th>{{ trans('biomet::facilities.client') }}</th>
+                <th>{{ trans('biomet::generic.action') }}</th>
             </tr>
-        @endforeach
-        </tbody>
-    </table>
+            </thead>
 
-    <a class="btn btn-success" href="{{ route('facilities_add') }}">{{ trans('biomet::generic.add') }}</a>
+            <tbody>
+            @foreach ($facilities as $facility)
+                <tr>
+                    <td>{{ $facility->name }}</td>
+                    <td>@if ($facility->client){{ $facility->client->name }}@else N/A @endif</td>
+                    <td align="right">
+                        <a class="btn btn-primary" href="{{ route('facilities_edit', ['id' => $facility->id]) }}">{{ trans('biomet::generic.edit') }}</a>
+                        <a class="btn btn-danger" href="{{ route('facilities_delete', ['id' => $facility->id]) }}">{{ trans('biomet::generic.delete') }}</a>
+                    </td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
 
-    <div class="text-center">
-        {!! $facilities->render() !!}
+        <a class="btn btn-success" href="{{ route('facilities_add') }}">{{ trans('biomet::generic.add') }}</a>
+
+        <div class="text-center">
+            {!! $facilities->render() !!}
+        </div>
     </div>
-    
+
 @endsection
