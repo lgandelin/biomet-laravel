@@ -29,7 +29,7 @@ class ClientManager
         $client = new Client();
         $client->id = Uuid::uuid4()->toString();
         $client->name = $name;
-        $client->accessLimitDate = $accessLimitDate;
+        $client->access_limit_date = $accessLimitDate;
 
         $client->save();
 
@@ -46,7 +46,7 @@ class ClientManager
     {
         if ($client = Client::find($clientID)) {
             $client->name = $name;
-            $client->accessLimitDate = $accessLimitDate;
+            $client->access_limit_date = $accessLimitDate;
             $client->save();
 
             return true;
