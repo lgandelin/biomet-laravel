@@ -7432,6 +7432,9 @@ ul.alert-dropdown {
   color: #fff;
   background-color: #080808; }
 
+.side-nav > li > ul > li > a {
+  padding: 10px 25px 10px 40px; }
+
 * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;

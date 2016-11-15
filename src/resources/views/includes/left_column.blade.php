@@ -1,7 +1,7 @@
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 
     <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+        <button type="button" class="navbar-toggle" data-toggle="collapse">
             <span class="sr-only">BIOMET</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -19,10 +19,10 @@
         <ul class="nav navbar-nav side-nav">
             <li @if (Request::is('/'))class="active"@endif><a href="{{ route('dashboard') }}"><i class="fa fa-fw fa-dashboard"></i> Tableau de bord</a></li>
 
-            <li @if(isset($current_facility) && $current_facility->id)class="active"@endif>
+            <li class="@if(isset($current_facility) && $current_facility->id) active @endif ">
                 <?php $route = (preg_match('/facility_/', $current_route)) ? $current_route : 'facility'; ?>
-                <a data-toggle="collapse" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-fw fa-bar-chart"></i> Sites <i class="fa fa-fw fa-caret-down"></i></a>
-                <ul class="collapse in">
+                <a class="toggle-facilities" href="#"><i class="fa fa-fw fa-bar-chart"></i> Sites <i class="fa fa-fw toggle-icon fa-caret-down"></i></a>
+                <ul @if (count($left_column_facilities) > 15)style="display: none;"@endif>
                     @if (count($left_column_facilities) > 0)
                         @foreach ($left_column_facilities as $f)
                             <li @if(isset($current_facility) && isset($current_facility->id) && $f->id === $current_facility->id)class="active"@endif><a href="{{ route($route, array('id' => $f->id)) }}">{{ $f->name }}</a></li>
@@ -40,3 +40,10 @@
         </ul>
     </div>
 </nav>
+
+<script>
+    $('.toggle-facilities').click(function() {
+        $(this).next().toggle();
+        $(this).find('.toggle-icon').toggleClass('fa-caret-down').toggleClass('fa-caret-up');
+    });
+</script>
