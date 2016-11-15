@@ -13,7 +13,13 @@ Route::group(['middleware' => ['web']], function () {
     Route::group(['middleware' => ['auth']], function () {
 
         Route::get('/', array('as' => 'dashboard', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\DashboardController@index'));
+
+        //FACILITY
         Route::get('/site/{id}', array('as' => 'facility', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@index'));
+        Route::get('/site/{id}/1', array('as' => 'facility_1', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@tab1'));
+        Route::get('/site/{id}/10', array('as' => 'facility_10', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@tab10'));
+        Route::post('/site/graph', array('as' => 'facility_get_graph', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@graph'));
+
 
         //ADMIN
         Route::group(['middleware' => ['admin']], function () {

@@ -40,8 +40,8 @@
     </div>
 
     <div class="form-group">
-        <button type="submit">{{ trans('biomet::generic.valid') }}</button>
-        <a href="{{ route('facilities') }}">{{ trans('biomet::generic.back') }}</a>
+        <button class="btn btn-success" type="submit">{{ trans('biomet::generic.valid') }}</button>
+        <a class="btn btn-default" href="{{ route('facilities') }}">{{ trans('biomet::generic.back') }}</a>
     </div>
 
     @if (isset($facility_id))

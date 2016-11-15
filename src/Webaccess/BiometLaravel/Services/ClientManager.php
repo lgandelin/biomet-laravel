@@ -7,10 +7,11 @@ use Webaccess\BiometLaravel\Models\Client;
 
 class ClientManager
 {
-
-    public static function getAll()
+    public static function getAll($paginate = true)
     {
-        return Client::orderBy('created_at')->paginate(10);
+        $clients = Client::orderBy('created_at');
+
+        return ($paginate) ? $clients->paginate(10) : $clients->get();
     }
 
     public static function getByID($clientID)

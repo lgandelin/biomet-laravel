@@ -10,9 +10,22 @@ use Webaccess\BiometLaravel\Models\User;
 class UserManager
 {
 
-    public static function getAll()
+    public static function getAll($paginate = true, $clientID = null, $clientName = null, $profileID = null)
     {
-        return User::with('client')->orderBy('created_at')->paginate(10);
+        $users = User::with('client')->orderBy('created_at');
+
+        if ($clientName)
+            $users->where('last_name', 'LIKE', '%' . $clientName . '%')
+                ->orWhere('first_name', 'LIKE', '%' . $clientName . '%')
+                ->orWhere('email', 'LIKE', '%' . $clientName . '%');
+
+        if ($clientID)
+            $users->where('client_id', '=', $clientID);
+
+        if ($profileID)
+            $users->where('profile_id', '=', $profileID);
+
+        return ($paginate) ? $users->paginate(10) : $users->get();
     }
 
     public static function getUser($userID)
@@ -26,10 +39,10 @@ class UserManager
      * @param $email
      * @param $password
      * @param $clientID
-     * @param bool $isAdministrator
+     * @param int $profileID
      * @return User
      */
-    public static function createUser($firstName, $lastName, $email, $password, $clientID = null, $isAdministrator = false)
+    public static function createUser($firstName, $lastName, $email, $password, $clientID = null, $profileID = User::PROFILE_ID_CLIENT)
     {
         $user = new User();
         $user->id = Uuid::uuid4()->toString();
@@ -38,7 +51,7 @@ class UserManager
         $user->email = $email;
         $user->password = Hash::make($password);
         $user->client_id = $clientID;
-        $user->is_administrator = $isAdministrator;
+        $user->profile_id = $profileID;
 
         $user->save();
 
@@ -54,10 +67,10 @@ class UserManager
      * @param $email
      * @param $password
      * @param $clientID
-     * @param bool $isAdministrator
+     * @param int $profileID
      * @return bool
      */
-    public static function udpateUser($userID, $firstName, $lastName, $email, $password, $clientID, $isAdministrator)
+    public static function udpateUser($userID, $firstName, $lastName, $email, $password, $clientID, $profileID)
     {
         if ($user = User::find($userID)) {
             $user->first_name = $firstName;
@@ -65,7 +78,7 @@ class UserManager
             $user->email = $email;
             if ($password != '') $user->password = Hash::make($password);
             $user->client_id = $clientID;
-            $user->is_administrator = $isAdministrator;
+            $user->profile_id = $profileID;
             $user->save();
 
             return true;

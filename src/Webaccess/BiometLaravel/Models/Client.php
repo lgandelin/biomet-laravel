@@ -24,6 +24,8 @@ class Client extends Model
 
     public function setAccessLimitDateAttribute($value)
     {
-        $this->attributes['access_limit_date'] = implode('-', array_reverse(explode('/', $value)));
+        if ($value != '') {
+            $this->attributes['access_limit_date'] = implode('-', array_reverse(explode('/', $value)));
+        }
     }
 }

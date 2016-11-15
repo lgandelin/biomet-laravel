@@ -5,7 +5,7 @@
 @section('main-content')
 
     @if (isset($error))
-        <div class="bg-danger">
+        <div class="alert alert-danger">
             {{ $error }}
         </div>
     @endif

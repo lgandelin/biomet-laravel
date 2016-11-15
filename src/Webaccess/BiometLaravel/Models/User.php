@@ -9,6 +9,10 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    const PROFILE_ID_ADMINISTRATOR = 1;
+    const PROFILE_ID_CLIENT = 2;
+    const PROFILE_ID_PROVIDER = 3;
+
     protected $table = 'users';
     public $incrementing = false;
     public $casts = [
@@ -21,7 +25,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'first_name', 'last_name', 'email', 'password', 'is_administrator',
+        'first_name', 'last_name', 'email', 'password', 'profile_id',
     ];
 
     /**

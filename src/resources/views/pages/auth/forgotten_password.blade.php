@@ -11,7 +11,7 @@
     @endif
 
     @if ($error)
-        <div class="bg-danger">
+        <div class="alert alert-danger">
             {{ $error }}
         </div>
     @endif

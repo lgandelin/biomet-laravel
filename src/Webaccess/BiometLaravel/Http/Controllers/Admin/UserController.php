@@ -10,8 +10,15 @@ class UserController extends BaseController
 {
     public function index()
     {
+        parent::__construct($this->request);
+
+
         return view('biomet::pages.users.index', [
-            'users' => UserManager::getAll(),
+            'users' => UserManager::getAll(true, $this->request->filter_client_id, $this->request->filter_client_name, $this->request->filter_profile_id),
+            'clients' => ClientManager::getAll(false),
+            'filter_client_id' => $this->request->filter_client_id,
+            'filter_client_name' => $this->request->filter_client_name,
+            'filter_profile_id' => $this->request->filter_profile_id,
             'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
             'confirmation' => ($this->request->session()->has('confirmation')) ? $this->request->session()->get('confirmation') : null,
         ]);
@@ -40,7 +47,7 @@ class UserController extends BaseController
                     $this->request->input('email'),
                     $this->request->input('password'),
                     $this->request->input('client_id'),
-                    ($this->request->input('is_administrator') == 'y') ? true : false
+                    $this->request->input('profile_id')
                 );
                 $this->request->session()->flash('confirmation', trans('biomet::users.add_user_success'));
 
@@ -86,7 +93,7 @@ class UserController extends BaseController
                     $this->request->input('email'),
                     $this->request->input('password'),
                     $this->request->input('client_id'),
-                    ($this->request->input('is_administrator') == 'y') ? true : false
+                    $this->request->input('profile_id')
                 );
                 $this->request->session()->flash('confirmation', trans('biomet::users.edit_user_success'));
             }
