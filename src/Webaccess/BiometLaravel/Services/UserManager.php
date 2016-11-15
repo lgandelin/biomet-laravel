@@ -10,9 +10,22 @@ use Webaccess\BiometLaravel\Models\User;
 class UserManager
 {
 
-    public static function getAll()
+    public static function getAll($paginate = true, $clientID = null, $clientName = null, $profileID = null)
     {
-        return User::with('client')->orderBy('created_at')->paginate(10);
+        $users = User::with('client')->orderBy('created_at');
+
+        if ($clientName)
+            $users->where('last_name', 'LIKE', '%' . $clientName . '%')
+                ->orWhere('first_name', 'LIKE', '%' . $clientName . '%')
+                ->orWhere('email', 'LIKE', '%' . $clientName . '%');
+
+        if ($clientID)
+            $users->where('client_id', '=', $clientID);
+
+        if ($profileID)
+            $users->where('profile_id', '=', $profileID);
+
+        return ($paginate) ? $users->paginate(10) : $users->get();
     }
 
     public static function getUser($userID)

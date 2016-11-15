@@ -12,8 +12,13 @@ class UserController extends BaseController
     {
         parent::__construct($this->request);
 
+
         return view('biomet::pages.users.index', [
-            'users' => UserManager::getAll(),
+            'users' => UserManager::getAll(true, $this->request->filter_client_id, $this->request->filter_client_name, $this->request->filter_profile_id),
+            'clients' => ClientManager::getAll(false),
+            'filter_client_id' => $this->request->filter_client_id,
+            'filter_client_name' => $this->request->filter_client_name,
+            'filter_profile_id' => $this->request->filter_profile_id,
             'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
             'confirmation' => ($this->request->session()->has('confirmation')) ? $this->request->session()->get('confirmation') : null,
         ]);

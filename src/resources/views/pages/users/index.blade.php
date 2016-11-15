@@ -17,6 +17,31 @@
         </div>
     @endif
 
+    <div class="filters" style="margin-top: 3rem; margin-bottom: 3rem;">
+        <h4>Filtres</h4>
+        <form action="">
+
+            <input type="text" class="form-control" name="filter_client_name" value="{{ $filter_client_name }}" placeholder="Recherche" style="width: 15%; display: inline;"/>
+
+            <select name="filter_client_id" class="form-control" style="width: 15%; display: inline;">
+                <option value="">Filtrer par client</option>
+                @foreach ($clients as $client)
+                    <option value="{{ $client->id }}" @if ($filter_client_id == $client->id)selected="selected"@endif>{{ $client->name }}</option>
+                @endforeach
+            </select>
+
+            <select name="filter_profile_id" class="form-control" style="width: 15%; display: inline;">
+                <option value="">Filtrer par profil</option>
+                <option value="1" @if ($filter_profile_id == 1)selected="selected"@endif>Administrateur</option>
+                <option value="2" @if ($filter_profile_id == 2)selected="selected"@endif>Utilisateur client</option>
+                <option value="3" @if ($filter_profile_id == 3)selected="selected"@endif>Prestataire</option>
+            </select>
+            
+            <input class="btn btn-success" type="submit" value="{{ trans('biomet::generic.valid') }}" />
+        </form>
+    </div>
+
+    <h4>Liste des utilisateurs</h4>
     <table class="table table-stripped">
         <thead>
         <tr>

@@ -13,7 +13,10 @@ class FacilityController extends BaseController
         parent::__construct($this->request);
 
         return view('biomet::pages.facilities.index', [
-            'facilities' => FacilityManager::getAll(),
+            'facilities' => FacilityManager::getAll(true, $this->request->filter_client_id, $this->request->filter_client_name),
+            'clients' => ClientManager::getAll(false),
+            'filter_client_id' => $this->request->filter_client_id,
+            'filter_client_name' => $this->request->filter_client_name,
             'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
             'confirmation' => ($this->request->session()->has('confirmation')) ? $this->request->session()->get('confirmation') : null,
         ]);
