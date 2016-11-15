@@ -10,7 +10,7 @@
         <a class="navbar-brand" href="{{ route('dashboard') }}">BIOMET</a>
     </div>
 
-    <div class="collapse navbar-collapse navbar-ex1-collapse">
+    <div class="collapse navbar-collapse">
 
         <ul class="nav navbar-right top-nav">
             <li><a href="{{ route('logout') }}">Se déconnecter</a></li>
@@ -23,15 +23,15 @@
                 <?php $route = (preg_match('/facility_/', $current_route)) ? $current_route : 'facility'; ?>
                 <a data-toggle="collapse" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-fw fa-bar-chart"></i> Sites <i class="fa fa-fw fa-caret-down"></i></a>
                 <ul class="collapse in">
-                    @if (count($facilities) > 0)
-                        @foreach ($facilities as $f)
+                    @if (count($left_column_facilities) > 0)
+                        @foreach ($left_column_facilities as $f)
                             <li @if(isset($current_facility) && isset($current_facility->id) && $f->id === $current_facility->id)class="active"@endif><a href="{{ route($route, array('id' => $f->id)) }}">{{ $f->name }}</a></li>
                         @endforeach
                     @endif
                 </ul>
             </li>
 
-            @if (Auth::user() && Auth::user()->is_administrator)
+            @if (Auth::user() && Auth::user()->profile_id === Webaccess\BiometLaravel\Models\User::PROFILE_ID_ADMINISTRATOR)
                 <li><a href="{{ route('facilities') }}"><i class="fa fa-fw fa-cogs"></i> Gestion des sites</a></li>
                 <li><a href="{{ route('clients') }}"><i class="fa fa-fw fa-briefcase"></i> Gestion des clients</a></li>
                 <li><a href="{{ route('users') }}"><i class="fa fa-fw fa-users"></i> Gestion des utilisateurs</a></li>

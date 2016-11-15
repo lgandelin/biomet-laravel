@@ -5,6 +5,7 @@ namespace Webaccess\BiometLaravel\Http\Middlewares;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
+use Webaccess\BiometLaravel\Models\User;
 
 class AdminMiddleware
 {
@@ -34,7 +35,7 @@ class AdminMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if ( ! $this->auth->user()->is_administrator)
+        if ($this->auth->user()->profile_id !== User::PROFILE_ID_ADMINISTRATOR)
         {
             if ($request->ajax())
             {

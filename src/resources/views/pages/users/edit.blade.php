@@ -23,6 +23,6 @@
         'user_first_name' => $user->first_name,
         'user_last_name' => $user->last_name,
         'user_email' => $user->email,
-        'is_administrator' => $user->is_administrator,
+        'profile_id' => $user->profile_id,
     ])
 @endsection

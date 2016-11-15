@@ -9,7 +9,7 @@ return [
     'last_name' => 'Nom',
     'password' => 'Mot de passe',
     'password_confirmation' => 'Confirmation du mot de passe',
-    'is_administrator' => 'Administrateur',
+    'profile' => 'Profil',
     'client' => 'Client',
 
     'add_user_success' => 'Ajout de l\'utilisateur effectué avec succès',

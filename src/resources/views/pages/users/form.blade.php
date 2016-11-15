@@ -35,9 +35,10 @@
     </div>
 
     <div class="form-group">
-        <label for="is_administrator">{{ trans('biomet::users.is_administrator') }}</label><br/>
-        Oui <input type="radio" placeholder="{{ trans('biomet::users.is_administrator') }}" name="is_administrator" value="y" @if (isset($is_administrator) && $is_administrator) checked @endif autocomplete="off" />
-        Non <input type="radio" placeholder="{{ trans('biomet::users.is_administrator') }}" name="is_administrator" value="n" @if (isset($is_administrator) && !$is_administrator) checked @endif @if (!isset($is_administrator)) checked @endif autocomplete="off" />
+        <label for="profile_id">{{ trans('biomet::users.profile') }}</label><br/>
+        Administrateur <input style="margin-right: 2rem" type="radio" name="profile_id" value="{{ Webaccess\BiometLaravel\Models\User::PROFILE_ID_ADMINISTRATOR }}" @if (isset($profile_id) && $profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_ADMINISTRATOR) checked @endif autocomplete="off" />
+        Utilisateur client <input style="margin-right: 2rem" type="radio" name="profile_id" value="{{ Webaccess\BiometLaravel\Models\User::PROFILE_ID_CLIENT }}" @if (isset($profile_id) && $profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_CLIENT) checked @endif autocomplete="off" />
+        Prestataire <input type="radio" name="profile_id" value="{{ Webaccess\BiometLaravel\Models\User::PROFILE_ID_PROVIDER }}" @if (isset($profile_id) && $profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_PROVIDER) checked @endif autocomplete="off" />
     </div>
 
     <div class="form-group">

@@ -23,7 +23,7 @@
             <th>{{ trans('biomet::users.name') }}</th>
             <th>{{ trans('biomet::users.email') }}</th>
             <th>{{ trans('biomet::users.client') }}</th>
-            <th>{{ trans('biomet::users.administrator') }}</th>
+            <th>{{ trans('biomet::users.profile') }}</th>
             <th>{{ trans('biomet::generic.action') }}</th>
         </tr>
         </thead>
@@ -34,7 +34,11 @@
                 <td>{{ $user->last_name }} {{ $user->first_name }}</td>
                 <td><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></td>
                 <td>@if ($user->client){{ $user->client->name }}@else N/A @endif</td>
-                <td>@if ($user->is_administrator) Oui @else Non @endif</td>
+                <td>@if ($user->profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_PROVIDER)Prestataire
+                    @elseif ($user->profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_CLIENT)Utilisateur client
+                    @elseif ($user->profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_ADMINISTRATOR)Administrateur
+                    @endif
+                </td>
                 <td align="right">
                     <a class="btn btn-primary" href="{{ route('users_edit', ['id' => $user->id]) }}">{{ trans('biomet::generic.edit') }}</a>
                     <a class="btn btn-danger" href="{{ route('users_delete', ['id' => $user->id]) }}">{{ trans('biomet::generic.delete') }}</a>
