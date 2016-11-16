@@ -13,13 +13,15 @@
         <script src="https://code.highcharts.com/modules/exporting.js"></script>
         <div id="container" style="min-width: 310px; height: 400px; margin: 50px auto"></div>
 
-        <a href="javascript:graph()">Graph</a>
-
         <div class="graphs"></div>
 
-        <a style="margin-top: 50px" class="btn btn-default" href="{{ route('dashboard') }}">{{ trans('biomet::generic.back') }}</a>
+        <input id="date" type="date" class="form-control" value="{{ date('Y-m-d') }}" style="width:175px; margin-bottom: 1rem;"/>
+        <a class="btn btn-success" href="javascript:graph()">{{ trans('biomet::generic.valid') }}</a>
 
         {{ csrf_field() }}
+        <input type="hidden" id="facility_id" value="{{ $current_facility->id }}" />
+
+        <a class="btn btn-default" href="{{ route('dashboard') }}">{{ trans('biomet::generic.back') }}</a>
     </div>
 
     <script type="text/javascript">
@@ -39,6 +41,9 @@
                 type: "POST",
                 url: "{{ route('facility_get_graph') }}",
                 data: {
+                    facility_id: $('#facility_id').val(),
+                    date: $('#date').val(),
+                    keys: ['FT0101F', 'FT0102F'],
                     _token: $('input[name="_token"]').val()
                 },
                 success: function(data) {

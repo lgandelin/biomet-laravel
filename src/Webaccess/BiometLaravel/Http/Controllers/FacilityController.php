@@ -47,11 +47,8 @@ class FacilityController extends BaseController
 
     public function graph()
     {
-        $date = '2016-11-16';
-        $facilityID = '0cbbe78c-0b3f-4d84-96fd-7480fc603120';
-
         return view('biomet::pages.facility.includes.graph', [
-            'series' => json_encode(FacilityManager::getData($date, $facilityID, ['FT0101F', 'FT0102F'])),
+            'series' => json_encode(FacilityManager::getData($this->request->date, $this->request->facility_id, $this->request->keys)),
         ])->render();
     }
 }

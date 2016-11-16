@@ -111,22 +111,25 @@ class FacilityManager
     public static function getData($date, $facilityID, $keys)
     {
         $jsonFile = env('DATA_FOLDER_PATH') . '/sites/' . $facilityID . '/' . implode('/', explode('-', $date)) . '/data.json';
-        $fileData = json_decode(file_get_contents($jsonFile));
         $series = [];
 
-        foreach ($keys as $key) {
-            $keyData = [];
+        if (file_exists($jsonFile)) {
+            $fileData = json_decode(file_get_contents($jsonFile));
 
-            if (is_array($fileData) && sizeof($fileData) > 0) {
-                foreach ($fileData as $data) {
-                    $keyData[] = [$data->timestamp, $data->$key];
+            foreach ($keys as $key) {
+                $keyData = [];
+
+                if (is_array($fileData) && sizeof($fileData) > 0) {
+                    foreach ($fileData as $data) {
+                        $keyData[] = [$data->timestamp, $data->$key];
+                    }
                 }
-            }
 
-            $series[]= [
-                'name' => $key,
-                'data' => $keyData
-            ];
+                $series[] = [
+                    'name' => $key,
+                    'data' => $keyData
+                ];
+            }
         }
 
         return $series;
