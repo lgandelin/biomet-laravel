@@ -3,6 +3,7 @@
 @section('page-title') Gestion des utilisateurs @endsection
 
 @section('page-content')
+
     <h1>Gestion des utilisateurs</h1>
 
     @if (isset($error))
@@ -32,11 +33,11 @@
 
             <select name="filter_profile_id" class="form-control" style="width: 15%; display: inline;">
                 <option value="">Filtrer par profil</option>
-                <option value="1" @if ($filter_profile_id == 1)selected="selected"@endif>Administrateur</option>
-                <option value="2" @if ($filter_profile_id == 2)selected="selected"@endif>Utilisateur client</option>
-                <option value="3" @if ($filter_profile_id == 3)selected="selected"@endif>Prestataire</option>
+                <option value="{{ Webaccess\BiometLaravel\Models\User::PROFILE_ID_ADMINISTRATOR }}" @if ($filter_profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_ADMINISTRATOR)selected="selected"@endif>Administrateur</option>
+                <option value="{{ Webaccess\BiometLaravel\Models\User::PROFILE_ID_CLIENT }}" @if ($filter_profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_CLIENT)selected="selected"@endif>Utilisateur client</option>
+                <option value="{{ Webaccess\BiometLaravel\Models\User::PROFILE_ID_ADMINISTRATOR }}" @if ($filter_profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_ADMINISTRATOR)selected="selected"@endif>Prestataire</option>
             </select>
-            
+
             <input class="btn btn-success" type="submit" value="{{ trans('biomet::generic.valid') }}" />
         </form>
     </div>
