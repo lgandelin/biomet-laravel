@@ -7459,5 +7459,9 @@ body {
 
 .facility-template {
   padding-top: 5rem; }
+  .facility-template .graph {
+    min-width: 310px;
+    height: 400px;
+    margin: 50px auto; }
 
 /*# sourceMappingURL=style.css.map */
