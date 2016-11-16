@@ -4,11 +4,12 @@
 
     window.chart = new Highcharts.StockChart({
         chart: {
-            renderTo: 'container',
+            renderTo: "{{ $container_id }}",
             type: 'line',
             zoomType: 'x'
         },
         title: {
+            text: "{{ $title }}",
              x: -20
         },
         subtitle: {
