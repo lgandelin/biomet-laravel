@@ -5,7 +5,7 @@
 @section('page-content')
     <h1>{{ $current_facility->name }} - Maintenance</h1>
 
-    @include('biomet::pages.facility.menu')
+    @include('biomet::pages.facility.includes.menu')
 
     <div class="facility-template">
 

@@ -4,10 +4,10 @@
     <input type="button" id="valid_graphs" class="btn btn-success" value="{{ trans('biomet::generic.valid') }}" />
 
 <ul style="text-align: center;">
-    <li><a href="javascript:last_24h()">Dernières 24h</a></li>
-    <li><a href="javascript:last_week()">Dernière semaine</a></li>
-    <li><a href="javascript:last_month()">Dernier mois</a></li>
-    <li><a href="javascript:current_year()">Année en cours</a></li>
+    <li style="display: inline;"><a href="javascript:last_24h()">Dernières 24h</a></li> |
+    <li style="display: inline;"><a href="javascript:last_week()">Dernière semaine</a></li> |
+    <li style="display: inline;"><a href="javascript:last_month()">Dernier mois</a></li> |
+    <li style="display: inline;"><a href="javascript:current_year()">Année en cours</a></li>
 </ul>
 </p>
 

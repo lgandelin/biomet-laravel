@@ -5,6 +5,8 @@ namespace Webaccess\BiometLaravel;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Webaccess\BiometLaravel\Commands\CreateUserCommand;
+use Webaccess\BiometLaravel\Commands\GenerateDatabaseDataCommand;
+use Webaccess\BiometLaravel\Commands\GenerateJSONDataCommand;
 use Webaccess\BiometLaravel\Http\Middlewares\AdminMiddleware;
 
 class BiometLaravelServiceProvider extends ServiceProvider
@@ -37,6 +39,8 @@ class BiometLaravelServiceProvider extends ServiceProvider
     {
         $this->commands([
             CreateUserCommand::class,
+            GenerateDatabaseDataCommand::class,
+            GenerateJSONDataCommand::class,
         ]);
 
         $this->app->register(

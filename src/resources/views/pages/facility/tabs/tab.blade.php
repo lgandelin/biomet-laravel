@@ -8,11 +8,10 @@
     @include('biomet::pages.facility.includes.menu')
 
     <div class="facility-template">
+        @include('biomet::pages.facility.includes.date_filters')
 
         @yield('graphs')
         <div class="entrypoint"></div>
-
-        @include('biomet::pages.facility.includes.date_filters')
 
         <a class="btn btn-default" href="{{ route('dashboard') }}">{{ trans('biomet::generic.back') }}</a>
     </div>
