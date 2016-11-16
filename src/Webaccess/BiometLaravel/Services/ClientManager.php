@@ -24,7 +24,7 @@ class ClientManager
      * @param $accessLimitDate
      * @return Client
      */
-    public static function createClient($name, $accessLimitDate)
+    public static function createClient($name, $accessLimitDate = null)
     {
         $client = new Client();
         $client->id = Uuid::uuid4()->toString();

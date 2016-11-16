@@ -2,6 +2,8 @@
 
 namespace Webaccess\BiometLaravel\Services;
 
+use DateInterval;
+use DateTime;
 use Ramsey\Uuid\Uuid;
 use Webaccess\BiometLaravel\Models\Facility;
 
@@ -103,35 +105,70 @@ class FacilityManager
     }
 
     /**
-     * @param $date
+     * @param DateTime $startDate
+     * @param DateTime $endDate
      * @param $facilityID
      * @param $keys
      * @return mixed
      */
-    public static function getData($date, $facilityID, $keys)
+    public static function getData(DateTime $startDate, DateTime $endDate, $facilityID, $keys)
     {
-        $jsonFile = env('DATA_FOLDER_PATH') . '/sites/' . $facilityID . '/' . implode('/', explode('-', $date)) . '/data.json';
         $series = [];
+        $fileData = self::fetchData($startDate, $endDate, $facilityID);
 
-        if (file_exists($jsonFile)) {
-            $fileData = json_decode(file_get_contents($jsonFile));
+        foreach ($keys as $key) {
+            $keyData = [];
 
-            foreach ($keys as $key) {
-                $keyData = [];
-
-                if (is_array($fileData) && sizeof($fileData) > 0) {
-                    foreach ($fileData as $data) {
-                        $keyData[] = [$data->timestamp, $data->$key];
-                    }
+            if (is_array($fileData) && sizeof($fileData) > 0) {
+                foreach ($fileData as $data) {
+                    $keyData[] = [$data->timestamp * 1000, $data->$key];
                 }
-
-                $series[] = [
-                    'name' => $key,
-                    'data' => $keyData
-                ];
             }
+
+            $series[] = [
+                'name' => $key,
+                'data' => $keyData
+            ];
         }
 
         return $series;
+    }
+
+    /**
+     * @param DateTime $startDate
+     * @param DateTime $endDate
+     * @param $facilityID
+     * @return array
+     */
+    private static function fetchData(DateTime $startDate, DateTime $endDate, $facilityID)
+    {
+        $date = clone $startDate;
+        $jsonFiles = [];
+        $fileData = [];
+
+        while ($date <= $endDate) {
+            $jsonFile = env('DATA_FOLDER_PATH') . '/sites/' . $facilityID . '/' . $date->format('Y/m/d') . '/data.json';
+            if (file_exists($jsonFile)) {
+                $jsonFiles[] = $jsonFile;
+            }
+            $date->add(new DateInterval('P1D'));
+        }
+
+        foreach ($jsonFiles as $jsonFile) {
+            $data = json_decode(file_get_contents($jsonFile));
+
+            //TEMP : A SUPPRIMER
+            usort($data, function ($a, $b)
+            {
+                return ($a->timestamp < $b->timestamp) ? -1 : 1;
+            });
+            //TEMP : A SUPPRIMER
+
+            foreach ($data as $d) {
+                $fileData[] = $d;
+            }
+        }
+
+        return $fileData;
     }
 }

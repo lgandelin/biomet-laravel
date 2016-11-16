@@ -2,6 +2,7 @@
 
 namespace Webaccess\BiometLaravel\Http\Controllers;
 
+use DateTime;
 use Illuminate\Support\Facades\Gate;
 use Webaccess\BiometLaravel\Services\FacilityManager;
 
@@ -48,7 +49,7 @@ class FacilityController extends BaseController
     public function graph()
     {
         return view('biomet::pages.facility.includes.graph', [
-            'series' => json_encode(FacilityManager::getData($this->request->date, $this->request->facility_id, $this->request->keys)),
+            'series' => json_encode(FacilityManager::getData(new DateTime($this->request->start_date), new DateTime($this->request->end_date), $this->request->facility_id, $this->request->keys)),
         ])->render();
     }
 }
