@@ -9,8 +9,7 @@
             zoomType: 'x'
         },
         title: {
-            text: 'Débits biogaz',
-            x: -20
+             x: -20
         },
         subtitle: {
             text: '',

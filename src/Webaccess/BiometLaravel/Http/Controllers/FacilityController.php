@@ -32,6 +32,34 @@ class FacilityController extends BaseController
         ]);
     }
 
+    public function tab3()
+    {
+        parent::__construct($this->request);
+
+        if (!Gate::allows('can-view-facility-tab', [FacilityManager::getByID($this->request->id), 3])) {
+            $this->request->session()->flash('error', trans('biomet::generic.no_permission_error'));
+            return redirect()->route('facility', ['id' => $this->request->id]);
+        }
+
+        return view('biomet::pages.facility.tabs.3', [
+            'current_facility' => FacilityManager::getByID($this->request->id),
+        ]);
+    }
+
+    public function tab5()
+    {
+        parent::__construct($this->request);
+
+        if (!Gate::allows('can-view-facility-tab', [FacilityManager::getByID($this->request->id), 5])) {
+            $this->request->session()->flash('error', trans('biomet::generic.no_permission_error'));
+            return redirect()->route('facility', ['id' => $this->request->id]);
+        }
+
+        return view('biomet::pages.facility.tabs.5', [
+            'current_facility' => FacilityManager::getByID($this->request->id),
+        ]);
+    }
+
     public function tab10()
     {
         parent::__construct($this->request);
