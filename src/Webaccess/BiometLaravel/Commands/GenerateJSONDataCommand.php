@@ -16,8 +16,10 @@ class GenerateJSONDataCommand extends Command
     {
         foreach (FacilityManager::getAll(false) as $facility) {
 
-            $startDate = (new \DateTime())->sub(new DateInterval('P15D'));
-            $endDate = new \DateTime();
+            $date = new \DateTime();
+            $date->setTime(0, 0, 0);
+            $endDate = clone $date;
+            $startDate = $date->sub(new DateInterval('P15D'));
 
             while($startDate <= $endDate) {
                 $date = clone $startDate;
