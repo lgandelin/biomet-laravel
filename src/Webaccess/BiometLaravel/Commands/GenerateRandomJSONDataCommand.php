@@ -3,12 +3,13 @@
 namespace Webaccess\BiometLaravel\Commands;
 
 use DateInterval;
+use DateTime;
 use Illuminate\Console\Command;
 use Webaccess\BiometLaravel\Services\FacilityManager;
 
 class GenerateRandomJSONDataCommand extends Command
 {
-    protected $signature = 'biomet:generate-random-json-data';
+    protected $signature = 'biomet:generate-random-json-data {date} {start_date?}';
 
     protected $description = 'Insère des fichiers JSON d\'exemple pour les sites';
 
@@ -16,12 +17,18 @@ class GenerateRandomJSONDataCommand extends Command
     {
         foreach (FacilityManager::getAll(false) as $facility) {
 
-            $date = new \DateTime();
-            $date->setTime(0, 0, 0);
-            $endDate = clone $date;
-            $startDate = $date->sub(new DateInterval('P15D'));
+            $endDate = DateTime::createFromFormat('Y-m-d', $this->argument('date'));
+            $endDate->setTime(0, 0, 0);
 
-            while($startDate <= $endDate) {
+            if ($this->argument('start_date')) {
+                $startDate = DateTime::createFromFormat('Y-m-d', $this->argument('start_date'));
+                $startDate->setTime(0, 0, 0);
+            } else {
+                $date = clone $endDate;
+                $startDate = $date->sub(new DateInterval('P1D'));
+            }
+
+            while($startDate < $endDate) {
                 $date = clone $startDate;
 
                 $folder = env('DATA_FOLDER_PATH') . '/sites/' . $facility->id;
