@@ -31,12 +31,12 @@ class GenerateRandomJSONDataCommand extends Command
             while($startDate < $endDate) {
                 $date = clone $startDate;
 
-                $folder = env('DATA_FOLDER_PATH') . '/sites/' . $facility->id;
+                $folder = env('DATA_FOLDER_PATH') . '/json/' . $facility->id;
                 if (!is_dir($folder)) {
                     mkdir($folder, 0777, true);
                 }
 
-                $folder = env('DATA_FOLDER_PATH') . '/sites/' . $facility->id . '/' . $date->format('Y/m/d');
+                $folder = env('DATA_FOLDER_PATH') . '/json/' . $facility->id . '/' . $date->format('Y/m/d');
                 if (!is_dir($folder)) {
                     mkdir($folder, 0777, true);
                 }

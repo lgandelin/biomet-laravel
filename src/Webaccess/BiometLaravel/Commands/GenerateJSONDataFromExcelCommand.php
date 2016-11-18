@@ -16,7 +16,7 @@ class GenerateJSONDataFromExcelCommand extends Command
     {
         date_default_timezone_set('Europe/Paris');
         $data = [];
-        $objPHPExcel = PHPExcel_IOFactory::load(env('DATA_FOLDER_PATH') . '/raw/EXPORT_BIOMET.xlsx');
+        $objPHPExcel = PHPExcel_IOFactory::load(env('DATA_FOLDER_PATH') . '/xls/EXPORT_BIOMET.xlsx');
 
         //Alimentation
         $objWorksheet = $objPHPExcel->getSheet(0);
@@ -124,7 +124,7 @@ class GenerateJSONDataFromExcelCommand extends Command
         //JSON generation
         $data = array_values($data);
 
-        $jsonFile = env('DATA_FOLDER_PATH') . '/raw/data.json';
+        $jsonFile = env('DATA_FOLDER_PATH') . '/xls/data.json';
         file_put_contents($jsonFile, utf8_encode(json_encode($data, JSON_PRETTY_PRINT)));
 
         $this->info('Fichiers JSON générés avec succès');

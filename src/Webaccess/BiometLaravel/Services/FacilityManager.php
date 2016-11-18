@@ -162,7 +162,7 @@ class FacilityManager
         $fileData = [];
 
         while ($date <= $endDate) {
-            $jsonFile = env('DATA_FOLDER_PATH') . '/sites/' . $facilityID . '/' . $date->format('Y/m/d') . '/data.json';
+            $jsonFile = env('DATA_FOLDER_PATH') . '/json/' . $facilityID . '/' . $date->format('Y/m/d') . '/data.json';
             if (file_exists($jsonFile)) {
                 $jsonFiles[] = $jsonFile;
             }
