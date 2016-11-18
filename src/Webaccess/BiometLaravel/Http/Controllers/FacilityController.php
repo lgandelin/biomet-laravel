@@ -109,6 +109,10 @@ class FacilityController extends BaseController
             }
         }
 
+        usort($entries, function($a, $b) {
+            return $a['name'] > $b['name'];
+        });
+
         return $entries;
     }
 }
