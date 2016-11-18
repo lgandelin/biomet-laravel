@@ -49,7 +49,9 @@ class GenerateRandomJSONDataCommand extends Command
                 $nextDay->add(new DateInterval('P1D'));
 
                 while ($date < $nextDay) {
-                    $data[]= [
+
+                    //Basic data
+                    $intervalData = [
                         'timestamp' => $date->getTimestamp(),
                         'FT0101F' => mt_rand(0, 1000),
                         'FT0102F' => mt_rand(0, 1000),
@@ -82,6 +84,14 @@ class GenerateRandomJSONDataCommand extends Command
 
                         'Q_DIGEST' => mt_rand(0, 1000),
                     ];
+
+                    //Daily calculations
+                    if ($date->format('H') == '0' && $date->format('i') == '0') {
+                        $intervalData['FT0101F_VOLUME'] = mt_rand(0, 1000);
+                        $intervalData['FT0102F_VOLUME'] = mt_rand(0, 1000);
+                    }
+
+                    $data[]= $intervalData;
                     $date->add(new DateInterval('PT15M'));
                 }
 

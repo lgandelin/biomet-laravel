@@ -84,11 +84,30 @@ class GenerateJSONDataFromExcelCommand extends Command
                 }
             }
         }
+
+        //Volume
+        $date = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCellByColumnAndRow('A', 3)->getValue());
+        $date->setTime(0, 0, 0);
+        $data[$date->getTimestamp()]['timestamp'] = $date->getTimestamp();
+        $data[$date->getTimestamp()]['FT0101F_VOLUME'] = $this->calculateSum($data, 'FT0101F');
+        $data[$date->getTimestamp()]['FT0102F_VOLUME'] = $this->calculateSum($data, 'FT0102F');
+
+        //JSON generation
         $data = array_values($data);
 
         $jsonFile = env('DATA_FOLDER_PATH') . '/raw/data.json';
         file_put_contents($jsonFile, utf8_encode(json_encode($data, JSON_PRETTY_PRINT)));
 
         $this->info('Fichiers JSON générés avec succès');
+    }
+
+    private function calculateSum($data, $key) {
+        $sum = 0;
+        foreach ($data as $timestamp => $intervalData) {
+            if (isset($intervalData[$key]))
+                $sum += $intervalData[$key];
+        }
+
+        return $sum;
     }
 }

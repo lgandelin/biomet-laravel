@@ -121,7 +121,8 @@ class FacilityManager
 
             if (is_array($fileData) && sizeof($fileData) > 0) {
                 foreach ($fileData as $data) {
-                    $keyData[] = [$data->timestamp * 1000, $data->$key];
+                    if (isset($data->$key))
+                        $keyData[] = [$data->timestamp * 1000, $data->$key];
                 }
             }
 
