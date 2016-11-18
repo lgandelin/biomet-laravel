@@ -5,7 +5,7 @@
     <li @if ($current_route == 'facility_3')class="active"@endif><a href="{{ route('facility_3', ['id' => $current_facility->id]) }}">Composition</a></li>
     <li @if ($current_route == 'facility_4')class="active"@endif><a href="{{ route('facility_4', ['id' => $current_facility->id]) }}">Suivi prétraitement</a></li>
     <li @if ($current_route == 'facility_5')class="active"@endif><a href="{{ route('facility_5', ['id' => $current_facility->id]) }}">Indicateur IGP</a></li>
-    <li class="disabled"><a href="#">Consommation électrique</a></li>
+    <li @if ($current_route == 'facility_6')class="active"@endif><a href="{{ route('facility_6', ['id' => $current_facility->id]) }}">Consommation électrique</a></li>
     <li @if ($current_route == 'facility_7')class="active"@endif><a href="{{ route('facility_7', ['id' => $current_facility->id]) }}">Puissance fournie</a></li>
     <li class="disabled"><a href="#">Heures en fonctionnement</a></li>
     <li class="disabled"><a href="#">Historique des alarmes</a></li>

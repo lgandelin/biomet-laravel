@@ -119,7 +119,7 @@ class FacilityManager
         foreach ($keys as $key) {
             $keyData = [];
 
-            //Average calculation
+            //Average serie
             if (preg_match('/_AVG/', $key)) {
                 $allData = [];
                 if (is_array($fileData) && sizeof($fileData) > 0) {
@@ -130,7 +130,7 @@ class FacilityManager
                     }
                 }
 
-                //Standard
+            //Standard serie
             } else {
                 if (is_array($fileData) && sizeof($fileData) > 0) {
                     foreach ($fileData as $data) {

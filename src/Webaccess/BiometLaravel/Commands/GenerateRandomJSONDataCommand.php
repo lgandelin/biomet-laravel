@@ -83,6 +83,10 @@ class GenerateRandomJSONDataCommand extends Command
                         'IGP' => mt_rand(0, 1000),
 
                         'Q_DIGEST' => mt_rand(0, 1000),
+
+                        'CONSO_ELEC_CHAUD' => mt_rand(0, 1000),
+                        'CONSO_ELEC_INSTAL' => mt_rand(0, 1000),
+                        'CONSO_ELEC_PEC' => mt_rand(0, 1000),
                     ];
 
                     //Daily calculations

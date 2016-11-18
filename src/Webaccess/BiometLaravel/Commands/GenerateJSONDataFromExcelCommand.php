@@ -24,7 +24,7 @@ class GenerateJSONDataFromExcelCommand extends Command
             if ($i > 2) {
                 $cellIterator = $row->getCellIterator();
                 $cellIterator->setIterateOnlyExistingCells(FALSE);
-                $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCellByColumnAndRow('A', $i)->getValue())->getTimestamp();
+                $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A' . $i)->getValue())->getTimestamp();
 
                 foreach ($cellIterator as $j => $cell) {
                     $data[$timestamp]['timestamp'] = $timestamp;
@@ -40,7 +40,7 @@ class GenerateJSONDataFromExcelCommand extends Command
             if ($i > 2) {
                 $cellIterator = $row->getCellIterator();
                 $cellIterator->setIterateOnlyExistingCells(FALSE);
-                $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCellByColumnAndRow('A', $i)->getValue())->getTimestamp();
+                $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A' . $i)->getValue())->getTimestamp();
 
                 foreach ($cellIterator as $j => $cell) {
                     if ($j == 'B') $data[$timestamp]['AP0101_CH4'] = $cell->getValue();
@@ -76,7 +76,7 @@ class GenerateJSONDataFromExcelCommand extends Command
             if ($i > 2) {
                 $cellIterator = $row->getCellIterator();
                 $cellIterator->setIterateOnlyExistingCells(FALSE);
-                $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCellByColumnAndRow('A', $i)->getValue())->getTimestamp();
+                $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A' . $i)->getValue())->getTimestamp();
 
                 foreach ($cellIterator as $j => $cell) {
                     if ($j == 'G') $data[$timestamp]['IGP'] = $cell->getValue();
@@ -85,8 +85,37 @@ class GenerateJSONDataFromExcelCommand extends Command
             }
         }
 
+        //Consommation électrique
+        $objWorksheet = $objPHPExcel->getSheet(3);
+        foreach ($objWorksheet->getRowIterator() as $i => $row) {
+            if ($i > 3) {
+                $cellIterator = $row->getCellIterator();
+                $cellIterator->setIterateOnlyExistingCells(FALSE);
+                $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A' . $i)->getValue())->getTimestamp();
+
+                //CONSO_ELEC_CHAUD
+                $previousValue = $objWorksheet->getCell('B' . ($i - 1))->getValue();
+                $currentValue = $objWorksheet->getCell('B' . $i)->getValue();
+
+                $data[$timestamp]['CONSO_ELEC_CHAUD'] = $currentValue - $previousValue;
+
+                //CONSO_ELEC_INSTAL
+                $previousValue = $objWorksheet->getCell('C' . ($i - 1))->getValue();
+                $currentValue = $objWorksheet->getCell('C' . $i)->getValue();
+
+                $data[$timestamp]['CONSO_ELEC_INSTAL'] = $currentValue - $previousValue;
+
+                //CONSO_ELEC_PEC
+                $previousValue = $objWorksheet->getCell('D' . ($i - 1))->getValue();
+                $currentValue = $objWorksheet->getCell('D' . $i)->getValue();
+
+                //dd($currentValue, $previousValue);
+                $data[$timestamp]['CONSO_ELEC_PEC'] = $currentValue - $previousValue;
+            }
+        }
+
         //Volume
-        $date = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCellByColumnAndRow('A', 3)->getValue());
+        $date = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A3')->getValue());
         $date->setTime(0, 0, 0);
         $data[$date->getTimestamp()]['timestamp'] = $date->getTimestamp();
         $data[$date->getTimestamp()]['FT0101F_VOLUME'] = $this->calculateSum($data, 'FT0101F');
