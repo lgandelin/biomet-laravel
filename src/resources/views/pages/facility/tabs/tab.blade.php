@@ -19,6 +19,7 @@
     <script>
         var get_graph_route = "{{ route('facility_get_graph') }}";
     </script>
+    <script src="{{ asset('js/filters.js') }}"></script>
     <script src="{{ asset('js/graphs.js') }}"></script>
 
 @endsection

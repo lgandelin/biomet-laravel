@@ -8,7 +8,7 @@
     <li @if ($current_tab == 6)class="active"@endif><a href="{{ route('facility_tab', ['id' => $current_facility->id, 'tab' => 6]) }}">Consommation électrique</a></li>
     <li @if ($current_tab == 7)class="active"@endif><a href="{{ route('facility_tab', ['id' => $current_facility->id, 'tab' => 7]) }}">Puissance fournie</a></li>
     <li class="disabled"><a href="#">Heures en fonctionnement</a></li>
-    <li class="disabled"><a href="#">Historique des alarmes</a></li>
+    <li @if ($current_tab == 9)class="active"@endif><a href="{{ route('facility_tab', ['id' => $current_facility->id, 'tab' => 9]) }}">Historique des alarmes</a></li>
     <li class="disabled"><a href="{{ route('facility_tab', ['id' => $current_facility->id, 'tab' => 10]) }}">Maintenance</a></li>
     <li @if ($current_tab == 11)class="active"@endif><a href="{{ route('facility_tab', ['id' => $current_facility->id, 'tab' => 11]) }}">Fichiers de données</a></li>
 </ul>

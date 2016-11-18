@@ -6,6 +6,7 @@ use DateTime;
 use DirectoryIterator;
 use Illuminate\Support\Facades\Gate;
 use IteratorIterator;
+use Webaccess\BiometLaravel\Services\AlarmManager;
 use Webaccess\BiometLaravel\Services\FacilityManager;
 
 class FacilityController extends BaseController
@@ -32,6 +33,15 @@ class FacilityController extends BaseController
         }
 
         $data = [];
+
+        //Fetch alarms log
+        if ($tab == 9) {
+            $data['alarms'] = AlarmManager::getAllByFacilityID($this->request->id, $this->request->start_date, $this->request->end_date);
+            $data['filter_start_date'] = (isset($this->request->start_date)) ? $this->request->start_date : null;
+            $data['filter_end_date'] = (isset($this->request->end_date)) ? $this->request->end_date : null;
+        }
+
+        //Fetch facilities data files
         if ($tab == 11) {
             $queryString = '';
             if (isset($this->request->year)) $queryString = $this->request->year;
