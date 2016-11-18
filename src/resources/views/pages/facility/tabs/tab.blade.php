@@ -12,8 +12,6 @@
 
         @yield('graphs')
         <div class="entrypoint"></div>
-
-        <a class="btn btn-default" href="{{ route('dashboard') }}">{{ trans('biomet::generic.back') }}</a>
     </div>
 
     <script src="https://code.highcharts.com/stock/highstock.js"></script>

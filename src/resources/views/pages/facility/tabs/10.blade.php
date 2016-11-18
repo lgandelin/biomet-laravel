@@ -9,8 +9,6 @@
 
     <div class="facility-template">
 
-        <a style="margin-top: 50px" class="btn btn-default" href="{{ route('dashboard') }}">{{ trans('biomet::generic.back') }}</a>
-
         {{ csrf_field() }}
         <input type="hidden" id="facility_id" value="{{ $current_facility->id }}" />
 

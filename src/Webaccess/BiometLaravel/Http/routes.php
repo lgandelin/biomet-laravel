@@ -16,7 +16,8 @@ Route::group(['middleware' => ['web']], function () {
 
         //FACILITY
         Route::get('/site/{id}', array('as' => 'facility', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@index'));
-        Route::get('/site/{id}/{tab}', array('as' => 'facility_tab', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@tab'));
+        Route::get('/site/{id}/download_file/{year?}/{month?}/{day?}', array('as' => 'facility_download_file', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@download_file'));
+        Route::get('/site/{id}/{tab}/{year?}/{month?}/{day?}', array('as' => 'facility_tab', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@tab'));
         Route::post('/site/graph', array('as' => 'facility_get_graph', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@graph'));
 
 

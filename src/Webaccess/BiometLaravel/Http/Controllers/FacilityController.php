@@ -3,7 +3,9 @@
 namespace Webaccess\BiometLaravel\Http\Controllers;
 
 use DateTime;
+use DirectoryIterator;
 use Illuminate\Support\Facades\Gate;
+use IteratorIterator;
 use Webaccess\BiometLaravel\Services\FacilityManager;
 
 class FacilityController extends BaseController
@@ -29,9 +31,20 @@ class FacilityController extends BaseController
             return redirect()->route('facility', ['id' => $this->request->id]);
         }
 
+        $data = [];
+        if ($tab == 11) {
+            $queryString = '';
+            if (isset($this->request->year)) $queryString = $this->request->year;
+            if (isset($this->request->month)) $queryString .= '/' . $this->request->month;
+            if (isset($this->request->day)) $queryString .= '/' . $this->request->day;
+            $data['query_string'] = $queryString;
+            $data['entries'] = $this->getEntries($this->request->id, $queryString);
+        }
+
         return view('biomet::pages.facility.tabs.' . $tab, [
             'current_tab' => $tab,
             'current_facility' => FacilityManager::getByID($this->request->id),
+            'data' => $data,
         ]);
     }
 
@@ -44,6 +57,19 @@ class FacilityController extends BaseController
         ])->render();
     }
 
+    public function download_file()
+    {
+        parent::__construct($this->request);
+
+        if (!$this->canViewFacilityTab($this->request->id, 11)) {
+            $this->request->session()->flash('error', trans('biomet::generic.no_permission_error'));
+
+            return redirect()->route('facility', ['id' => $this->request->id]);
+        }
+
+        return response()->download(env('DATA_FOLDER_PATH') . '/xls/' . implode([$this->request->id, $this->request->year, $this->request->month, $this->request->day, 'data.xlsx'], '/'));
+    }
+
     /**
      * @param $facilityID
      * @param $tabNumber
@@ -52,5 +78,37 @@ class FacilityController extends BaseController
     private function canViewFacilityTab($facilityID, $tabNumber)
     {
         return Gate::allows('can-view-facility-tab', [FacilityManager::getByID($facilityID), $tabNumber]);
+    }
+
+    /**
+     * @param $facilityID
+     * @param string $queryString
+     * @return array
+     */
+    private function getEntries($facilityID, $queryString = '')
+    {
+        $entries = [];
+        $path = realpath(env('DATA_FOLDER_PATH') . '/xls/' . $facilityID . '/' . $queryString);
+        foreach (new IteratorIterator(new DirectoryIterator($path)) as $entry) {
+
+            //Folders
+            if (!preg_match('/\./', $entry->getPathname())) {
+                $entries[] = [
+                    'type' => 'folder',
+                    'name' => preg_replace('#' . $path . '/#', '', $entry->getPathname())
+                ];
+            }
+
+            //Files
+            if (preg_match('/\.xls/', $entry->getPathname())) {
+                $entries[] = [
+                    'type' => 'file',
+                    'name' => preg_replace('#' . $path . '/#', '', $entry->getPathname()),
+                    'link' => route('facility_download_file', ['id' => $facilityID, 'query_string' => $queryString])
+                ];
+            }
+        }
+
+        return $entries;
     }
 }
