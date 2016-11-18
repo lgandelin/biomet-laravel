@@ -9,9 +9,9 @@ use Webaccess\BiometLaravel\Services\ClientManager;
 use Webaccess\BiometLaravel\Services\FacilityManager;
 use Webaccess\BiometLaravel\Services\UserManager;
 
-class GenerateDatabaseDataCommand extends Command
+class GenerateRandomDatabaseDataCommand extends Command
 {
-    protected $signature = 'biomet:generate-database-data';
+    protected $signature = 'biomet:generate-random-database-data';
 
     protected $description = 'Peuple la base de données avec des données d\'exemple';
 

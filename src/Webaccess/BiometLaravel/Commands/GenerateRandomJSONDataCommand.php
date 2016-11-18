@@ -6,9 +6,9 @@ use DateInterval;
 use Illuminate\Console\Command;
 use Webaccess\BiometLaravel\Services\FacilityManager;
 
-class GenerateJSONDataCommand extends Command
+class GenerateRandomJSONDataCommand extends Command
 {
-    protected $signature = 'biomet:generate-json-data';
+    protected $signature = 'biomet:generate-random-json-data';
 
     protected $description = 'Insère des fichiers JSON d\'exemple pour les sites';
 
