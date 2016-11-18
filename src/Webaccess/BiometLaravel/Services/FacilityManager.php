@@ -119,10 +119,24 @@ class FacilityManager
         foreach ($keys as $key) {
             $keyData = [];
 
-            if (is_array($fileData) && sizeof($fileData) > 0) {
-                foreach ($fileData as $data) {
-                    if (isset($data->$key))
-                        $keyData[] = [$data->timestamp * 1000, $data->$key];
+            //Average calculation
+            if (preg_match('/_AVG/', $key)) {
+                $allData = [];
+                if (is_array($fileData) && sizeof($fileData) > 0) {
+                    $avg = self::calculateAverage($fileData, $key, $allData);
+
+                    foreach ($fileData as $data) {
+                        $keyData[]= [$data->timestamp * 1000, $avg];
+                    }
+                }
+
+                //Standard
+            } else {
+                if (is_array($fileData) && sizeof($fileData) > 0) {
+                    foreach ($fileData as $data) {
+                        if (isset($data->$key))
+                            $keyData[] = [$data->timestamp * 1000, $data->$key];
+                    }
                 }
             }
 
@@ -171,5 +185,22 @@ class FacilityManager
         }
 
         return $fileData;
+    }
+
+    /**
+     * @param $fileData
+     * @param $key
+     * @param $allData
+     * @return array
+     */
+    private static function calculateAverage($fileData, $key, $allData)
+    {
+        foreach ($fileData as $data) {
+            $targetedKey = preg_replace('/_AVG/', '', $key);
+            if (isset($data->$targetedKey))
+                $allData[] = $data->$targetedKey;
+        }
+
+        return count($allData) > 0 ? array_sum($allData) / count($allData) : 0;
     }
 }

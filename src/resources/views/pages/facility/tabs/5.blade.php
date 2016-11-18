@@ -5,5 +5,5 @@
 @endsection
 
 @section('graphs')
-    <div class="graph" id="container1" data-title="IGP" data-keys="IGP"></div>
+    <div class="graph" id="container1" data-title="IGP" data-keys="IGP,IGP_AVG"></div>
 @endsection
