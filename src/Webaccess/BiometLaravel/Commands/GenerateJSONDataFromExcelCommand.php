@@ -89,28 +89,12 @@ class GenerateJSONDataFromExcelCommand extends Command
         $objWorksheet = $objPHPExcel->getSheet(3);
         foreach ($objWorksheet->getRowIterator() as $i => $row) {
             if ($i > 3) {
-                $cellIterator = $row->getCellIterator();
-                $cellIterator->setIterateOnlyExistingCells(FALSE);
                 $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A' . $i)->getValue())->getTimestamp();
 
-                //CONSO_ELEC_CHAUD
-                $previousValue = $objWorksheet->getCell('B' . ($i - 1))->getValue();
-                $currentValue = $objWorksheet->getCell('B' . $i)->getValue();
-
-                $data[$timestamp]['CONSO_ELEC_CHAUD'] = $currentValue - $previousValue;
-
-                //CONSO_ELEC_INSTAL
-                $previousValue = $objWorksheet->getCell('C' . ($i - 1))->getValue();
-                $currentValue = $objWorksheet->getCell('C' . $i)->getValue();
-
-                $data[$timestamp]['CONSO_ELEC_INSTAL'] = $currentValue - $previousValue;
-
-                //CONSO_ELEC_PEC
-                $previousValue = $objWorksheet->getCell('D' . ($i - 1))->getValue();
-                $currentValue = $objWorksheet->getCell('D' . $i)->getValue();
-
-                //dd($currentValue, $previousValue);
-                $data[$timestamp]['CONSO_ELEC_PEC'] = $currentValue - $previousValue;
+                //calculation : value(t) - value(t-1)
+                $data[$timestamp]['CONSO_ELEC_CHAUD'] = $objWorksheet->getCell('B' . $i)->getValue() - $objWorksheet->getCell('B' . ($i - 1))->getValue();
+                $data[$timestamp]['CONSO_ELEC_INSTAL'] = $objWorksheet->getCell('C' . $i)->getValue() - $objWorksheet->getCell('C' . ($i - 1))->getValue();
+                $data[$timestamp]['CONSO_ELEC_PEC'] = $objWorksheet->getCell('D' . $i)->getValue() - $objWorksheet->getCell('D' . ($i - 1))->getValue();
             }
         }
 

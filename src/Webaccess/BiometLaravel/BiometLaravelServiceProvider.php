@@ -5,6 +5,7 @@ namespace Webaccess\BiometLaravel;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Webaccess\BiometLaravel\Commands\CreateUserCommand;
+use Webaccess\BiometLaravel\Commands\GenerateExcelDataCommand;
 use Webaccess\BiometLaravel\Commands\GenerateJSONDataFromExcelCommand;
 use Webaccess\BiometLaravel\Commands\GenerateRandomDatabaseDataCommand;
 use Webaccess\BiometLaravel\Commands\GenerateRandomJSONDataCommand;
@@ -43,6 +44,7 @@ class BiometLaravelServiceProvider extends ServiceProvider
             GenerateRandomDatabaseDataCommand::class,
             GenerateRandomJSONDataCommand::class,
             GenerateJSONDataFromExcelCommand::class,
+            GenerateExcelDataCommand::class,
         ]);
 
         $this->app->register(
