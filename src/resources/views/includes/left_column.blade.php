@@ -25,7 +25,7 @@
                 <ul @if (count($left_column_facilities) > 15)style="display: none;"@endif>
                     @if (count($left_column_facilities) > 0)
                         @foreach ($left_column_facilities as $f)
-                            <li @if(isset($current_facility) && isset($current_facility->id) && $f->id === $current_facility->id)class="active"@endif><a href="{{ route($route, array('id' => $f->id)) }}">{{ $f->name }}</a></li>
+                            <li @if(isset($current_facility) && isset($current_facility->id) && $f->id === $current_facility->id)class="active"@endif><a href="{{ route($route, array('id' => $f->id, 'tab' => $current_tab)) }}">{{ $f->name }}</a></li>
                         @endforeach
                     @endif
                 </ul>

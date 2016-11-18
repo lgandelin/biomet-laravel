@@ -18,122 +18,19 @@ class FacilityController extends BaseController
         ]);
     }
 
-    public function tab1()
+    public function tab()
     {
         parent::__construct($this->request);
 
-        if (!$this->canViewFacilityTab($this->request->id, 1)) {
+        $tab = isset($this->request->tab) ? $this->request->tab : 1;
+        if (!$this->canViewFacilityTab($this->request->id, $tab)) {
             $this->request->session()->flash('error', trans('biomet::generic.no_permission_error'));
 
             return redirect()->route('facility', ['id' => $this->request->id]);
         }
 
-        return view('biomet::pages.facility.tabs.1', [
-            'current_facility' => FacilityManager::getByID($this->request->id),
-        ]);
-    }
-
-    public function tab2()
-    {
-        parent::__construct($this->request);
-
-        if (!$this->canViewFacilityTab($this->request->id, 2)) {
-            $this->request->session()->flash('error', trans('biomet::generic.no_permission_error'));
-
-            return redirect()->route('facility', ['id' => $this->request->id]);
-        }
-
-        return view('biomet::pages.facility.tabs.2', [
-            'current_facility' => FacilityManager::getByID($this->request->id),
-        ]);
-    }
-
-    public function tab3()
-    {
-        parent::__construct($this->request);
-
-        if (!$this->canViewFacilityTab($this->request->id, 3)) {
-            $this->request->session()->flash('error', trans('biomet::generic.no_permission_error'));
-
-            return redirect()->route('facility', ['id' => $this->request->id]);
-        }
-
-        return view('biomet::pages.facility.tabs.3', [
-            'current_facility' => FacilityManager::getByID($this->request->id),
-        ]);
-    }
-
-    public function tab4()
-    {
-        parent::__construct($this->request);
-
-        if (!$this->canViewFacilityTab($this->request->id, 4)) {
-            $this->request->session()->flash('error', trans('biomet::generic.no_permission_error'));
-
-            return redirect()->route('facility', ['id' => $this->request->id]);
-        }
-
-        return view('biomet::pages.facility.tabs.4', [
-            'current_facility' => FacilityManager::getByID($this->request->id),
-        ]);
-    }
-
-    public function tab5()
-    {
-        parent::__construct($this->request);
-
-        if (!$this->canViewFacilityTab($this->request->id, 5)) {
-            $this->request->session()->flash('error', trans('biomet::generic.no_permission_error'));
-
-            return redirect()->route('facility', ['id' => $this->request->id]);
-        }
-
-        return view('biomet::pages.facility.tabs.5', [
-            'current_facility' => FacilityManager::getByID($this->request->id),
-        ]);
-    }
-
-    public function tab6()
-    {
-        parent::__construct($this->request);
-
-        if (!$this->canViewFacilityTab($this->request->id, 6)) {
-            $this->request->session()->flash('error', trans('biomet::generic.no_permission_error'));
-
-            return redirect()->route('facility', ['id' => $this->request->id]);
-        }
-
-        return view('biomet::pages.facility.tabs.6', [
-            'current_facility' => FacilityManager::getByID($this->request->id),
-        ]);
-    }
-    
-    public function tab7()
-    {
-        parent::__construct($this->request);
-
-        if (!$this->canViewFacilityTab($this->request->id, 7)) {
-            $this->request->session()->flash('error', trans('biomet::generic.no_permission_error'));
-
-            return redirect()->route('facility', ['id' => $this->request->id]);
-        }
-
-        return view('biomet::pages.facility.tabs.7', [
-            'current_facility' => FacilityManager::getByID($this->request->id),
-        ]);
-    }
-
-    public function tab10()
-    {
-        parent::__construct($this->request);
-
-        if (!$this->canViewFacilityTab($this->request->id, 10)) {
-            $this->request->session()->flash('error', trans('biomet::generic.no_permission_error'));
-
-            return redirect()->route('facility', ['id' => $this->request->id]);
-        }
-
-        return view('biomet::pages.facility.tabs.10', [
+        return view('biomet::pages.facility.tabs.' . $tab, [
+            'current_tab' => $tab,
             'current_facility' => FacilityManager::getByID($this->request->id),
         ]);
     }

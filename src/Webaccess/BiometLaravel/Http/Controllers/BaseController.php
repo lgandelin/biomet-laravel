@@ -14,6 +14,7 @@ class BaseController extends Controller
         $this->request = $request;
         view()->share('left_column_facilities', $this->getFacilities(false));
         view()->share('current_route', $request->route()->getName());
+        view()->share('current_tab', isset($request->tab) ? $request->tab : 0);
     }
 
     protected function getUser()
