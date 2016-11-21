@@ -7,9 +7,9 @@ use DateTime;
 use Illuminate\Console\Command;
 use Webaccess\BiometLaravel\Services\FacilityManager;
 
-class GenerateExcelDataCommand extends Command
+class GenerateSampleExcelDataCommand extends Command
 {
-    protected $signature = 'biomet:generate-excel-data {date} {start_date?}';
+    protected $signature = 'biomet-dev:generate-sample-excel-data {date} {start_date?}';
 
     protected $description = 'Insère des fichiers XLS d\'exemple pour les sites';
 

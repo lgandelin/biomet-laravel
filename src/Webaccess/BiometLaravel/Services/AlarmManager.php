@@ -9,7 +9,7 @@ class AlarmManager
 {
     public static function getAllByFacilityID($facilityID, $startDate = null, $endDate = null, $paginate = true)
     {
-        $alarms = Alarm::where('facility_id', '=', $facilityID)->orderBy('created_at');
+        $alarms = Alarm::where('facility_id', '=', $facilityID)->orderBy('event_date', 'desc');
 
         if ($startDate) {
             $alarms->where('event_date', '>=', $startDate);
@@ -29,14 +29,20 @@ class AlarmManager
     }
 
     /**
-     * @param $name
-     * @param $accessLimitDate
+     * @param $facilityID
+     * @param $eventDate
+     * @param $title
+     * @param $description
      * @return Alarm
      */
-    public static function createAlarm($name, $accessLimitDate = null)
+    public static function createAlarm($facilityID, $eventDate, $title, $description)
     {
         $alarm = new Alarm();
         $alarm->id = Uuid::uuid4()->toString();
+        $alarm->facility_id = $facilityID;
+        $alarm->event_date = $eventDate;
+        $alarm->title = $title;
+        $alarm->description = $description;
 
         $alarm->save();
 
@@ -45,14 +51,20 @@ class AlarmManager
 
     /**
      * @param $alarmID
-     * @param $name
-     * @param $accessLimitDate
+     * @param $facilityID
+     * @param $eventDate
+     * @param $title
+     * @param $description
      * @return bool
      */
-    public static function udpateAlarm($alarmID, $name, $accessLimitDate)
+    public static function udpateAlarm($alarmID, $facilityID, $eventDate, $title, $description)
     {
         if ($alarm = Alarm::find($alarmID)) {
-            $alarm->name = $name;
+
+            $alarm->facility_id = $facilityID;
+            $alarm->event_date = $eventDate;
+            $alarm->title = $title;
+            $alarm->description = $description;
             $alarm->save();
 
             return true;

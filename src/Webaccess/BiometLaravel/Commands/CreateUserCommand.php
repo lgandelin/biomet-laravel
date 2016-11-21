@@ -8,7 +8,7 @@ use Webaccess\BiometLaravel\Services\UserManager;
 
 class CreateUserCommand extends Command
 {
-    protected $signature = 'biomet:create-user';
+    protected $signature = 'biomet-dev:create-user';
 
     protected $description = 'Créer un utilisateur avec un profil administrateur';
 

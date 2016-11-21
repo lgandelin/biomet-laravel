@@ -34,21 +34,31 @@ class FacilityController extends BaseController
 
         $data = [];
 
-        //Fetch alarms log
-        if ($tab == 9) {
-            $data['alarms'] = AlarmManager::getAllByFacilityID($this->request->id, $this->request->start_date, $this->request->end_date);
-            $data['filter_start_date'] = (isset($this->request->start_date)) ? $this->request->start_date : null;
-            $data['filter_end_date'] = (isset($this->request->end_date)) ? $this->request->end_date : null;
-        }
+        switch ($tab) {
+            //Fetch alarms log
+            case 9:
+                $yesterdayDate = date('Y-m-d', strtotime( '-1 days' ));
+                $data['alarms'] = AlarmManager::getAllByFacilityID(
+                    $this->request->id,
+                    isset($this->request->start_date) ? $this->request->start_date : $yesterdayDate,
+                    isset($this->request->end_date) ? $this->request->end_date : $yesterdayDate
+                );
+                $data['filter_start_date'] = (isset($this->request->start_date)) ? $this->request->start_date : null;
+                $data['filter_end_date'] = (isset($this->request->end_date)) ? $this->request->end_date : null;
+            break;
 
-        //Fetch facilities data files
-        if ($tab == 11) {
-            $queryString = '';
-            if (isset($this->request->year)) $queryString = $this->request->year;
-            if (isset($this->request->month)) $queryString .= '/' . $this->request->month;
-            if (isset($this->request->day)) $queryString .= '/' . $this->request->day;
-            $data['query_string'] = $queryString;
-            $data['entries'] = $this->getEntries($this->request->id, $queryString);
+            //Fetch facilities data files
+            case 11:
+                $queryString = '';
+                if (isset($this->request->year)) $queryString = $this->request->year;
+                if (isset($this->request->month)) $queryString .= '/' . $this->request->month;
+                if (isset($this->request->day)) $queryString .= '/' . $this->request->day;
+                $data['query_string'] = $queryString;
+                $data['entries'] = $this->getEntries($this->request->id, $queryString);
+            break;
+
+            default:
+            break;
         }
 
         return view('biomet::pages.facility.tabs.' . $tab, [

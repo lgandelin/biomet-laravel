@@ -9,7 +9,7 @@ use Webaccess\BiometLaravel\Services\FacilityManager;
 
 class GenerateRandomJSONDataCommand extends Command
 {
-    protected $signature = 'biomet:generate-random-json-data {date} {start_date?}';
+    protected $signature = 'biomet-dev:generate-random-json-data {date} {start_date?}';
 
     protected $description = 'Insère des fichiers JSON d\'exemple pour les sites';
 
