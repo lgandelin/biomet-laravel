@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Gate;
 use IteratorIterator;
 use Webaccess\BiometLaravel\Services\AlarmManager;
 use Webaccess\BiometLaravel\Services\FacilityManager;
+use Webaccess\BiometLaravel\Services\InterventionManager;
 
 class FacilityController extends BaseController
 {
@@ -33,12 +34,23 @@ class FacilityController extends BaseController
         }
 
         $data = [];
+        $yesterdayDate = date('Y-m-d', strtotime( '-1 days' ));
 
         switch ($tab) {
             //Fetch alarms log
             case 9:
-                $yesterdayDate = date('Y-m-d', strtotime( '-1 days' ));
                 $data['alarms'] = AlarmManager::getAllByFacilityID(
+                    $this->request->id,
+                    isset($this->request->start_date) ? $this->request->start_date : $yesterdayDate,
+                    isset($this->request->end_date) ? $this->request->end_date : $yesterdayDate
+                );
+                $data['filter_start_date'] = (isset($this->request->start_date)) ? $this->request->start_date : null;
+                $data['filter_end_date'] = (isset($this->request->end_date)) ? $this->request->end_date : null;
+            break;
+
+            //Fetch maintenance history
+            case 10:
+                $data['interventions'] = InterventionManager::getAllByFacilityID(
                     $this->request->id,
                     isset($this->request->start_date) ? $this->request->start_date : $yesterdayDate,
                     isset($this->request->end_date) ? $this->request->end_date : $yesterdayDate
@@ -65,6 +77,8 @@ class FacilityController extends BaseController
             'current_tab' => $tab,
             'current_facility' => FacilityManager::getByID($this->request->id),
             'data' => $data,
+            'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
+            'confirmation' => ($this->request->session()->has('confirmation')) ? $this->request->session()->get('confirmation') : null,
         ]);
     }
 
@@ -134,5 +148,87 @@ class FacilityController extends BaseController
         });
 
         return $entries;
+    }
+
+    public function add_intervention()
+    {
+        return view('biomet::pages.facility.interventions.add', [
+            'facility_id' => $this->request->id,
+            'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
+            'confirmation' => ($this->request->session()->has('confirmation')) ? $this->request->session()->get('confirmation') : null,
+        ]);
+    }
+
+    public function store_intervention()
+    {
+        try {
+            InterventionManager::createIntervention(
+                $this->request->input('facility_id'),
+                $this->request->input('event_date'),
+                $this->request->input('title'),
+                $this->request->input('personal_information'),
+                $this->request->input('description')
+            );
+            $this->request->session()->flash('confirmation', trans('biomet::interventions.add_intervention_success'));
+
+            return redirect()->route('facility_tab', ['id' => $this->request->input('facility_id'), 'tab' => 10]);
+        } catch (\Exception $e) {
+            $this->request->session()->flash('error', trans('biomet::interventions.add_intervention_error'));
+
+            return redirect()->route('facility_tab', ['id' => $this->request->input('facility_id'), 'tab' => 10]);
+        }
+    }
+
+    public function edit_intervention()
+    {
+        try {
+            $intervention = InterventionManager::getByID($this->request->id);
+        } catch (\Exception $e) {
+            $this->request->session()->flash('error', trans('biomet::interventions.intervention_not_found_error'));
+
+            return redirect()->route('facility_tab', ['id' => $this->request->input('facility_id'), 'tab' => 10]);
+        }
+
+        return view('biomet::pages.facility.interventions.edit', [
+            'intervention' => $intervention,
+            'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
+            'confirmation' => ($this->request->session()->has('confirmation')) ? $this->request->session()->get('confirmation') : null,
+        ]);
+    }
+
+    public function update_intervention()
+    {
+        try {
+            InterventionManager::udpateIntervention(
+                $this->request->input('intervention_id'),
+                $this->request->input('facility_id'),
+                $this->request->input('event_date'),
+                $this->request->input('title'),
+                $this->request->input('personal_information'),
+                $this->request->input('description')
+            );
+            $this->request->session()->flash('confirmation', trans('biomet::interventions.edit_intervention_success'));
+        } catch (\Exception $e) {
+            $this->request->session()->flash('error', trans('biomet::interventions.update_intervention_error'));
+        }
+
+        return redirect()->route('interventions_edit', ['id' => $this->request->input('intervention_id')]);
+    }
+
+    public function delete_intervention()
+    {
+        try {
+            $interventionID = $this->request->id;
+            if ($intervention = InterventionManager::getByID($interventionID)) {
+                InterventionManager::deleteIntervention($interventionID);
+                $this->request->session()->flash('confirmation', trans('biomet::interventions.delete_intervention_success'));
+            } else {
+                $this->request->session()->flash('error', trans('biomet::interventions.delete_intervention_error'));
+            }
+        } catch (\Exception $e) {
+            $this->request->session()->flash('error', trans('biomet::interventions.delete_intervention_error'));
+        }
+
+        return redirect()->route('facility_tab', ['id' => $intervention->facility_id, 'tab' => 10]);
     }
 }
