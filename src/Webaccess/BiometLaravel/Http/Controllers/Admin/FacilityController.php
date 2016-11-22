@@ -24,6 +24,8 @@ class FacilityController extends BaseController
 
     public function add()
     {
+        parent::__construct($this->request);
+
         return view('biomet::pages.facilities.add', [
             'clients' => ClientManager::getAll(),
             'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
@@ -55,6 +57,8 @@ class FacilityController extends BaseController
 
     public function edit()
     {
+        parent::__construct($this->request);
+
         try {
             $facility = FacilityManager::getByID($this->request->id);
         } catch (\Exception $e) {

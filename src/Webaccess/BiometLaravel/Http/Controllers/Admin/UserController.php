@@ -12,7 +12,6 @@ class UserController extends BaseController
     {
         parent::__construct($this->request);
 
-
         return view('biomet::pages.users.index', [
             'users' => UserManager::getAll(true, $this->request->filter_client_id, $this->request->filter_client_name, $this->request->filter_profile_id),
             'clients' => ClientManager::getAll(false),
@@ -26,6 +25,8 @@ class UserController extends BaseController
 
     public function add()
     {
+        parent::__construct($this->request);
+
         return view('biomet::pages.users.add', [
             'clients' => ClientManager::getAll(),
             'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
@@ -62,6 +63,8 @@ class UserController extends BaseController
 
     public function edit()
     {
+        parent::__construct($this->request);
+        
         try {
             $user = UserManager::getUser($this->request->id);
         } catch (\Exception $e) {

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Gate;
 use IteratorIterator;
 use Webaccess\BiometLaravel\Services\AlarmManager;
 use Webaccess\BiometLaravel\Services\FacilityManager;
+use Webaccess\BiometLaravel\Services\InterventionManager;
 
 class FacilityController extends BaseController
 {
@@ -33,12 +34,23 @@ class FacilityController extends BaseController
         }
 
         $data = [];
+        $yesterdayDate = date('Y-m-d', strtotime( '-1 days' ));
 
         switch ($tab) {
             //Fetch alarms log
             case 9:
-                $yesterdayDate = date('Y-m-d', strtotime( '-1 days' ));
                 $data['alarms'] = AlarmManager::getAllByFacilityID(
+                    $this->request->id,
+                    isset($this->request->start_date) ? $this->request->start_date : $yesterdayDate,
+                    isset($this->request->end_date) ? $this->request->end_date : $yesterdayDate
+                );
+                $data['filter_start_date'] = (isset($this->request->start_date)) ? $this->request->start_date : null;
+                $data['filter_end_date'] = (isset($this->request->end_date)) ? $this->request->end_date : null;
+            break;
+
+            //Fetch maintenance history
+            case 10:
+                $data['interventions'] = InterventionManager::getAllByFacilityID(
                     $this->request->id,
                     isset($this->request->start_date) ? $this->request->start_date : $yesterdayDate,
                     isset($this->request->end_date) ? $this->request->end_date : $yesterdayDate
@@ -65,6 +77,8 @@ class FacilityController extends BaseController
             'current_tab' => $tab,
             'current_facility' => FacilityManager::getByID($this->request->id),
             'data' => $data,
+            'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
+            'confirmation' => ($this->request->session()->has('confirmation')) ? $this->request->session()->get('confirmation') : null,
         ]);
     }
 
