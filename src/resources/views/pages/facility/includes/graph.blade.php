@@ -4,13 +4,13 @@
 
     window.chart = new Highcharts.StockChart({
         chart: {
-            renderTo: 'container',
+            renderTo: "{{ $container_id }}",
             type: 'line',
             zoomType: 'x'
         },
         title: {
-            text: 'Débits biogaz',
-            x: -20
+            text: "{{ $title }}",
+             x: -20
         },
         subtitle: {
             text: '',

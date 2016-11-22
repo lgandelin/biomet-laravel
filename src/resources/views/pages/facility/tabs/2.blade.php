@@ -1,10 +1,10 @@
 @extends('biomet::pages.facility.tabs.tab')
 
 @section('tab_name')
-    Débits biogaz
+    Volume biogaz
 @endsection
 
 @section('graphs')
-    <div class="graph" id="container1" data-title="Débits biogaz" data-keys="FT0101F,FT0102F"></div>
+    <div class="graph" id="container1" data-title="Volume biogaz" data-keys="FT0101F_VOLUME,FT0102F_VOLUME"></div>
     <button class="btn btn-success download-excel">Export Excel</button>
 @endsection

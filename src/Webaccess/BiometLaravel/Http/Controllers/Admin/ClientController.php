@@ -20,6 +20,8 @@ class ClientController extends BaseController
 
     public function add()
     {
+        parent::__construct($this->request);
+
         return view('biomet::pages.clients.add', [
             'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
             'confirmation' => ($this->request->session()->has('confirmation')) ? $this->request->session()->get('confirmation') : null,
@@ -45,6 +47,8 @@ class ClientController extends BaseController
 
     public function edit()
     {
+        parent::__construct($this->request);
+
         try {
             $client = ClientManager::getByID($this->request->id);
         } catch (\Exception $e) {

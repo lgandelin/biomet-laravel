@@ -5,7 +5,7 @@
 @section('page-content')
     <h1>{{ $current_facility->name }}</h1>
 
-    @include('biomet::pages.facility.menu')
+    @include('biomet::pages.facility.includes.menu')
 
     <div class="facility-template">
 
@@ -20,8 +20,6 @@
                 {{ $confirmation }}
             </div>
         @endif
-
-        <a style="margin-top: 50px" class="btn btn-default" href="{{ route('dashboard') }}">{{ trans('biomet::generic.back') }}</a>
     </div>
 
 @endsection
