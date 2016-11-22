@@ -17,12 +17,12 @@ Route::group(['middleware' => ['web']], function () {
         //FACILITY
         Route::get('/site/{id}', array('as' => 'facility', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@index'));
 
-            //INTERVENTIONS
-            Route::get('/site/{id}/10/ajouter_intervention', array('as' => 'interventions_add', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@add_intervention'));
-            Route::post('/site/interventions/ajouter', array('as' => 'interventions_store', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@store_intervention'));
-            Route::get('/site/interventions/{id}', array('as' => 'interventions_edit', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@edit_intervention'));
-            Route::post('/site/interventions/update', array('as' => 'interventions_update', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@update_intervention'));
-            Route::get('/site/interventions/delete/{id}', array('as' => 'interventions_delete', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@delete_intervention'));
+        //INTERVENTIONS
+        Route::get('/site/{id}/10/ajouter_intervention', array('as' => 'interventions_add', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\InterventionController@add'));
+        Route::post('/site/interventions/ajouter', array('as' => 'interventions_store', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\InterventionController@store'));
+        Route::get('/site/interventions/{id}', array('as' => 'interventions_edit', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\InterventionController@edit'));
+        Route::post('/site/interventions/update', array('as' => 'interventions_update', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\InterventionController@update'));
+        Route::get('/site/interventions/delete/{id}', array('as' => 'interventions_delete', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\InterventionController@delete'));
 
         Route::get('/site/{id}/download_file/{year?}/{month?}/{day?}', array('as' => 'facility_download_file', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@download_file'));
         Route::get('/site/{id}/{tab}/{year?}/{month?}/{day?}', array('as' => 'facility_tab', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@tab'));
