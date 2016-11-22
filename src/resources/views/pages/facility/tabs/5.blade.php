@@ -6,4 +6,5 @@
 
 @section('graphs')
     <div class="graph" id="container1" data-title="IGP" data-keys="IGP,IGP_AVG"></div>
+    <button class="btn btn-success download-excel">Export Excel</button>
 @endsection

@@ -4,6 +4,9 @@ namespace Webaccess\BiometLaravel\Services;
 
 use DateInterval;
 use DateTime;
+use PHPExcel;
+use PHPExcel_IOFactory;
+use PHPExcel_Worksheet;
 use Ramsey\Uuid\Uuid;
 use Webaccess\BiometLaravel\Models\Facility;
 
@@ -116,6 +119,7 @@ class FacilityManager
         $series = [];
         $fileData = self::fetchData($startDate, $endDate, $facilityID);
 
+
         foreach ($keys as $key) {
             $keyData = [];
 
@@ -202,5 +206,31 @@ class FacilityManager
         }
 
         return count($allData) > 0 ? array_sum($allData) / count($allData) : 0;
+    }
+
+    public static function createExcelFile($data)
+    {
+        $file = env('DATA_FOLDER_PATH') . '/temp/data-' . time() . '.xlsx';
+
+        $objPHPExcel = new PHPExcel();
+
+        $length = sizeof($data[0]['data']);
+
+        $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Date');
+
+        for ($col = 0; $col < sizeof($data); $col++) {
+            $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($col + 1, 1)->setValue($data[$col]['name']);
+
+            for ($row = 0; $row < $length; $row++) {
+                $dateTime = (new DateTime())->setTimestamp($data[0]['data'][$row][0] / 1000);
+                $objPHPExcel->getActiveSheet()->setCellValue('A' . ($row + 2), $dateTime->format('d/m/Y H:i:s'));
+                $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($col + 1, ($row + 2))->setValue($data[$col]['data'][$row][1]);
+            }
+        }
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+
+        $objWriter->save($file);
+
+        return $file;
     }
 }

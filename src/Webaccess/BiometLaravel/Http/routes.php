@@ -27,6 +27,7 @@ Route::group(['middleware' => ['web']], function () {
         Route::get('/site/{id}/download_file/{year?}/{month?}/{day?}', array('as' => 'facility_download_file', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@download_file'));
         Route::get('/site/{id}/{tab}/{year?}/{month?}/{day?}', array('as' => 'facility_tab', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@tab'));
         Route::post('/site/graph', array('as' => 'facility_get_graph', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@graph'));
+        Route::post('/site/excel', array('as' => 'facility_get_excel', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@excel'));
 
         //ADMIN
         Route::group(['middleware' => ['admin']], function () {

@@ -12,6 +12,15 @@
 
         @yield('graphs')
         <div class="entrypoint"></div>
+
+        <form action="{{ route('facility_get_excel') }}" id="download-excel" method="post">
+            <input type="hidden" name="keys" value="" />
+            <input type="hidden" name="facility_id" value="{{ $current_facility->id }}" />
+            <input type="hidden" name="start_date" value="" />
+            <input type="hidden" name="end_date" value="" />
+            {{ csrf_field() }}
+        </form>
+
     </div>
 
     <script src="https://code.highcharts.com/stock/highstock.js"></script>

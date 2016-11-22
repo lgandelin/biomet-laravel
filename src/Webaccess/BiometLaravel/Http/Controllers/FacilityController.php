@@ -91,6 +91,14 @@ class FacilityController extends BaseController
         ])->render();
     }
 
+    public function excel()
+    {
+        $data = FacilityManager::getData(new DateTime($this->request->start_date), new DateTime($this->request->end_date), $this->request->facility_id, explode(',', $this->request->keys));
+        $file = FacilityManager::createExcelFile($data);
+
+        return response()->download($file);
+    }
+
     public function download_file()
     {
         parent::__construct($this->request);
