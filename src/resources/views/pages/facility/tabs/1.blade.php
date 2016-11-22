@@ -6,5 +6,5 @@
 
 @section('graphs')
     <div class="graph" id="container1" data-title="Débits biogaz" data-keys="FT0101F,FT0102F"></div>
-    <button class="btn btn-success download-excel">Export Excel</button>
+    @include('biomet::pages.facility.includes.excel_button')
 @endsection
