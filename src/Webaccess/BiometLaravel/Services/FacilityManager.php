@@ -119,7 +119,6 @@ class FacilityManager
         $series = [];
         $fileData = self::fetchData($startDate, $endDate, $facilityID);
 
-
         foreach ($keys as $key) {
             $keyData = [];
 
@@ -228,7 +227,44 @@ class FacilityManager
             }
         }
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save($file);
 
+        return $file;
+    }
+
+    public static function groupExcelFiles($startDate, $endDate, $facilityID)
+    {
+        $date = clone $startDate;
+
+        $xlsFiles = [];
+        while ($date <= $endDate) {
+            $xlsFile = env('DATA_FOLDER_PATH') . '/xls/' . $facilityID . '/' . $date->format('Y/m/d') . '/data.xlsx';
+            if (file_exists($xlsFile)) {
+                $xlsFiles[] = $xlsFile;
+            }
+            $date->add(new DateInterval('P1D'));
+        }
+
+        $baseFile = array_shift($xlsFiles);
+        $baseObjPHPExcel = PHPExcel_IOFactory::load($baseFile);
+
+        foreach ($xlsFiles as $i => $xlsFile) {
+
+            $objPHPExcel = PHPExcel_IOFactory::load($xlsFile);
+            foreach ($objPHPExcel->getAllSheets() as $sheetIndex => $sheet) {
+                $startingRow = ($sheetIndex == 9) ? 2 : 3;
+                $findEndDataRow = $sheet->getHighestRow();
+                $findEndDataColumn = $sheet->getHighestColumn();
+                $findEndData = $findEndDataColumn . $findEndDataRow;
+                $fileData = $sheet->rangeToArray('A' . $startingRow . ':' . $findEndData);
+                $appendStartRow = $baseObjPHPExcel->getSheet($sheetIndex)->getHighestRow() + 1;
+                $baseObjPHPExcel->getSheet($sheetIndex)->fromArray($fileData, null, 'A' . $appendStartRow);
+            }
+        }
+
+        $file = env('DATA_FOLDER_PATH') . '/temp/data-' . $startDate->format('Y-m-d') . '-' . $endDate->format('Y-m-d'). '-' . time() . '.xlsx';
+
+        $objWriter = PHPExcel_IOFactory::createWriter($baseObjPHPExcel, 'Excel2007');
         $objWriter->save($file);
 
         return $file;

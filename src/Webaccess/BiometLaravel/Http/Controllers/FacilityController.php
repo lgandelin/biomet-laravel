@@ -99,6 +99,13 @@ class FacilityController extends BaseController
         return response()->download($file);
     }
 
+    public function group_excel()
+    {
+        $file= FacilityManager::groupExcelFiles(new DateTime($this->request->start_date), new DateTime($this->request->end_date), $this->request->facility_id);
+
+        return response()->download($file);
+    }
+
     public function download_file()
     {
         parent::__construct($this->request);
