@@ -10,11 +10,13 @@ class ClientController extends BaseController
     public function index()
     {
         parent::__construct($this->request);
+        $itemsPerPage = isset($this->request->items_per_page) ? $this->request->items_per_page : 10;
 
         return view('biomet::pages.clients.index', [
-            'clients' => ClientManager::getAll(),
+            'clients' => ClientManager::getAll($itemsPerPage),
             'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
             'confirmation' => ($this->request->session()->has('confirmation')) ? $this->request->session()->get('confirmation') : null,
+            'items_per_page' => $this->request->items_per_page,
         ]);
     }
 

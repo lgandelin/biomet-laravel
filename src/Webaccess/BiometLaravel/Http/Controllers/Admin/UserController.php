@@ -11,15 +11,17 @@ class UserController extends BaseController
     public function index()
     {
         parent::__construct($this->request);
-
+        $itemsPerPage = isset($this->request->items_per_page) ? $this->request->items_per_page : 10;
+        
         return view('biomet::pages.users.index', [
-            'users' => UserManager::getAll(true, $this->request->filter_client_id, $this->request->filter_client_name, $this->request->filter_profile_id),
+            'users' => UserManager::getAll($itemsPerPage, $this->request->filter_client_id, $this->request->filter_client_name, $this->request->filter_profile_id),
             'clients' => ClientManager::getAll(false),
             'filter_client_id' => $this->request->filter_client_id,
             'filter_client_name' => $this->request->filter_client_name,
             'filter_profile_id' => $this->request->filter_profile_id,
             'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
             'confirmation' => ($this->request->session()->has('confirmation')) ? $this->request->session()->get('confirmation') : null,
+            'items_per_page' => $this->request->items_per_page,
         ]);
     }
 
@@ -64,7 +66,7 @@ class UserController extends BaseController
     public function edit()
     {
         parent::__construct($this->request);
-        
+
         try {
             $user = UserManager::getUser($this->request->id);
         } catch (\Exception $e) {

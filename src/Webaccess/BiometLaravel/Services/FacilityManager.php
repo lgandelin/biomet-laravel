@@ -12,7 +12,7 @@ use Webaccess\BiometLaravel\Models\Facility;
 class FacilityManager
 {
 
-    public static function getAll($paginate = true, $clientID = null, $clientName = null)
+    public static function getAll($itemsPerPage = false, $clientID = null, $clientName = null)
     {
         $facilities = Facility::orderBy('created_at');
 
@@ -22,7 +22,7 @@ class FacilityManager
         if ($clientID)
             $facilities->where('client_id', '=', $clientID);
 
-        return ($paginate === true) ? $facilities->paginate(10) : $facilities->get();
+        return ($itemsPerPage) ? $facilities->paginate($itemsPerPage) : $facilities->get();
     }
 
     public static function getByClient($clientID)

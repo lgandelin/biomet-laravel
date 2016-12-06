@@ -11,14 +11,16 @@ class FacilityController extends BaseController
     public function index()
     {
         parent::__construct($this->request);
+        $itemsPerPage = isset($this->request->items_per_page) ? $this->request->items_per_page : 10;
 
         return view('biomet::pages.facilities.index', [
-            'facilities' => FacilityManager::getAll(true, $this->request->filter_client_id, $this->request->filter_client_name),
+            'facilities' => FacilityManager::getAll($itemsPerPage, $this->request->filter_client_id, $this->request->filter_client_name),
             'clients' => ClientManager::getAll(false),
             'filter_client_id' => $this->request->filter_client_id,
             'filter_client_name' => $this->request->filter_client_name,
             'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
             'confirmation' => ($this->request->session()->has('confirmation')) ? $this->request->session()->get('confirmation') : null,
+            'items_per_page' => $this->request->items_per_page,
         ]);
     }
 

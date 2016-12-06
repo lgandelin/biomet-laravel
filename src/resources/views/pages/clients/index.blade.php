@@ -43,7 +43,8 @@
     <a class="btn btn-success" href="{{ route('clients_add') }}">{{ trans('biomet::generic.add') }}</a>
 
     <div class="text-center">
-        {!! $clients->render() !!}
+        @include('biomet::includes.items_per_page')
+        {{ $clients->appends(['items_per_page' => $items_per_page])->links() }}
     </div>
-    
+
 @endsection

@@ -9,8 +9,7 @@ use Webaccess\BiometLaravel\Models\User;
 
 class UserManager
 {
-
-    public static function getAll($paginate = true, $clientID = null, $clientName = null, $profileID = null)
+    public static function getAll($paginate = false, $clientID = null, $clientName = null, $profileID = null)
     {
         $users = User::with('client')->orderBy('created_at');
 
@@ -25,7 +24,7 @@ class UserManager
         if ($profileID)
             $users->where('profile_id', '=', $profileID);
 
-        return ($paginate) ? $users->paginate(10) : $users->get();
+        return ($paginate) ? $users->paginate($paginate) : $users->get();
     }
 
     public static function getUser($userID)

@@ -77,7 +77,8 @@
     <a class="btn btn-success" href="{{ route('users_add') }}">{{ trans('biomet::generic.add') }}</a>
 
     <div class="text-center">
-        {!! $users->render() !!}
+        @include('biomet::includes.items_per_page')
+        {{ $users->appends(['items_per_page' => $items_per_page])->links() }}
     </div>
-    
+
 @endsection
