@@ -6,7 +6,6 @@ use DateInterval;
 use DateTime;
 use PHPExcel;
 use PHPExcel_IOFactory;
-use PHPExcel_Worksheet;
 use Ramsey\Uuid\Uuid;
 use Webaccess\BiometLaravel\Models\Facility;
 

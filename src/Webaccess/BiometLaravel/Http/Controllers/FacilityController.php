@@ -66,7 +66,7 @@ class FacilityController extends BaseController
                 if (isset($this->request->month)) $queryString .= '/' . $this->request->month;
                 if (isset($this->request->day)) $queryString .= '/' . $this->request->day;
                 $data['query_string'] = $queryString;
-                $data['entries'] = $this->getEntries($this->request->id, $queryString);
+                $data['entries'] = $this->getFacilitiesDataFiles($this->request->id, $queryString);
             break;
 
             default:
@@ -134,7 +134,7 @@ class FacilityController extends BaseController
      * @param string $queryString
      * @return array
      */
-    private function getEntries($facilityID, $queryString = '')
+    private function getFacilitiesDataFiles($facilityID, $queryString = '')
     {
         $entries = [];
         $path = realpath(env('DATA_FOLDER_PATH') . '/xls/' . $facilityID . '/' . $queryString);

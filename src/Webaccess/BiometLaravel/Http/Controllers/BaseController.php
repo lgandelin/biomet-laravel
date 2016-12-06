@@ -12,7 +12,7 @@ class BaseController extends Controller
     public function __construct(Request $request)
     {
         $this->request = $request;
-        view()->share('left_column_facilities', $this->getFacilities(false));
+        view()->share('left_column_facilities', $this->getFacilities());
         view()->share('current_route', $request->route()->getName());
         view()->share('current_tab', isset($request->tab) ? $request->tab : 0);
     }

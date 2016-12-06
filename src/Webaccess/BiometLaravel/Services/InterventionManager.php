@@ -65,7 +65,6 @@ class InterventionManager
     public static function udpateIntervention($interventionID, $facilityID, $eventDate, $title, $personalInformation, $description)
     {
         if ($intervention = Intervention::find($interventionID)) {
-
             $intervention->facility_id = $facilityID;
             $intervention->event_date = $eventDate;
             $intervention->title = $title;
@@ -122,7 +121,6 @@ class InterventionManager
     {
         $entries = [];
         if ($intervention = Intervention::find($interventionID)) {
-
             $interventionFolder = env('DATA_FOLDER_PATH') . '/interventions/' . $intervention->facility_id . '/' . $interventionID . '/';
 
             if (is_dir($interventionFolder)) {
