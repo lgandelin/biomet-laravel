@@ -8,6 +8,9 @@ return [
     'address' => 'Adresse',
     'city' => 'Ville',
     'department' => 'Département',
+    'country' => 'Pays',
+    'technology' => 'Technologie',
+    'serial_number' => 'Numéro de série',
 
     'add_facility_success' => 'Ajout du site effectué avec succès',
 

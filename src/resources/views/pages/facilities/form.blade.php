@@ -23,10 +23,15 @@
         <label for="city">{{ trans('biomet::facilities.city') }}</label>
         <input class="form-control" type="text" placeholder="{{ trans('biomet::facilities.city') }}" name="city" @if (isset($facility_city))value="{{ $facility_city }}"@endif autocomplete="off" />
     </div>
-    
+
     <div class="form-group">
         <label for="department">{{ trans('biomet::facilities.department') }}</label>
         <input class="form-control" type="text" placeholder="{{ trans('biomet::facilities.department') }}" name="department" @if (isset($facility_department))value="{{ $facility_department }}"@endif autocomplete="off" />
+    </div>
+
+    <div class="form-group">
+        <label for="department">{{ trans('biomet::facilities.country') }}</label>
+        <input class="form-control" type="text" placeholder="{{ trans('biomet::facilities.country') }}" name="country" @if (isset($facility_country))value="{{ $facility_country }}"@endif autocomplete="off" />
     </div>
 
     <div class="form-group">
@@ -37,6 +42,16 @@
                 <option value="{{ $client->id }}" @if (isset($facility) && $facility->client_id == $client->id)selected="selected"@endif>{{ $client->name }}</option>
             @endforeach
         </select>
+    </div>
+
+    <div class="form-group">
+        <label for="department">{{ trans('biomet::facilities.technology') }}</label>
+        <input class="form-control" type="text" placeholder="{{ trans('biomet::facilities.technology') }}" name="technology" @if (isset($facility_technology))value="{{ $facility_technology }}"@endif autocomplete="off" />
+    </div>
+
+    <div class="form-group">
+        <label for="department">{{ trans('biomet::facilities.serial_number') }}</label>
+        <input class="form-control" type="text" placeholder="{{ trans('biomet::facilities.serial_number') }}" name="serial_number" @if (isset($facility_serial_number))value="{{ $facility_serial_number }}"@endif autocomplete="off" />
     </div>
 
     <div class="form-group">

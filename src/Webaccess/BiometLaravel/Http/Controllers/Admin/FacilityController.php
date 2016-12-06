@@ -43,7 +43,10 @@ class FacilityController extends BaseController
                 $this->request->input('address'),
                 $this->request->input('city'),
                 $this->request->input('department'),
-                $this->request->input('client_id')
+                $this->request->input('country'),
+                $this->request->input('client_id'),
+                $this->request->input('technology'),
+                $this->request->input('serial_number')
             );
             $this->request->session()->flash('confirmation', trans('biomet::facilities.add_facility_success'));
 
@@ -86,7 +89,10 @@ class FacilityController extends BaseController
                 $this->request->input('address'),
                 $this->request->input('city'),
                 $this->request->input('department'),
-                $this->request->input('client_id')
+                $this->request->input('country'),
+                $this->request->input('client_id'),
+                $this->request->input('technology'),
+                $this->request->input('serial_number')
             );
             $this->request->session()->flash('confirmation', trans('biomet::facilities.edit_facility_success'));
         } catch (\Exception $e) {

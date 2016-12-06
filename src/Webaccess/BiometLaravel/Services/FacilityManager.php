@@ -45,7 +45,7 @@ class FacilityManager
      * @param $clientID
      * @return Facility
      */
-    public static function createFacility($name, $longitude, $latitude, $address, $city, $department, $clientID)
+    public static function createFacility($name, $longitude, $latitude, $address, $city, $department, $country, $clientID, $technology, $serialNumber)
     {
         $facility = new Facility();
         $facility->id = Uuid::uuid4()->toString();
@@ -55,7 +55,10 @@ class FacilityManager
         $facility->address = $address;
         $facility->city = $city;
         $facility->department = $department;
+        $facility->country = $country;
         $facility->client_id = $clientID;
+        $facility->technology = $technology;
+        $facility->serial_number = $serialNumber;
 
         $facilityID = $facility->save();
 
@@ -73,7 +76,7 @@ class FacilityManager
      * @param $clientID
      * @return bool
      */
-    public static function udpateFacility($facilityID, $name, $longitude, $latitude, $address, $city, $department, $clientID)
+    public static function udpateFacility($facilityID, $name, $longitude, $latitude, $address, $city, $department, $country, $clientID, $technology, $serialNumber)
     {
         if ($facility = Facility::find($facilityID)) {
             $facility->name = $name;
@@ -82,7 +85,10 @@ class FacilityManager
             $facility->address = $address;
             $facility->city = $city;
             $facility->department = $department;
+            $facility->country = $country;
             $facility->client_id = $clientID;
+            $facility->technology = $technology;
+            $facility->serial_number = $serialNumber;
             $facility->save();
 
             return true;

@@ -27,5 +27,8 @@
         'facility_city' => $facility->city,
         'facility_department' => $facility->department,
         'facility_client_id' => $facility->client_id,
+        'facility_country' => $facility->country,
+        'facility_technology' => $facility->technology,
+        'facility_serial_number' => $facility->serial_number,
     ])
 @endsection

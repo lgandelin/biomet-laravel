@@ -24,6 +24,9 @@ class Facility extends Model
         'address',
         'city',
         'department',
+        'country',
+        'technology',
+        'serial_number',
     ];
 
     public function client()
