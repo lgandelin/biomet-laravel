@@ -6,7 +6,7 @@
     
     <div class="form-group">
         <label for="access_limit_date">{{ trans('biomet::clients.access_limit_date') }}</label>
-        <input class="form-control" type="date" placeholder="{{ trans('biomet::clients.access_limit_date') }}" name="access_limit_date" @if (isset($client_access_limit_date))value="{{ $client_access_limit_date }}"@endif />
+        <input class="datepicker form-control" placeholder="{{ trans('biomet::clients.access_limit_date') }}" name="access_limit_date" @if (isset($client_access_limit_date))value="{{ $client_access_limit_date }}"@endif />
     </div>
 
     <div class="form-group">

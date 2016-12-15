@@ -2,6 +2,7 @@
 
 namespace Webaccess\BiometLaravel\Http\Controllers\Admin;
 
+use DateTime;
 use Webaccess\BiometLaravel\Http\Controllers\BaseController;
 use Webaccess\BiometLaravel\Services\ClientManager;
 use Webaccess\BiometLaravel\Services\FacilityManager;
@@ -48,7 +49,8 @@ class FacilityController extends BaseController
                 $this->request->input('country'),
                 $this->request->input('client_id'),
                 $this->request->input('technology'),
-                $this->request->input('serial_number')
+                $this->request->input('serial_number'),
+                $this->request->input('startup_date') ? DateTime::createFromFormat('d/m/Y', $this->request->input('startup_date')) : null
             );
             $this->request->session()->flash('confirmation', trans('biomet::facilities.add_facility_success'));
 
@@ -94,7 +96,8 @@ class FacilityController extends BaseController
                 $this->request->input('country'),
                 $this->request->input('client_id'),
                 $this->request->input('technology'),
-                $this->request->input('serial_number')
+                $this->request->input('serial_number'),
+                $this->request->input('startup_date') ? DateTime::createFromFormat('d/m/Y', $this->request->input('startup_date')) : null
             );
             $this->request->session()->flash('confirmation', trans('biomet::facilities.edit_facility_success'));
         } catch (\Exception $e) {

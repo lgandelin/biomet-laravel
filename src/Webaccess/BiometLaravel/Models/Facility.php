@@ -27,6 +27,7 @@ class Facility extends Model
         'country',
         'technology',
         'serial_number',
+        'startup_date',
     ];
 
     public function client()

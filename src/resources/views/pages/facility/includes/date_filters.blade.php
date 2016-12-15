@@ -1,6 +1,6 @@
 <p style="text-align: center;">
-    <strong>Date de début :</strong> <input id="start_date" name="start_date" type="date" class="form-control" value="@if (isset($start_date)){{$start_date}}@else{{ date('Y-m-d', strtotime( '-1 days' )) }}@endif" style="display: inline; width:175px; margin-bottom: 1rem; margin-right: 2.5rem;"/>
-    <strong>Date de fin :</strong> <input id="end_date" name="end_date" type="date" class="form-control" value="@if (isset($end_date)){{$end_date}}@else{{ date('Y-m-d', strtotime( '-1 days' )) }}@endif" style="display: inline; width:175px; margin-bottom: 1rem;"/>
+    <strong>Date de début :</strong> <input id="start_date" name="start_date" class="datepicker form-control" value="@if (isset($start_date)){{$start_date}}@else{{ date('d/m/Y', strtotime( '-1 days' )) }}@endif" style="display: inline; width:175px; margin-bottom: 1rem; margin-right: 2.5rem;"/>
+    <strong>Date de fin :</strong> <input id="end_date" name="end_date" class="datepicker form-control" value="@if (isset($end_date)){{$end_date}}@else{{ date('d/m/Y', strtotime( '-1 days' )) }}@endif" style="display: inline; width:175px; margin-bottom: 1rem;"/>
     <input type="button" id="valid" class="btn btn-success" value="{{ trans('biomet::generic.valid') }}" />
 
 <ul style="text-align: center;">

@@ -50,8 +50,13 @@
     </div>
 
     <div class="form-group">
-        <label for="department">{{ trans('biomet::facilities.serial_number') }}</label>
+        <label for="serial_number">{{ trans('biomet::facilities.serial_number') }}</label>
         <input class="form-control" type="text" placeholder="{{ trans('biomet::facilities.serial_number') }}" name="serial_number" @if (isset($facility_serial_number))value="{{ $facility_serial_number }}"@endif autocomplete="off" />
+    </div>
+
+    <div class="form-group">
+        <label for="startup_date">{{ trans('biomet::facilities.startup_date') }}</label>
+        <input class="datepicker form-control" type="text" placeholder="{{ trans('biomet::facilities.startup_date') }}" name="startup_date" @if (isset($facility_startup_date))value="{{ $facility_startup_date }}"@endif autocomplete="off" />
     </div>
 
     <div class="form-group">
