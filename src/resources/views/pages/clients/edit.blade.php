@@ -21,6 +21,7 @@
         'form_action' => route('clients_update'),
         'client_id' => $client->id,
         'client_name' => $client->name,
-        'client_access_limit_date' => $client->access_limit_date,
+        'client_access_limit_date' => $client->access_limit_date ? DateTime::createFromFormat('Y-m-d', $client->access_limit_date)->format('d/m/Y') : null,
+        'client_users_limit' => $client->users_limit,
     ])
 @endsection

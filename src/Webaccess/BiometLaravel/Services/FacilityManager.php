@@ -6,14 +6,13 @@ use DateInterval;
 use DateTime;
 use PHPExcel;
 use PHPExcel_IOFactory;
-use PHPExcel_Worksheet;
 use Ramsey\Uuid\Uuid;
 use Webaccess\BiometLaravel\Models\Facility;
 
 class FacilityManager
 {
 
-    public static function getAll($paginate = true, $clientID = null, $clientName = null)
+    public static function getAll($itemsPerPage = false, $clientID = null, $clientName = null)
     {
         $facilities = Facility::orderBy('created_at');
 
@@ -23,7 +22,7 @@ class FacilityManager
         if ($clientID)
             $facilities->where('client_id', '=', $clientID);
 
-        return ($paginate === true) ? $facilities->paginate(10) : $facilities->get();
+        return ($itemsPerPage) ? $facilities->paginate($itemsPerPage) : $facilities->get();
     }
 
     public static function getByClient($clientID)
@@ -43,10 +42,15 @@ class FacilityManager
      * @param $address
      * @param $city
      * @param $department
+     * @param $country
      * @param $clientID
+     * @param $technology
+     * @param $serialNumber
+     * @param $startupDate
+     * @param array $tabs
      * @return Facility
      */
-    public static function createFacility($name, $longitude, $latitude, $address, $city, $department, $clientID)
+    public static function createFacility($name, $longitude, $latitude, $address, $city, $department, $country, $clientID, $technology, $serialNumber, $startupDate, $tabs = [])
     {
         $facility = new Facility();
         $facility->id = Uuid::uuid4()->toString();
@@ -56,7 +60,12 @@ class FacilityManager
         $facility->address = $address;
         $facility->city = $city;
         $facility->department = $department;
+        $facility->country = $country;
         $facility->client_id = $clientID;
+        $facility->technology = $technology;
+        $facility->serial_number = $serialNumber;
+        $facility->startup_date = $startupDate;
+        $facility->tabs = $tabs;
 
         $facilityID = $facility->save();
 
@@ -71,10 +80,15 @@ class FacilityManager
      * @param $address
      * @param $city
      * @param $department
+     * @param $country
      * @param $clientID
+     * @param $technology
+     * @param $serialNumber
+     * @param $startupDate
+     * @param array $tabs
      * @return bool
      */
-    public static function udpateFacility($facilityID, $name, $longitude, $latitude, $address, $city, $department, $clientID)
+    public static function udpateFacility($facilityID, $name, $longitude, $latitude, $address, $city, $department, $country, $clientID, $technology, $serialNumber, $startupDate, $tabs = [])
     {
         if ($facility = Facility::find($facilityID)) {
             $facility->name = $name;
@@ -83,7 +97,12 @@ class FacilityManager
             $facility->address = $address;
             $facility->city = $city;
             $facility->department = $department;
+            $facility->country = $country;
             $facility->client_id = $clientID;
+            $facility->technology = $technology;
+            $facility->serial_number = $serialNumber;
+            $facility->startup_date = $startupDate;
+            $facility->tabs = $tabs;
             $facility->save();
 
             return true;
@@ -118,7 +137,6 @@ class FacilityManager
     {
         $series = [];
         $fileData = self::fetchData($startDate, $endDate, $facilityID);
-
 
         foreach ($keys as $key) {
             $keyData = [];
@@ -228,7 +246,44 @@ class FacilityManager
             }
         }
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save($file);
 
+        return $file;
+    }
+
+    public static function groupExcelFiles($startDate, $endDate, $facilityID)
+    {
+        $date = clone $startDate;
+
+        $xlsFiles = [];
+        while ($date <= $endDate) {
+            $xlsFile = env('DATA_FOLDER_PATH') . '/xls/' . $facilityID . '/' . $date->format('Y/m/d') . '/data.xlsx';
+            if (file_exists($xlsFile)) {
+                $xlsFiles[] = $xlsFile;
+            }
+            $date->add(new DateInterval('P1D'));
+        }
+
+        $baseFile = array_shift($xlsFiles);
+        $baseObjPHPExcel = PHPExcel_IOFactory::load($baseFile);
+
+        foreach ($xlsFiles as $i => $xlsFile) {
+
+            $objPHPExcel = PHPExcel_IOFactory::load($xlsFile);
+            foreach ($objPHPExcel->getAllSheets() as $sheetIndex => $sheet) {
+                $startingRow = ($sheetIndex == 9) ? 2 : 3;
+                $findEndDataRow = $sheet->getHighestRow();
+                $findEndDataColumn = $sheet->getHighestColumn();
+                $findEndData = $findEndDataColumn . $findEndDataRow;
+                $fileData = $sheet->rangeToArray('A' . $startingRow . ':' . $findEndData);
+                $appendStartRow = $baseObjPHPExcel->getSheet($sheetIndex)->getHighestRow() + 1;
+                $baseObjPHPExcel->getSheet($sheetIndex)->fromArray($fileData, null, 'A' . $appendStartRow);
+            }
+        }
+
+        $file = env('DATA_FOLDER_PATH') . '/temp/data-' . $startDate->format('Y-m-d') . '-' . $endDate->format('Y-m-d'). '-' . time() . '.xlsx';
+
+        $objWriter = PHPExcel_IOFactory::createWriter($baseObjPHPExcel, 'Excel2007');
         $objWriter->save($file);
 
         return $file;

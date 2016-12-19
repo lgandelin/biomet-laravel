@@ -47,7 +47,7 @@ function current_year() {
 }
 
 function format_date(date) {
-    return date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2);
+    return ("0" + date.getDate()).slice(-2) + "/" + ("0" + (date.getMonth() + 1)).slice(-2) + "/" + date.getFullYear();
 }
 
 function get_monday(d) {

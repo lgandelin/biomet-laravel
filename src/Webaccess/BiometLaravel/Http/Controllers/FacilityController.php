@@ -66,7 +66,7 @@ class FacilityController extends BaseController
                 if (isset($this->request->month)) $queryString .= '/' . $this->request->month;
                 if (isset($this->request->day)) $queryString .= '/' . $this->request->day;
                 $data['query_string'] = $queryString;
-                $data['entries'] = $this->getEntries($this->request->id, $queryString);
+                $data['entries'] = $this->getFacilitiesDataFiles($this->request->id, $queryString);
             break;
 
             default:
@@ -87,14 +87,21 @@ class FacilityController extends BaseController
         return view('biomet::pages.facility.includes.graph', [
             'container_id' => $this->request->container_id,
             'title' => $this->request->title,
-            'series' => json_encode(FacilityManager::getData(new DateTime($this->request->start_date), new DateTime($this->request->end_date), $this->request->facility_id, $this->request->keys)),
+            'series' => json_encode(FacilityManager::getData(DateTime::createFromFormat('d/m/Y', $this->request->start_date), DateTime::createFromFormat('d/m/Y', $this->request->end_date), $this->request->facility_id, $this->request->keys)),
         ])->render();
     }
 
     public function excel()
     {
-        $data = FacilityManager::getData(new DateTime($this->request->start_date), new DateTime($this->request->end_date), $this->request->facility_id, explode(',', $this->request->keys));
+        $data = FacilityManager::getData(DateTime::createFromFormat('d/m/Y', $this->request->start_date), DateTime::createFromFormat('d/m/Y', $this->request->end_date), $this->request->facility_id, explode(',', $this->request->keys));
         $file = FacilityManager::createExcelFile($data);
+
+        return response()->download($file);
+    }
+
+    public function group_excel()
+    {
+        $file = FacilityManager::groupExcelFiles(DateTime::createFromFormat('d/m/Y', $this->request->start_date), DateTime::createFromFormat('d/m/Y', $this->request->end_date), $this->request->facility_id);
 
         return response()->download($file);
     }
@@ -127,7 +134,7 @@ class FacilityController extends BaseController
      * @param string $queryString
      * @return array
      */
-    private function getEntries($facilityID, $queryString = '')
+    private function getFacilitiesDataFiles($facilityID, $queryString = '')
     {
         $entries = [];
         $path = realpath(env('DATA_FOLDER_PATH') . '/xls/' . $facilityID . '/' . $queryString);

@@ -2,6 +2,9 @@
 
 namespace Webaccess\BiometLaravel\Services;
 
+use DateTime;
+use DirectoryIterator;
+use IteratorIterator;
 use Ramsey\Uuid\Uuid;
 use Webaccess\BiometLaravel\Models\Intervention;
 
@@ -16,7 +19,6 @@ class InterventionManager
         }
 
         if ($endDate) {
-            $endDate = (new \DateTime($endDate))->add(new \DateInterval('P1D'))->format('Y-m-d H:i:s');
             $interventions->where('event_date', '<=', $endDate);
         }
 
@@ -63,7 +65,6 @@ class InterventionManager
     public static function udpateIntervention($interventionID, $facilityID, $eventDate, $title, $personalInformation, $description)
     {
         if ($intervention = Intervention::find($interventionID)) {
-
             $intervention->facility_id = $facilityID;
             $intervention->event_date = $eventDate;
             $intervention->title = $title;
@@ -90,5 +91,70 @@ class InterventionManager
         }
 
         return false;
+    }
+
+    /**
+     * @param $interventionID
+     * @param $fileName
+     * @return bool
+     */
+    public static function deleteInterventionFile($interventionID, $fileName)
+    {
+        if ($intervention = Intervention::find($interventionID)) {
+            $interventionFolder = env('DATA_FOLDER_PATH') . '/interventions/' . $intervention->facility_id . '/' . $interventionID . '/';
+
+            if (file_exists($interventionFolder . $fileName)) {
+                unlink($interventionFolder . $fileName);
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $interventionID
+     * @return bool
+     */
+    public static function getFilesByID($interventionID)
+    {
+        $entries = [];
+        if ($intervention = Intervention::find($interventionID)) {
+            $interventionFolder = env('DATA_FOLDER_PATH') . '/interventions/' . $intervention->facility_id . '/' . $interventionID . '/';
+
+            if (is_dir($interventionFolder)) {
+                $path = realpath($interventionFolder);
+
+                foreach (new IteratorIterator(new DirectoryIterator($path)) as $entry) {
+
+                    $fileName = preg_replace('#' . $path . '/#', '', $entry->getPathname());
+
+                    if (!preg_match('/^\./', $fileName)) {
+                        //Files
+                        $entries[] = [
+                            'name' => $fileName,
+                            'creation_date' => (new DateTime())->setTimestamp(filemtime($entry->getPathname()))->format('d/m/Y H:i:s'),
+                            'size' => self::getReadableFilesize(filesize($entry->getPathname())),
+                            //'link' => route('facility_download_file', [])
+                        ];
+                    }
+                }
+            }
+        }
+
+        return $entries;
+    }
+
+    /**
+     * @param $bytes
+     * @param int $decimals
+     * @return string
+     */
+    public static function getReadableFilesize($bytes, $decimals = 2) {
+        $sz = 'BKMGTP';
+        $factor = floor((strlen($bytes) - 1) / 3);
+
+        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
     }
 }

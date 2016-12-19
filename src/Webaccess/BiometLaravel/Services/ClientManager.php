@@ -7,11 +7,11 @@ use Webaccess\BiometLaravel\Models\Client;
 
 class ClientManager
 {
-    public static function getAll($paginate = true)
+    public static function getAll($paginate = false)
     {
         $clients = Client::orderBy('created_at');
 
-        return ($paginate) ? $clients->paginate(10) : $clients->get();
+        return ($paginate) ? $clients->paginate($paginate) : $clients->get();
     }
 
     public static function getByID($clientID)
@@ -22,14 +22,16 @@ class ClientManager
     /**
      * @param $name
      * @param $accessLimitDate
+     * @param null $usersLimit
      * @return Client
      */
-    public static function createClient($name, $accessLimitDate = null)
+    public static function createClient($name, $accessLimitDate = null, $usersLimit = null)
     {
         $client = new Client();
         $client->id = Uuid::uuid4()->toString();
         $client->name = $name;
         $client->access_limit_date = $accessLimitDate;
+        $client->users_limit = $usersLimit;
 
         $client->save();
 
@@ -40,13 +42,15 @@ class ClientManager
      * @param $clientID
      * @param $name
      * @param $accessLimitDate
+     * @param $usersLimit
      * @return bool
      */
-    public static function udpateClient($clientID, $name, $accessLimitDate)
+    public static function udpateClient($clientID, $name, $accessLimitDate, $usersLimit)
     {
         if ($client = Client::find($clientID)) {
             $client->name = $name;
             $client->access_limit_date = $accessLimitDate;
+            $client->users_limit = $usersLimit;
             $client->save();
 
             return true;

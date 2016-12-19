@@ -18,5 +18,7 @@ return [
     'update_password_confirmation_error' => 'Les 2 mots de passe ne correspondent pas',
     'user_not_found_error' => 'L\'utilisateur n\'a pas été trouvé',
 
+    'add_user_limit_error' => 'Vous avez atteint la limite d\'utilisateurs, veuillez contacter un administrateur pour plus d\'informations',
+
     'delete_user_success' => 'Utilisateur supprimé avec succès',
 ];

@@ -2,12 +2,12 @@
 
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse">
-            <span class="sr-only">BIOMET</span>
+            <span class="sr-only">Plateforme web AROL ENERGY</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="{{ route('dashboard') }}">BIOMET</a>
+        <a class="navbar-brand" href="{{ route('dashboard') }}">Plateforme web AROL ENERGY</a>
     </div>
 
     <div class="collapse navbar-collapse">
@@ -18,7 +18,7 @@
 
         <ul class="nav navbar-nav side-nav">
             <li @if (Request::is('/'))class="active"@endif><a href="{{ route('dashboard') }}"><i class="fa fa-fw fa-dashboard"></i> Tableau de bord</a></li>
-
+        
             <li class="@if(isset($current_facility) && $current_facility->id) active @endif ">
                 <?php $route = (preg_match('/facility_/', $current_route)) ? $current_route : 'facility'; ?>
                 <a class="toggle-facilities" href="#"><i class="fa fa-fw fa-bar-chart"></i> Sites <i class="fa fa-fw toggle-icon fa-caret-down"></i></a>
@@ -31,12 +31,15 @@
                 </ul>
             </li>
 
-            @if (Auth::user() && Auth::user()->profile_id === Webaccess\BiometLaravel\Models\User::PROFILE_ID_ADMINISTRATOR)
+            @if (Auth::user() && Auth::user()->profile_id === Webaccess\BiometLaravel\Models\User::PROFILE_ID_AROL_ENERGY_ADMINISTRATOR)
                 <li @if (preg_match('/facilities/', $current_route)) class="active" @endif><a href="{{ route('facilities') }}"><i class="fa fa-fw fa-cogs"></i> Gestion des sites</a></li>
                 <li @if (preg_match('/clients/', $current_route)) class="active" @endif><a href="{{ route('clients') }}"><i class="fa fa-fw fa-briefcase"></i> Gestion des clients</a></li>
                 <li @if (preg_match('/users/', $current_route)) class="active" @endif><a href="{{ route('users') }}"><i class="fa fa-fw fa-users"></i> Gestion des utilisateurs</a></li>
             @endif
 
+            @if (Auth::user() && Auth::user()->profile_id === Webaccess\BiometLaravel\Models\User::PROFILE_ID_CLIENT_ADMINISTRATOR))
+                <li @if (preg_match('/client_users/', $current_route)) class="active" @endif><a href="{{ route('client_users') }}"><i class="fa fa-fw fa-users"></i> Gestion des utilisateurs</a></li>
+            @endif
         </ul>
     </div>
 </nav>

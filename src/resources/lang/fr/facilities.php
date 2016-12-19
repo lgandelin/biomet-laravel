@@ -8,6 +8,11 @@ return [
     'address' => 'Adresse',
     'city' => 'Ville',
     'department' => 'Département',
+    'country' => 'Pays',
+    'technology' => 'Technologie',
+    'serial_number' => 'Numéro de série',
+    'startup_date' => 'Date de mise en service',
+    'tabs' => 'Onglets',
 
     'add_facility_success' => 'Ajout du site effectué avec succès',
 

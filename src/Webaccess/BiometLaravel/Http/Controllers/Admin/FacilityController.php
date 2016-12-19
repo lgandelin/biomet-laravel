@@ -2,6 +2,7 @@
 
 namespace Webaccess\BiometLaravel\Http\Controllers\Admin;
 
+use DateTime;
 use Webaccess\BiometLaravel\Http\Controllers\BaseController;
 use Webaccess\BiometLaravel\Services\ClientManager;
 use Webaccess\BiometLaravel\Services\FacilityManager;
@@ -11,14 +12,16 @@ class FacilityController extends BaseController
     public function index()
     {
         parent::__construct($this->request);
+        $itemsPerPage = isset($this->request->items_per_page) ? $this->request->items_per_page : 10;
 
         return view('biomet::pages.facilities.index', [
-            'facilities' => FacilityManager::getAll(true, $this->request->filter_client_id, $this->request->filter_client_name),
+            'facilities' => FacilityManager::getAll($itemsPerPage, $this->request->filter_client_id, $this->request->filter_client_name),
             'clients' => ClientManager::getAll(false),
             'filter_client_id' => $this->request->filter_client_id,
             'filter_client_name' => $this->request->filter_client_name,
             'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
             'confirmation' => ($this->request->session()->has('confirmation')) ? $this->request->session()->get('confirmation') : null,
+            'items_per_page' => $this->request->items_per_page,
         ]);
     }
 
@@ -43,7 +46,12 @@ class FacilityController extends BaseController
                 $this->request->input('address'),
                 $this->request->input('city'),
                 $this->request->input('department'),
-                $this->request->input('client_id')
+                $this->request->input('country'),
+                $this->request->input('client_id'),
+                $this->request->input('technology'),
+                $this->request->input('serial_number'),
+                $this->request->input('startup_date') ? DateTime::createFromFormat('d/m/Y', $this->request->input('startup_date')) : null,
+                $this->request->input('tabs') ? implode(',', $this->request->input('tabs')) : null
             );
             $this->request->session()->flash('confirmation', trans('biomet::facilities.add_facility_success'));
 
@@ -86,7 +94,12 @@ class FacilityController extends BaseController
                 $this->request->input('address'),
                 $this->request->input('city'),
                 $this->request->input('department'),
-                $this->request->input('client_id')
+                $this->request->input('country'),
+                $this->request->input('client_id'),
+                $this->request->input('technology'),
+                $this->request->input('serial_number'),
+                $this->request->input('startup_date') ? DateTime::createFromFormat('d/m/Y', $this->request->input('startup_date')) : null,
+                $this->request->input('tabs') ? implode(',', $this->request->input('tabs')) : null
             );
             $this->request->session()->flash('confirmation', trans('biomet::facilities.edit_facility_success'));
         } catch (\Exception $e) {

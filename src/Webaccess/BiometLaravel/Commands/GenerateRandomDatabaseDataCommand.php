@@ -30,7 +30,7 @@ class GenerateRandomDatabaseDataCommand extends Command
                     $faker->email,
                     $faker->password,
                     $clientID,
-                    User::PROFILE_ID_CLIENT
+                    User::PROFILE_ID_CLIENT_USER
                 );
             }
 

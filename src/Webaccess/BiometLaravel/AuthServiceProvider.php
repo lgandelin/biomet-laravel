@@ -29,12 +29,18 @@ class AuthServiceProvider extends ServiceProvider
             elseif (!$facility->client_id)
                 return false;
 
+            //Tab disabled
+            if (!in_array($tab, $facility->tabs))
+                return false;
+
+            //Profile check
             switch ($user->profile_id) {
-                case User::PROFILE_ID_ADMINISTRATOR:
+                case User::PROFILE_ID_AROL_ENERGY_ADMINISTRATOR:
                     return true;
                 break;
 
-                case User::PROFILE_ID_CLIENT:
+                case User::PROFILE_ID_CLIENT_ADMINISTRATOR:
+                case User::PROFILE_ID_CLIENT_USER:
 
                     //User not belonging to the facility client
                     if ($user->client_id && $user->client_id !== $facility->client_id)

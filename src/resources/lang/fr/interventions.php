@@ -12,4 +12,7 @@ return [
     'edit_intervention_error' => 'Une erreur est survenue lors de la mise à jour de l\'intervention',
     'delete_intervention_success' => 'Intervention supprimée avec succès',
     'delete_intervention_error' => 'Une erreur est survenue lors de la suppression de l\'intervention',
+    'intervention_not_found_error' => 'Une erreur est survenue lors de la récupération de l\'intervention',
+    'delete_file_success' => 'Suppression du fichier effectuée avec succès',
+    'delete_file__error' => 'Une erreur est survenue lors de la suppression du fichier',
 ];

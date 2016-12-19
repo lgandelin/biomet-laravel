@@ -61,7 +61,8 @@
     <a class="btn btn-success" href="{{ route('facilities_add') }}">{{ trans('biomet::generic.add') }}</a>
 
     <div class="text-center">
-        {!! $facilities->render() !!}
+        @include('biomet::includes.items_per_page')
+        {{ $facilities->appends(['items_per_page' => $items_per_page])->links() }}
     </div>
 
 @endsection

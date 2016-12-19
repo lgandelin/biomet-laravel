@@ -7,7 +7,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Webaccess\BiometLaravel\Models\User;
 
-class AdminMiddleware
+class AdminClientsMiddleware
 {
     /**
      * The Guard implementation.
@@ -35,7 +35,7 @@ class AdminMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if ($this->auth->user()->profile_id !== User::PROFILE_ID_AROL_ENERGY_ADMINISTRATOR)
+        if ($this->auth->user()->profile_id !== User::PROFILE_ID_CLIENT_ADMINISTRATOR)
         {
             if ($request->ajax())
             {
