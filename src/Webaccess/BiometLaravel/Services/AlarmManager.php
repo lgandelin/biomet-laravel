@@ -2,22 +2,22 @@
 
 namespace Webaccess\BiometLaravel\Services;
 
+use DateTime;
 use Ramsey\Uuid\Uuid;
 use Webaccess\BiometLaravel\Models\Alarm;
 
 class AlarmManager
 {
-    public static function getAllByFacilityID($facilityID, $startDate = null, $endDate = null, $paginate = true)
+    public static function getAllByFacilityID($facilityID, DateTime $startDate = null, DateTime $endDate = null, $paginate = true)
     {
         $alarms = Alarm::where('facility_id', '=', $facilityID)->orderBy('event_date', 'desc');
 
         if ($startDate) {
-            $alarms->where('event_date', '>=', $startDate);
+            $alarms->where('event_date', '>=', $startDate->format('Y-m-d H:i:s'));
         }
 
         if ($endDate) {
-            $endDate = (new \DateTime($endDate))->add(new \DateInterval('P1D'))->format('Y-m-d H:i:s');
-            $alarms->where('event_date', '<=', $endDate);
+            $alarms->where('event_date', '<=', $endDate->add(new \DateInterval('P1D'))->format('Y-m-d H:i:s'));
         }
 
         return ($paginate) ? $alarms->paginate(10) : $alarms->get();

@@ -2,6 +2,7 @@
 
 namespace Webaccess\BiometLaravel\Http\Controllers;
 
+use DateInterval;
 use DateTime;
 use DirectoryIterator;
 use Illuminate\Support\Facades\Gate;
@@ -34,18 +35,18 @@ class FacilityController extends BaseController
         }
 
         $data = [];
-        $yesterdayDate = date('Y-m-d', strtotime( '-1 days' ));
+        $yesterdayDate = (new DateTime())->sub(new DateInterval('P1D'));
 
         switch ($tab) {
             //Fetch alarms log
             case 9:
                 $data['alarms'] = AlarmManager::getAllByFacilityID(
                     $this->request->id,
-                    isset($this->request->start_date) ? $this->request->start_date : $yesterdayDate,
-                    isset($this->request->end_date) ? $this->request->end_date : $yesterdayDate
+                    isset($this->request->start_date) ? DateTime::createFromFormat('d/m/Y', $this->request->start_date) : $yesterdayDate,
+                    isset($this->request->end_date) ? DateTime::createFromFormat('d/m/Y', $this->request->end_date) : $yesterdayDate
                 );
-                $data['filter_start_date'] = (isset($this->request->start_date)) ? $this->request->start_date : null;
-                $data['filter_end_date'] = (isset($this->request->end_date)) ? $this->request->end_date : null;
+                $data['filter_start_date'] = (isset($this->request->start_date)) ? DateTime::createFromFormat('d/m/Y', $this->request->start_date)->format('d/m/Y') : null;
+                $data['filter_end_date'] = (isset($this->request->end_date)) ? DateTime::createFromFormat('d/m/Y', $this->request->end_date)->format('d/m/Y') : null;
             break;
 
             //Fetch maintenance history
