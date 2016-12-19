@@ -23,6 +23,6 @@
         'user_first_name' => $user->first_name,
         'user_last_name' => $user->last_name,
         'user_email' => $user->email,
-        'profile_id' => $user->profile_id,
+        'user_profile_id' => $user->profile_id,
     ])
 @endsection

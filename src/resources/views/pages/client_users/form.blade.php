@@ -24,11 +24,15 @@
         <input class="form-control" type="password" placeholder="{{ trans('biomet::users.password_confirmation') }}" name="password_confirmation" autocomplete="off" />
     </div>
 
-    <div class="form-group">
-        <label for="profile_id">{{ trans('biomet::users.profile') }}</label><br/>
-        Utilisateur client <input style="margin-right: 2rem" type="radio" name="profile_id" value="{{ Webaccess\BiometLaravel\Models\User::PROFILE_ID_CLIENT_USER }}" @if (isset($profile_id) && $profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_CLIENT_USER) checked @endif autocomplete="off" />
-        Prestataire <input type="radio" name="profile_id" value="{{ Webaccess\BiometLaravel\Models\User::PROFILE_ID_PROVIDER }}" @if (isset($profile_id) && $profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_PROVIDER) checked @endif autocomplete="off" />
-    </div>
+    @if ($user_profile_id === Webaccess\BiometLaravel\Models\User::PROFILE_ID_CLIENT_ADMINISTRATOR)
+        <input type="hidden" name="profile_id" value="{{ Webaccess\BiometLaravel\Models\User::PROFILE_ID_CLIENT_ADMINISTRATOR }}" />
+    @else
+        <div class="form-group">
+            <label for="profile_id">{{ trans('biomet::users.profile') }}</label><br/>
+            Utilisateur client <input style="margin-right: 2rem" type="radio" name="profile_id" value="{{ Webaccess\BiometLaravel\Models\User::PROFILE_ID_CLIENT_USER }}" @if (isset($user_profile_id) && $user_profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_CLIENT_USER) checked @endif autocomplete="off" />
+            Prestataire <input type="radio" name="profile_id" value="{{ Webaccess\BiometLaravel\Models\User::PROFILE_ID_PROVIDER }}" @if (isset($user_profile_id) && $user_profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_PROVIDER) checked @endif autocomplete="off" />
+        </div>
+    @endif
 
     <div class="form-group">
         <button class="btn btn-success" type="submit">{{ trans('biomet::generic.valid') }}</button>
