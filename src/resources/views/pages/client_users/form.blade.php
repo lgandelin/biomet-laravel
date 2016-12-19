@@ -25,26 +25,14 @@
     </div>
 
     <div class="form-group">
-        <label for="email">{{ trans('biomet::users.client') }}</label>
-        <select class="form-control" placeholder="{{ trans('biomet::users.client') }}" name="client_id" autocomplete="off">
-            <option value="">{{ trans('biomet::generic.choose_value') }}</option>
-            @foreach ($clients as $client)
-                <option value="{{ $client->id }}" @if (isset($user) && $user->client_id == $client->id)selected="selected"@endif>{{ $client->name }}</option>
-            @endforeach
-        </select>
-    </div>
-
-    <div class="form-group">
         <label for="profile_id">{{ trans('biomet::users.profile') }}</label><br/>
-        Administrateur Arol Energy <input style="margin-right: 2rem" type="radio" name="profile_id" value="{{ Webaccess\BiometLaravel\Models\User::PROFILE_ID_AROL_ENERGY_ADMINISTRATOR }}" @if (isset($profile_id) && $profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_AROL_ENERGY_ADMINISTRATOR) checked @endif autocomplete="off" />
-        Administrateur client <input style="margin-right: 2rem" type="radio" name="profile_id" value="{{ Webaccess\BiometLaravel\Models\User::PROFILE_ID_CLIENT_ADMINISTRATOR }}" @if (isset($profile_id) && $profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_CLIENT_ADMINISTRATOR) checked @endif autocomplete="off" />
         Utilisateur client <input style="margin-right: 2rem" type="radio" name="profile_id" value="{{ Webaccess\BiometLaravel\Models\User::PROFILE_ID_CLIENT_USER }}" @if (isset($profile_id) && $profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_CLIENT_USER) checked @endif autocomplete="off" />
         Prestataire <input type="radio" name="profile_id" value="{{ Webaccess\BiometLaravel\Models\User::PROFILE_ID_PROVIDER }}" @if (isset($profile_id) && $profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_PROVIDER) checked @endif autocomplete="off" />
     </div>
 
     <div class="form-group">
         <button class="btn btn-success" type="submit">{{ trans('biomet::generic.valid') }}</button>
-        <a class="btn btn-default" href="{{ route('users') }}">{{ trans('biomet::generic.back') }}</a>
+        <a class="btn btn-default" href="{{ route('client_users') }}">{{ trans('biomet::generic.back') }}</a>
     </div>
 
     @if (isset($user_id))

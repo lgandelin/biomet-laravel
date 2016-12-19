@@ -33,7 +33,7 @@ Route::group(['middleware' => ['web']], function () {
         Route::post('/site/excel', array('as' => 'facility_get_excel', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@excel'));
         Route::post('/site/group_excel', array('as' => 'facility_group_excel', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@group_excel'));
 
-        //ADMIN
+        //ADMIN AROL ENERGY
         Route::group(['middleware' => ['admin']], function () {
 
             Route::get('/admin/utilisateurs', array('as' => 'users', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\Admin\UserController@index'));
@@ -56,6 +56,17 @@ Route::group(['middleware' => ['web']], function () {
             Route::get('/admin/sites/{id}', array('as' => 'facilities_edit', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\Admin\FacilityController@edit'));
             Route::post('/admin/sites', array('as' => 'facilities_update', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\Admin\FacilityController@update'));
             Route::get('/admin/sites/supprimer/{id}', array('as' => 'facilities_delete', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\Admin\FacilityController@delete'));
+        });
+
+        //ADMIN CLIENT
+        Route::group(['middleware' => ['admin_clients']], function() {
+
+            Route::get('/admin/comptes', array('as' => 'client_users', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\Admin\ClientUserController@index'));
+            Route::get('/admin/comptes/ajouter', array('as' => 'client_users_add', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\Admin\ClientUserController@add'));
+            Route::post('/admin/comptes/ajouter', array('as' => 'client_users_store', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\Admin\ClientUserController@store'));
+            Route::get('/admin/comptes/{id}', array('as' => 'client_users_edit', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\Admin\ClientUserController@edit'));
+            Route::post('/admin/comptes', array('as' => 'client_users_update', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\Admin\ClientUserController@update'));
+            Route::get('/admin/comptes/supprimer/{id}', array('as' => 'client_users_delete', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\Admin\ClientUserController@delete'));
         });
     });
 });

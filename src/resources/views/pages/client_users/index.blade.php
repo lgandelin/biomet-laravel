@@ -24,16 +24,8 @@
 
             <input type="text" class="form-control" name="filter_client_name" value="{{ $filter_client_name }}" placeholder="Recherche" style="width: 15%; display: inline;"/>
 
-            <select name="filter_client_id" class="form-control" style="width: 15%; display: inline;">
-                <option value="">Filtrer par client</option>
-                @foreach ($clients as $client)
-                    <option value="{{ $client->id }}" @if ($filter_client_id == $client->id)selected="selected"@endif>{{ $client->name }}</option>
-                @endforeach
-            </select>
-
             <select name="filter_profile_id" class="form-control" style="width: 15%; display: inline;">
                 <option value="">Filtrer par profil</option>
-                <option value="{{ Webaccess\BiometLaravel\Models\User::PROFILE_ID_AROL_ENERGY_ADMINISTRATOR }}" @if ($filter_profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_AROL_ENERGY_ADMINISTRATOR)selected="selected"@endif>Administrateur Arol Energy</option>
                 <option value="{{ Webaccess\BiometLaravel\Models\User::PROFILE_ID_CLIENT_ADMINISTRATOR }}" @if ($filter_profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_CLIENT_ADMINISTRATOR)selected="selected"@endif>Administrateur client</option>
                 <option value="{{ Webaccess\BiometLaravel\Models\User::PROFILE_ID_CLIENT_USER }}" @if ($filter_profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_CLIENT_USER)selected="selected"@endif>Utilisateur client</option>
                 <option value="{{ Webaccess\BiometLaravel\Models\User::PROFILE_ID_PROVIDER }}" @if ($filter_profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_PROVIDER)selected="selected"@endif>Prestataire</option>
@@ -49,7 +41,6 @@
         <tr>
             <th>{{ trans('biomet::users.name') }}</th>
             <th>{{ trans('biomet::users.email') }}</th>
-            <th>{{ trans('biomet::users.client') }}</th>
             <th>{{ trans('biomet::users.profile') }}</th>
             <th>{{ trans('biomet::generic.action') }}</th>
         </tr>
@@ -60,23 +51,21 @@
             <tr>
                 <td>{{ $user->last_name }} {{ $user->first_name }}</td>
                 <td><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></td>
-                <td>@if ($user->client){{ $user->client->name }}@else N/A @endif</td>
                 <td>@if ($user->profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_PROVIDER)Prestataire
                     @elseif ($user->profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_CLIENT_USER)Utilisateur client
                     @elseif ($user->profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_CLIENT_ADMINISTRATOR)Administrateur client
-                    @elseif ($user->profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_AROL_ENERGY_ADMINISTRATOR)Administrateur Arol Energy
                     @endif
                 </td>
                 <td align="right">
-                    <a class="btn btn-primary" href="{{ route('users_edit', ['id' => $user->id]) }}">{{ trans('biomet::generic.edit') }}</a>
-                    <a class="btn btn-danger" href="{{ route('users_delete', ['id' => $user->id]) }}">{{ trans('biomet::generic.delete') }}</a>
+                    <a class="btn btn-primary" href="{{ route('client_users_edit', ['id' => $user->id]) }}">{{ trans('biomet::generic.edit') }}</a>
+                    <a class="btn btn-danger" href="{{ route('client_users_delete', ['id' => $user->id]) }}">{{ trans('biomet::generic.delete') }}</a>
                 </td>
             </tr>
         @endforeach
         </tbody>
     </table>
 
-    <a class="btn btn-success" href="{{ route('users_add') }}">{{ trans('biomet::generic.add') }}</a>
+    <a class="btn btn-success" href="{{ route('client_users_add') }}">{{ trans('biomet::generic.add') }}</a>
 
     <div class="text-center">
         @include('biomet::includes.items_per_page')

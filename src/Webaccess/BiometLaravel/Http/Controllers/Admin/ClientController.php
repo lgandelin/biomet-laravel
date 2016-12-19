@@ -35,7 +35,8 @@ class ClientController extends BaseController
         try {
             ClientManager::createClient(
                 $this->request->input('name'),
-                $this->request->input('access_limit_date')
+                $this->request->input('access_limit_date'),
+                $this->request->input('users_limit')
             );
             $this->request->session()->flash('confirmation', trans('biomet::clients.add_client_success'));
 
@@ -72,7 +73,8 @@ class ClientController extends BaseController
             ClientManager::udpateClient(
                 $this->request->input('client_id'),
                 $this->request->input('name'),
-                $this->request->input('access_limit_date')
+                $this->request->input('access_limit_date'),
+                $this->request->input('users_limit')
             );
             $this->request->session()->flash('confirmation', trans('biomet::clients.edit_client_success'));
         } catch (\Exception $e) {

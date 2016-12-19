@@ -13,16 +13,19 @@ class UserManager
     {
         $users = User::with('client')->orderBy('created_at');
 
-        if ($clientName)
-            $users->where('last_name', 'LIKE', '%' . $clientName . '%')
-                ->orWhere('first_name', 'LIKE', '%' . $clientName . '%')
-                ->orWhere('email', 'LIKE', '%' . $clientName . '%');
-
-        if ($clientID)
+        if ($clientID) {
             $users->where('client_id', '=', $clientID);
+        }
 
-        if ($profileID)
+        if ($profileID) {
             $users->where('profile_id', '=', $profileID);
+        }
+
+        if ($clientName) {
+            $users->where(function ($query) use ($clientName) {
+                $query->where('last_name', 'LIKE', '%' . $clientName . '%')->orWhere('first_name', 'LIKE', '%' . $clientName . '%')->orWhere('email', 'LIKE', '%' . $clientName . '%');
+            });
+        }
 
         return ($paginate) ? $users->paginate($paginate) : $users->get();
     }

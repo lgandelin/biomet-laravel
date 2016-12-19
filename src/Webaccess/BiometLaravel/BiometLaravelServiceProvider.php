@@ -9,6 +9,7 @@ use Webaccess\BiometLaravel\Commands\GenerateDataFromExcelCommand;
 use Webaccess\BiometLaravel\Commands\GenerateRandomDatabaseDataCommand;
 use Webaccess\BiometLaravel\Commands\GenerateRandomJSONDataCommand;
 use Webaccess\BiometLaravel\Commands\GenerateSampleExcelDataCommand;
+use Webaccess\BiometLaravel\Http\Middlewares\AdminClientsMiddleware;
 use Webaccess\BiometLaravel\Http\Middlewares\AdminMiddleware;
 
 class BiometLaravelServiceProvider extends ServiceProvider
@@ -24,6 +25,7 @@ class BiometLaravelServiceProvider extends ServiceProvider
         $this->loadViewsFrom($basePath.'resources/views/', 'biomet');
         $this->loadTranslationsFrom($basePath.'resources/lang/', 'biomet');
         $router->middleware('admin', AdminMiddleware::class);
+        $router->middleware('admin_clients', AdminClientsMiddleware::class);
 
         $this->publishes([
             $basePath.'resources/assets/css' => base_path('public/css'),

@@ -20,6 +20,7 @@ class Client extends Model
     protected $fillable = [
         'name',
         'access_limit_date',
+        'users_limit'
     ];
 
     public function setAccessLimitDateAttribute($value)

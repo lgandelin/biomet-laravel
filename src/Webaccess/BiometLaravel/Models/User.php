@@ -9,9 +9,10 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    const PROFILE_ID_ADMINISTRATOR = 1;
-    const PROFILE_ID_CLIENT = 2;
-    const PROFILE_ID_PROVIDER = 3;
+    const PROFILE_ID_AROL_ENERGY_ADMINISTRATOR = 1;
+    const PROFILE_ID_CLIENT_USER = 2;
+    const PROFILE_ID_CLIENT_ADMINISTRATOR = 3;
+    const PROFILE_ID_PROVIDER = 4;
 
     protected $table = 'users';
     public $incrementing = false;

@@ -27,10 +27,13 @@ class BaseController extends Controller
         if (!$user = $this->getUser())
             return [];
 
-        if ($user->profile_id == User::PROFILE_ID_ADMINISTRATOR)
+        if ($user->profile_id == User::PROFILE_ID_AROL_ENERGY_ADMINISTRATOR)
             return FacilityManager::getAll(false);
 
-        if ($user->profile_id == User::PROFILE_ID_CLIENT || User::PROFILE_ID_PROVIDER && $user->client_id)
+        if ($user->client_id && ($user->profile_id == User::PROFILE_ID_CLIENT_ADMINISTRATOR ||
+            $user->profile_id == User::PROFILE_ID_CLIENT_USER ||
+            $user->profile_id == User::PROFILE_ID_PROVIDER))
+
             return FacilityManager::getByClient($user->client_id);
 
         return [];
