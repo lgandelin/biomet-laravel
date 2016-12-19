@@ -42,7 +42,11 @@ class FacilityManager
      * @param $address
      * @param $city
      * @param $department
+     * @param $country
      * @param $clientID
+     * @param $technology
+     * @param $serialNumber
+     * @param $startupDate
      * @return Facility
      */
     public static function createFacility($name, $longitude, $latitude, $address, $city, $department, $country, $clientID, $technology, $serialNumber, $startupDate)
@@ -74,7 +78,11 @@ class FacilityManager
      * @param $address
      * @param $city
      * @param $department
+     * @param $country
      * @param $clientID
+     * @param $technology
+     * @param $serialNumber
+     * @param $startupDate
      * @return bool
      */
     public static function udpateFacility($facilityID, $name, $longitude, $latitude, $address, $city, $department, $country, $clientID, $technology, $serialNumber, $startupDate)
