@@ -31,5 +31,6 @@
         'facility_technology' => $facility->technology,
         'facility_serial_number' => $facility->serial_number,
         'facility_startup_date' => $facility->startup_date ? DateTime::createFromFormat('Y-m-d', $facility->startup_date)->format('d/m/Y') : null,
+        'facility_tabs' => $facility->tabs
     ])
 @endsection

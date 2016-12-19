@@ -28,10 +28,16 @@ class Facility extends Model
         'technology',
         'serial_number',
         'startup_date',
+        'tabs'
     ];
 
     public function client()
     {
         return $this->belongsTo(Client::class);
+    }
+
+    public function getTabsAttribute()
+    {
+        return $this->attributes['tabs'] ? explode(',', $this->attributes['tabs']) : [];
     }
 }
