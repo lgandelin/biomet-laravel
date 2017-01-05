@@ -1,5 +1,6 @@
 .navigation {
     overflow: hidden;
+
     background: $lightgray;
     border-bottom: 1px solid #4f7e97;
 
@@ -48,4 +49,91 @@
         }
 
     }
+}
+
+.left-column {
+    position: absolute;
+    top: 81px;
+    bottom: 0;
+    left: 0;
+    width: 270px;
+    float: left;
+
+    background: $lightgray;
+    border-right: 1px solid #e8e8e8;
+
+    nav {
+        ul {
+            margin-bottom: 0;
+
+            li {
+                background: $darkblue2;
+                border-bottom: 1px solid #4f7e97;
+
+                a {
+                    display: block;
+                    padding: 17px 22px;
+                    
+                    font-size: 16px;
+                    color: white;
+                }
+
+                a:hover, a:active, a:focus {
+                    text-decoration: none;
+                }
+
+                i {
+                    margin-right: 5px;
+                    color: #00ffff;
+                }
+            }
+            
+            li.separator {
+                height: 3px;
+                background: $orange;
+            }
+
+            li.separator:hover {
+                background: $orange;
+            }
+
+            li.admin-tab {
+                background: #3c3c3c;
+                border-bottom: 1px solid #777777;
+
+                i {
+                    color: white;
+                }
+            }
+
+            li.admin-tab:hover,
+            li.admin-tab.active {
+                background: #515151;
+            }
+
+            li.active {
+                background: #1c5278;
+
+                a {
+                    color: $orange;
+                    font-weight: bold;
+                }
+
+                i {
+                    color: $orange;
+                }
+            }
+
+            li:hover {
+                background: #1c5278;
+            }
+        }
+    }
+}
+
+.main-content {
+    overflow: hidden;
+    margin-left: 270px;
+    padding-left: 36px;
+    padding-top: 21px;
 }

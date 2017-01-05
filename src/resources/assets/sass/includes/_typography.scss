@@ -17,9 +17,13 @@ ul {
 }
 
 body {
-	font-family: Verdana;
+	font-family: Verdana, Arial, sans-serif;
 	font-size: 13px;
 	color: $darkblue;
+}
+
+h1, h2, h3 {
+	margin-top: 0;
 }
 
 h1 {

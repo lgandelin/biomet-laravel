@@ -7273,9 +7273,12 @@ ul {
   list-style: none; }
 
 body {
-  font-family: Verdana;
+  font-family: Verdana, Arial, sans-serif;
   font-size: 13px;
   color: #184667; }
+
+h1, h2, h3 {
+  margin-top: 0; }
 
 h1 {
   font-size: 19px;
@@ -7352,6 +7355,59 @@ label {
       font-size: 27px; }
     .navigation .logout .logout-icon:hover {
       color: #f5f5f5; }
+
+.left-column {
+  position: absolute;
+  top: 81px;
+  bottom: 0;
+  left: 0;
+  width: 270px;
+  float: left;
+  background: #f5f5f5;
+  border-right: 1px solid #e8e8e8; }
+  .left-column nav ul {
+    margin-bottom: 0; }
+    .left-column nav ul li {
+      background: #004468;
+      border-bottom: 1px solid #4f7e97; }
+      .left-column nav ul li a {
+        display: block;
+        padding: 17px 22px;
+        font-size: 16px;
+        color: white; }
+      .left-column nav ul li a:hover, .left-column nav ul li a:active, .left-column nav ul li a:focus {
+        text-decoration: none; }
+      .left-column nav ul li i {
+        margin-right: 5px;
+        color: #00ffff; }
+    .left-column nav ul li.separator {
+      height: 3px;
+      background: #fbb336; }
+    .left-column nav ul li.separator:hover {
+      background: #fbb336; }
+    .left-column nav ul li.admin-tab {
+      background: #3c3c3c;
+      border-bottom: 1px solid #777777; }
+      .left-column nav ul li.admin-tab i {
+        color: white; }
+    .left-column nav ul li.admin-tab:hover,
+    .left-column nav ul li.admin-tab.active {
+      background: #515151; }
+    .left-column nav ul li.active {
+      background: #1c5278; }
+      .left-column nav ul li.active a {
+        color: #fbb336;
+        font-weight: bold; }
+      .left-column nav ul li.active i {
+        color: #fbb336; }
+    .left-column nav ul li:hover {
+      background: #1c5278; }
+
+.main-content {
+  overflow: hidden;
+  margin-left: 270px;
+  padding-left: 36px;
+  padding-top: 21px; }
 
 .dashboard-template .google-map {
   width: 100%;

@@ -6,9 +6,9 @@
 }
 
 .btn-valid {
-    background: #004468;
+    background: $darkblue2;
     color: white;
-    border: 2px solid #004468;
+    border: 2px solid $darkblue2;
 }
 
 .btn-valid:hover {
@@ -19,8 +19,8 @@
 
 .btn-default {
     background: white;
-    color: #004468;
-    border: 2px solid #004468;
+    color: $darkblue2;
+    border: 2px solid $darkblue2;
 }
 
 .btn-danger {
