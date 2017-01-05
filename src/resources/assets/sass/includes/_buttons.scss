@@ -1,0 +1,29 @@
+.btn {
+    padding: 8px 25px;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+
+.btn-valid {
+    background: #004468;
+    color: white;
+    border: 2px solid #004468;
+}
+
+.btn-valid:hover {
+    background: $orange;
+    color: white;
+    border: 2px solid $orange;
+}
+
+.btn-default {
+    background: white;
+    color: #004468;
+    border: 2px solid #004468;
+}
+
+.btn-danger {
+    background: #d9534f;
+    border: 2px solid #d9534f;
+}

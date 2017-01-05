@@ -13,7 +13,7 @@
             <form action="{{ route('facility_group_excel') }}" method="post">
                 <strong>Date de début :</strong> <input id="start_date" name="start_date" class="datepicker form-control" value="@if (isset($start_date)){{$start_date}}@else{{ date('d/m/Y', strtotime( '-1 days' )) }}@endif" style="display: inline; width:175px; margin-bottom: 1rem; margin-right: 2.5rem;"/>
                 <strong>Date de fin :</strong> <input id="end_date" name="end_date" class="datepicker form-control" value="@if (isset($end_date)){{$end_date}}@else{{ date('d/m/Y', strtotime( '-1 days' )) }}@endif" style="display: inline; width:175px; margin-bottom: 1rem;"/>
-                <input type="submit" class="btn btn-success" value="{{ trans('biomet::generic.valid') }}" />
+                <input type="submit" class="btn btn-valid" value="{{ trans('biomet::generic.valid') }}" />
                 {{ csrf_field() }}
                 <input type="hidden" name="facility_id" id="facility_id" value="{{ $current_facility->id }}" />
             </form>

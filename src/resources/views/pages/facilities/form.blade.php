@@ -77,7 +77,7 @@
     </div>
     
     <div class="form-group">
-        <button class="btn btn-success" type="submit">{{ trans('biomet::generic.valid') }}</button>
+        <button class="btn btn-valid" type="submit">{{ trans('biomet::generic.valid') }}</button>
         <a class="btn btn-default" href="{{ route('facilities') }}">{{ trans('biomet::generic.back') }}</a>
     </div>
 

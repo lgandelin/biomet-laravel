@@ -39,7 +39,7 @@
                 <option value="{{ Webaccess\BiometLaravel\Models\User::PROFILE_ID_PROVIDER }}" @if ($filter_profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_PROVIDER)selected="selected"@endif>Prestataire</option>
             </select>
 
-            <input class="btn btn-success" type="submit" value="{{ trans('biomet::generic.valid') }}" />
+            <input class="btn btn-valid" type="submit" value="{{ trans('biomet::generic.valid') }}" />
         </form>
     </div>
 
@@ -76,7 +76,7 @@
         </tbody>
     </table>
 
-    <a class="btn btn-success" href="{{ route('users_add') }}">{{ trans('biomet::generic.add') }}</a>
+    <a class="btn btn-valid" href="{{ route('users_add') }}">{{ trans('biomet::generic.add') }}</a>
 
     <div class="text-center">
         @include('biomet::includes.items_per_page')

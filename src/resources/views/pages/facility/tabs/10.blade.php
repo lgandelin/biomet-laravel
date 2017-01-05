@@ -52,7 +52,7 @@
             </tbody>
         </table>
 
-        <a class="btn btn-success" href="{{ route('interventions_add', ['id' => $current_facility->id]) }}">{{ trans('biomet::generic.add') }}</a>
+        <a class="btn btn-valid" href="{{ route('interventions_add', ['id' => $current_facility->id]) }}">{{ trans('biomet::generic.add') }}</a>
 
         <div class="text-center">
             {!! $data['interventions']->render() !!}

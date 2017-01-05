@@ -42,7 +42,7 @@
         </tbody>
     </table>
 
-    <a class="btn btn-success" href="{{ route('clients_add') }}">{{ trans('biomet::generic.add') }}</a>
+    <a class="btn btn-valid" href="{{ route('clients_add') }}">{{ trans('biomet::generic.add') }}</a>
 
     <div class="text-center">
         @include('biomet::includes.items_per_page')
