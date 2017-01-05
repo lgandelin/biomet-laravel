@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'action' => 'Action',
+    'action' => 'Actions',
     'add' => 'Ajouter',
     'valid' => 'Valider',
     'edit' => 'Editer',

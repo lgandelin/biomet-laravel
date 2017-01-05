@@ -3,6 +3,7 @@
 
     <div class="facilities-switcher">
         <select>
+            <option value="">Choisir un site à consulter</option>
             @foreach ($navigation_facilities as $f)
                 <option value="{{ $f->id }}" @if(isset($current_facility) && isset($current_facility->id) && $f->id === $current_facility->id)selected="selected"@endif>{{ $f->name }}</option>
             @endforeach

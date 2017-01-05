@@ -24,7 +24,7 @@
         <input class="form-control" type="password" placeholder="{{ trans('biomet::users.password_confirmation') }}" name="password_confirmation" autocomplete="off" />
     </div>
 
-    @if ($user_profile_id === Webaccess\BiometLaravel\Models\User::PROFILE_ID_CLIENT_ADMINISTRATOR)
+    @if (isset($user_profile_id) && $user_profile_id === Webaccess\BiometLaravel\Models\User::PROFILE_ID_CLIENT_ADMINISTRATOR)
         <input type="hidden" name="profile_id" value="{{ Webaccess\BiometLaravel\Models\User::PROFILE_ID_CLIENT_ADMINISTRATOR }}" />
     @else
         <div class="form-group">

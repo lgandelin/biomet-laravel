@@ -62,17 +62,17 @@
     <div class="form-group">
         <label for="tabs[]">{{ trans('biomet::facilities.tabs') }}</label>
         <select multiple class="form-control" name="tabs[]" autocomplete="off" style="height:200px">
-            <option value="1" @if (in_array(1, $facility_tabs))selected="selected"@endif>Débit</option>
-            <option value="2" @if (in_array(2, $facility_tabs))selected="selected"@endif>Volume</option>
-            <option value="3" @if (in_array(3, $facility_tabs))selected="selected"@endif>Composition</option>
-            <option value="4" @if (in_array(4, $facility_tabs))selected="selected"@endif>Suivi prétraitement</option>
-            <option value="5" @if (in_array(5, $facility_tabs))selected="selected"@endif>Indicateur IGP</option>
-            <option value="6" @if (in_array(6, $facility_tabs))selected="selected"@endif>Consommation électrique</option>
-            <option value="7" @if (in_array(7, $facility_tabs))selected="selected"@endif>Puissance fournie</option>
-            <option value="8" @if (in_array(8, $facility_tabs))selected="selected"@endif>Heure en fonctionnement</option>
-            <option value="9" @if (in_array(9, $facility_tabs))selected="selected"@endif>Historique des alarmes</option>
-            <option value="10" @if (in_array(10, $facility_tabs))selected="selected"@endif>Maintenance</option>
-            <option value="11" @if (in_array(11, $facility_tabs))selected="selected"@endif>Fichiers de données</option>
+            <option value="1" @if (isset($facility_tabs) && in_array(1, $facility_tabs))selected="selected"@endif>Débit</option>
+            <option value="2" @if (isset($facility_tabs) && in_array(2, $facility_tabs))selected="selected"@endif>Volume</option>
+            <option value="3" @if (isset($facility_tabs) && in_array(3, $facility_tabs))selected="selected"@endif>Composition</option>
+            <option value="4" @if (isset($facility_tabs) && in_array(4, $facility_tabs))selected="selected"@endif>Suivi prétraitement</option>
+            <option value="5" @if (isset($facility_tabs) && in_array(5, $facility_tabs))selected="selected"@endif>Indicateur IGP</option>
+            <option value="6" @if (isset($facility_tabs) && in_array(6, $facility_tabs))selected="selected"@endif>Consommation électrique</option>
+            <option value="7" @if (isset($facility_tabs) && in_array(7, $facility_tabs))selected="selected"@endif>Puissance fournie</option>
+            <option value="8" @if (isset($facility_tabs) && in_array(8, $facility_tabs))selected="selected"@endif>Heure en fonctionnement</option>
+            <option value="9" @if (isset($facility_tabs) && in_array(9, $facility_tabs))selected="selected"@endif>Historique des alarmes</option>
+            <option value="10" @if (isset($facility_tabs) && in_array(10, $facility_tabs))selected="selected"@endif>Maintenance</option>
+            <option value="11" @if (isset($facility_tabs) && in_array(11, $facility_tabs))selected="selected"@endif>Fichiers de données</option>
         </select>
     </div>
     

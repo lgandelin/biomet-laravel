@@ -6,7 +6,7 @@
 
     @include('biomet::includes.left_column')
 
-    <div class="main-content container-fluid">
+    <div class="main-content">
         @yield('page-content')
     </div>
 

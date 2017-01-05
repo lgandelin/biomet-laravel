@@ -6,7 +6,6 @@ $(document).ready(function() {
 
 //Load graphs
 $('#valid').on('click', function() {
-
     //Delete old graphs on page
     $('.entrypoint').empty();
     $.each(Highcharts.charts, function(i, chart) {

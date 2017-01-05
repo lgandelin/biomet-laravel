@@ -1,7 +1,7 @@
 <form action="{{ $form_action }}" method="post" enctype="multipart/form-data">
     <div class="form-group">
         <label for="event_date">{{ trans('biomet::interventions.event_date') }}</label>
-        <input class="form-control" type="date" placeholder="{{ trans('biomet::interventions.event_date') }}" name="event_date" @if (isset($intervention_event_date))value="{{ $intervention_event_date }}"@endif />
+        <input class="form-control datepicker" type="text" placeholder="{{ trans('biomet::interventions.event_date') }}" name="event_date" @if (isset($intervention_event_date))value="{{ $intervention_event_date }}"@endif />
     </div>
 
     <div class="form-group">
