@@ -5,8 +5,6 @@
 @section('page-content')
     <h1>{{ $current_facility->name }} - Fichiers de données</h1>
 
-    @include('biomet::pages.facility.includes.menu')
-
     <div class="facility-template">
 
         <div style="margin-bottom: 3rem;">

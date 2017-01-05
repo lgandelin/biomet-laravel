@@ -45,7 +45,7 @@ class ClientManager
      * @param $usersLimit
      * @return bool
      */
-    public static function udpateClient($clientID, $name, $accessLimitDate, $usersLimit)
+    public static function udpateClient($clientID, $name, $accessLimitDate = null, $usersLimit = null)
     {
         if ($client = Client::find($clientID)) {
             $client->name = $name;

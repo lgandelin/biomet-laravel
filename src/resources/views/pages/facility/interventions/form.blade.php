@@ -57,6 +57,7 @@
                         <a class="btn btn-success" href="{{ route('interventions_download_file', ['id' => $intervention_id, 'file_name' => $file['name']]) }}">{{ trans('biomet::generic.download') }}</a>
                         <a class="btn btn-danger" href="{{ route('interventions_delete_file', ['id' => $intervention_id, 'file_name' => $file['name']]) }}">{{ trans('biomet::generic.delete') }}</a>
                     </td>
+                </tr>
             @endforeach
         </table>
     </div>

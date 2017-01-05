@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'meta_title' => 'Tableau de bord',
-    'title' => 'Tableau de bord',
-    'facilities_list' => 'Liste des sites',
+    'meta_title' => 'Carte des sites',
+    'title' => 'Carte des sites',
 ];

@@ -5,8 +5,6 @@
 @section('page-content')
     <h1>{{ $current_facility->name }}</h1>
 
-    @include('biomet::pages.facility.includes.menu')
-
     <div class="facility-template">
 
         @if (isset($error))
