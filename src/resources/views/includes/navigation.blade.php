@@ -1,6 +1,8 @@
 <div class="navigation">
     <a class="logo" href="{{ route('dashboard') }}"><img src="{{ asset('img/logo-arol-energy.png') }}" alt="Arol Energy" /></a>
 
+    <div class="logout"><span class="name">{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</span> <a href="{{ route('logout') }}"><i class="logout-icon"></i></a></div>
+
     <div class="facilities-switcher">
         <select>
             <option value="">Choisir un site à consulter</option>
@@ -8,9 +10,9 @@
                 <option value="{{ $f->id }}" @if(isset($current_facility) && isset($current_facility->id) && $f->id === $current_facility->id)selected="selected"@endif>{{ $f->name }}</option>
             @endforeach
         </select>
-    </div>
 
-    <div class="logout">{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}<a href="{{ route('logout') }}"><i class="logout-icon"></i></a></div>
+        <div class="menu-icon">MENU <i class="glyphicon glyphicon-menu-hamburger"></i></div>
+    </div>
 </div>
 
 <script>

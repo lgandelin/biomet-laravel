@@ -45,7 +45,7 @@
                         <td>{{ (new \DateTime($intervention->event_date))->format('d/m/Y') }}</td>
                         <td>{{ $intervention->title }}</td>
                         <td>{{ $intervention->description }}</td>
-                        <td width="12%">
+                        <td width="15%">
                             <a href="{{ route('interventions_edit', ['id' => $intervention->id]) }}"><i class="btn-edit glyphicon glyphicon-pencil"></i></a>
                             <a href="{{ route('interventions_delete', ['id' => $intervention->id]) }}"><i class="btn-remove glyphicon glyphicon-remove"></i></a>
                         </td>

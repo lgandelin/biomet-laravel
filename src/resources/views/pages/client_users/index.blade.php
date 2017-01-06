@@ -19,7 +19,7 @@
                 </div>
             @endif
 
-            <div class="filters" style="margin-top: 3rem; margin-bottom: 3rem;">
+            <div class="filters">
                 <h4>Filtres</h4>
                 <form action="">
                     <input type="text" class="form-control" name="filter_client_name" value="{{ $filter_client_name }}" placeholder="Recherche" style="width: 15%; display: inline;"/>
@@ -56,7 +56,7 @@
                             @elseif ($user->profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_CLIENT_ADMINISTRATOR)Administrateur client
                             @endif
                         </td>
-                        <td width="12%">
+                        <td width="15%">
                             <a href="{{ route('client_users_edit', ['id' => $user->id]) }}"><i class="btn-edit glyphicon glyphicon-pencil"></i></a>
                             <a href="{{ route('client_users_delete', ['id' => $user->id]) }}"><i class="btn-remove glyphicon glyphicon-remove"></i></a>
                         </td>

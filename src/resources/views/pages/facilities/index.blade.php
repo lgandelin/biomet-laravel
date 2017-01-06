@@ -18,7 +18,7 @@
                 </div>
             @endif
 
-            <div class="filters" style="margin-bottom: 3rem;">
+            <div class="filters">
                 <h4>Filtres</h4>
                 <form action="">
 
@@ -50,7 +50,7 @@
                     <tr>
                         <td>{{ $facility->name }}</td>
                         <td>@if ($facility->client){{ $facility->client->name }}@else N/A @endif</td>
-                        <td width="12%">
+                        <td width="15%">
                             <a href="{{ route('facilities_edit', ['id' => $facility->id]) }}"><i class="btn-edit glyphicon glyphicon-pencil"></i></a>
                             <a href="{{ route('facilities_delete', ['id' => $facility->id]) }}"><i class="btn-remove glyphicon glyphicon-remove"></i></a>
                         </td>

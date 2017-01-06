@@ -34,7 +34,7 @@
                         <td>{{ $client->name }}</td>
                         <td>@if ($client->access_limit_date){{ date('d/m/Y', strtotime($client->access_limit_date)) }}@endif</td>
                         <td>{{ $client->users_limit }}</td>
-                        <td width="12%">
+                        <td width="15%">
                             <a href="{{ route('clients_edit', ['id' => $client->id]) }}"><i class="btn-edit glyphicon glyphicon-pencil"></i></a>
                             <a href="{{ route('clients_delete', ['id' => $client->id]) }}"><i class="btn-remove glyphicon glyphicon-remove"></i></a>
                         </td>

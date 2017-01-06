@@ -1,0 +1,27 @@
+.date-filters {
+    text-align: center;
+
+    .current {
+        color: $orange;
+    }
+
+    .datepicker {
+        display: inline;
+        width: 175px;
+        margin-bottom: 1rem;
+        margin-right: 2.5rem;
+    }
+
+    ul {
+        margin-top: 15px;
+        text-align: center;
+
+        li {
+            display: inline;
+        }
+    }
+}
+
+.filters {
+    margin-bottom: 3rem;
+}
