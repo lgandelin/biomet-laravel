@@ -10,7 +10,7 @@
         </select>
     </div>
 
-    <div class="logout">{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}<a href="{{ route('logout') }}"><i class="logout-icon fa fa-power-off"></i></a></div>
+    <div class="logout">{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}<a href="{{ route('logout') }}"><i class="logout-icon"></i></a></div>
 </div>
 
 <script>

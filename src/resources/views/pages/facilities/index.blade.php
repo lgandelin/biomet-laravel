@@ -50,7 +50,7 @@
                     <tr>
                         <td>{{ $facility->name }}</td>
                         <td>@if ($facility->client){{ $facility->client->name }}@else N/A @endif</td>
-                        <td>
+                        <td width="12%">
                             <a href="{{ route('facilities_edit', ['id' => $facility->id]) }}"><i class="btn-edit glyphicon glyphicon-pencil"></i></a>
                             <a href="{{ route('facilities_delete', ['id' => $facility->id]) }}"><i class="btn-remove glyphicon glyphicon-remove"></i></a>
                         </td>

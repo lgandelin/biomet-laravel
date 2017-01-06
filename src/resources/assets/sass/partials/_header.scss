@@ -32,6 +32,7 @@
         font-size: 16px;
         font-weight: bold;
         color: white;
+
         background: $orange;
 
         .logout-icon {
@@ -40,12 +41,14 @@
             vertical-align: middle;
             margin-left: 12px;
 
-            color: white;
-            font-size: 27px;
+            width: 25px;
+            height: 25px;
+            display: inline-block;
+            background: $orange url('../img/ico-logout.png') no-repeat center right;
         }
 
         .logout-icon:hover {
-            color: $lightgray;
+            opacity: 0.8;
         }
 
     }

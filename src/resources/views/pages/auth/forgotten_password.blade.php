@@ -4,30 +4,45 @@
 
 @section('main-content')
 
-    @if ($message)
-        <div class="bg-info">
-            {{ $message }}
-        </div>
-    @endif
+    <div class="container">
+        <div class="login-template">
 
-    @if ($error)
-        <div class="alert alert-danger">
-            {{ $error }}
-        </div>
-    @endif
+            <div class="col-md-8 col-md-offset-2">
+                <div class="panel panel-default" style="margin-top: 5rem">
+                    <div class="panel-heading">Mot de passe oublié</div>
+                    <div class="panel-body">
 
-    <form class="form-horizontal" role="form" method="POST" action="{{ route('forgotten_password_handler') }}">
-        <div class="form-group">
-            <label>{{ trans('biomet::login.email') }}</label>
-            <input type="email" class="form-control" name="email" value="{{ old('email') }}" />
-        </div>
+                        @if ($message)
+                            <div class="alert alert-info">
+                                {{ $message }}
+                            </div>
+                        @endif
 
-        <div class="form-group">
-            <button type="submit">{{ trans('biomet::login.send_new_password') }}</button>
-            <a href="{{ route('login') }}" title="{{ trans('biomet::generic.back') }}">{{ trans('biomet::generic.back') }}</a>
-        </div>
+                        @if ($error)
+                            <div class="alert alert-danger">
+                                {{ $error }}
+                            </div>
+                        @endif
 
-        {!! csrf_field() !!}
-    </form>
+                        <h1 class="logo" style="text-align: center; margin-top: 1rem; margin-bottom: 4rem"><img src="{{asset('img/logo-arol-energy.png')}}"></h1>
+
+                        <form class="form-horizontal" role="form" method="POST" action="{{ route('forgotten_password_handler') }}">
+                            <div class="form-group">
+                                <label>{{ trans('biomet::login.email') }}</label>
+                                <input type="email" class="form-control" name="email" value="{{ old('email') }}" />
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-valid">{{ trans('biomet::login.send_new_password') }}</button>
+                                <a href="{{ route('login') }}" title="{{ trans('biomet::generic.back') }}">{{ trans('biomet::generic.back') }}</a>
+                            </div>
+
+                            {!! csrf_field() !!}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 @endsection

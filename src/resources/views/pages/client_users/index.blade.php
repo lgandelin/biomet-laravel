@@ -57,7 +57,7 @@
                             @elseif ($user->profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_CLIENT_ADMINISTRATOR)Administrateur client
                             @endif
                         </td>
-                        <td>
+                        <td width="12%">
                             <a href="{{ route('client_users_edit', ['id' => $user->id]) }}"><i class="btn-edit glyphicon glyphicon-pencil"></i></a>
                             <a href="{{ route('client_users_delete', ['id' => $user->id]) }}"><i class="btn-remove glyphicon glyphicon-remove"></i></a>
                         </td>

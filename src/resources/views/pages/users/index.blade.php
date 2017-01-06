@@ -68,7 +68,7 @@
                             @elseif ($user->profile_id == Webaccess\BiometLaravel\Models\User::PROFILE_ID_AROL_ENERGY_ADMINISTRATOR)Administrateur Arol Energy
                             @endif
                         </td>
-                        <td>
+                        <td width="12%">
                             <a href="{{ route('users_edit', ['id' => $user->id]) }}"><i class="btn-edit glyphicon glyphicon-pencil"></i></a>
                             <a href="{{ route('users_delete', ['id' => $user->id]) }}"><i class="btn-remove glyphicon glyphicon-remove"></i></a>
                         </td>
