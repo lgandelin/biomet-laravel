@@ -22,7 +22,6 @@
             <div class="filters" style="margin-top: 3rem; margin-bottom: 3rem;">
                 <h4>Filtres</h4>
                 <form action="">
-
                     <input type="text" class="form-control" name="filter_client_name" value="{{ $filter_client_name }}" placeholder="Recherche" style="width: 15%; display: inline;"/>
 
                     <select name="filter_profile_id" class="form-control" style="width: 15%; display: inline;">

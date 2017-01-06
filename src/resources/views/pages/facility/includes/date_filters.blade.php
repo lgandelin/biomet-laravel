@@ -4,7 +4,7 @@
     <input type="button" id="valid" class="btn btn-valid" value="{{ trans('biomet::generic.valid') }}" />
 
     <ul class="date-filters" style="text-align: center;">
-        <li style="display: inline;"><a class="current" href="javascript:last_24h();">Dernières 24h</a></li> |
+        <li style="display: inline;"><a @if (isset($current) && $current == false) @else class="current"@endif href="javascript:last_24h();">Dernières 24h</a></li> |
         <li style="display: inline;"><a href="javascript:last_week()">Dernière semaine</a></li> |
         <li style="display: inline;"><a href="javascript:last_month()">Dernier mois</a></li> |
         <li style="display: inline;"><a href="javascript:current_year()">Année en cours</a></li>

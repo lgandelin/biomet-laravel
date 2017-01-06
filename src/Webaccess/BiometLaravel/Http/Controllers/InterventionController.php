@@ -146,7 +146,7 @@ class InterventionController extends BaseController
                 $this->request->session()->flash('confirmation', trans('biomet::interventions.delete_file_success'));
             }
         } catch (\Exception $e) {
-            $this->request->session()->flash('error', trans('biomet::interventions.delete_file__error'));
+            $this->request->session()->flash('error', trans('biomet::interventions.delete_file_error'));
         }
 
         return redirect()->route('interventions_edit', ['id' => $this->request->id]);

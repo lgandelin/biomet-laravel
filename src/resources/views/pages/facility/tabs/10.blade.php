@@ -24,6 +24,7 @@
                 @include('biomet::pages.facility.includes.date_filters', [
                     'start_date' => $data['filter_start_date'],
                     'end_date' => $data['filter_end_date'],
+                    'current' => false,
                 ])
             </form>
 
