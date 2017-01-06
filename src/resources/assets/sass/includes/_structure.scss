@@ -1,0 +1,35 @@
+html {
+    height: 100%;
+}
+body {
+    position: relative;
+    min-height: 100%;
+}
+
+.main-content {
+    overflow: hidden;
+    margin-left: 305px;
+    margin-top: 21px;
+    margin-right: 35px;
+    padding-bottom: 50px;
+}
+
+.box {
+    padding-top: 10px;
+    padding-bottom: 15px;
+
+    border: 2px solid #e2e8e7;
+    border-top: 2px solid $darkblue;
+
+    .box-title {
+        margin-bottom: 30px;
+        padding-bottom: 10px;
+        padding-left: 35px;
+        border-bottom: 1px solid #184667;
+    }
+
+    .box-content {
+        padding-left: 35px;
+        padding-right: 35px;
+    }
+}

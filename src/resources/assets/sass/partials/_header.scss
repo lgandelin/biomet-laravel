@@ -1,0 +1,136 @@
+.navigation {
+    overflow: hidden;
+
+    background: $lightgray;
+    border-bottom: 1px solid #4f7e97;
+
+    .logo {
+        width: 270px;
+        height: 80px;
+        padding-top: 10px;
+        display: block;
+        float: left;
+
+        text-align: center;
+        background: white;
+        border-right: 1px solid #4f7e97;
+    }
+
+    .facilities-switcher {
+        margin-top: 25px;
+        margin-left: 30px;
+        display: block;
+        float: left;
+    }
+
+    .logout {
+        height: 80px;
+        display: block;
+        float: right;
+        padding: 27px 35px;
+
+        font-size: 16px;
+        font-weight: bold;
+        color: white;
+
+        background: $orange;
+
+        .logout-icon {
+            position: relative;
+            top: -2px;
+            vertical-align: middle;
+            margin-left: 12px;
+
+            width: 25px;
+            height: 25px;
+            display: inline-block;
+            background: $orange url('../img/ico-logout.png') no-repeat center right;
+        }
+
+        .logout-icon:hover {
+            opacity: 0.8;
+        }
+
+    }
+}
+
+.left-column {
+    position: absolute;
+    top: 81px;
+    bottom: 0;
+    left: 0;
+    width: 270px;
+    float: left;
+
+    background: $lightgray;
+    border-right: 1px solid #e8e8e8;
+
+    nav {
+        ul {
+            margin-bottom: 0;
+
+            li {
+                background: $darkblue2;
+                border-bottom: 1px solid #4f7e97;
+
+                a {
+                    display: block;
+                    padding: 17px 0 17px 22px;
+                    
+                    font-size: 15px;
+                    color: white;
+                }
+
+                a:hover, a:active, a:focus {
+                    text-decoration: none;
+                }
+
+                i {
+                    margin-right: 5px;
+                    color: #00ffff;
+                }
+            }
+            
+            li.separator {
+                height: 3px;
+                background: $orange;
+                border-bottom: 1px solid #95805b;
+            }
+
+            li.separator:hover {
+                background: $orange;
+            }
+
+            li.admin-tab {
+                background: #3c3c3c;
+                border-bottom: 1px solid #777777;
+
+                i {
+                    color: white;
+                }
+            }
+
+            li.admin-tab:hover,
+            li.admin-tab.active {
+                background: #515151;
+            }
+
+            li.active {
+                background: #1c5278;
+
+                a {
+                    color: $orange;
+                    font-weight: bold;
+                }
+
+                i {
+                    color: $orange;
+                }
+            }
+
+            li:hover {
+                background: #1c5278;
+            }
+        }
+    }
+}

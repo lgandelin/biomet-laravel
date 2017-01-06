@@ -56,3 +56,10 @@ function get_monday(d) {
         diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
     return new Date(d.setDate(diff));
 }
+
+$(document).ready(function() {
+    $('.date-filters a').click(function() {
+        $('.date-filters a').removeClass('current');
+        $(this).addClass('current');
+    });
+});

@@ -1,0 +1,44 @@
+.btn {
+    padding: 7px 25px;
+
+    font-size: 12px;
+
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+
+.btn-valid, .btn-valid:focus, .btn-valid:active {
+    background: $darkblue2;
+    color: white;
+    border: 2px solid $darkblue2;
+}
+
+.btn-valid:hover {
+    background: $orange;
+    color: white;
+    border: 2px solid $orange;
+}
+
+.btn-default {
+    background: white;
+    color: $darkblue2;
+    border: 2px solid $darkblue2;
+}
+
+.btn-danger {
+    background: #d9534f;
+    border: 2px solid #d9534f;
+}
+
+.btn-edit, .btn-remove {
+    font-size: 20px;
+}
+
+.btn-edit {
+    margin-right: 15px;
+}
+
+.btn-edit:hover, .btn-remove:hover {
+    color: $orange;
+}

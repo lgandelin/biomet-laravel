@@ -3,14 +3,15 @@
 @section('page-title'){{ $current_facility->name }}@endsection
 
 @section('page-content')
-    <h1>{{ $current_facility->name }} - @yield('tab_name')</h1>
 
-    <div class="facility-template">
-        @include('biomet::pages.facility.includes.date_filters')
+    <div class="box">
+        <h1 class="box-title">{{ $current_facility->name }} - @yield('tab_name')</h1>
+        <div class="box-content facility-template">
+            @include('biomet::pages.facility.includes.date_filters')
 
-        @yield('graphs')
-        <div class="entrypoint"></div>
-
+            @yield('graphs')
+            <div class="entrypoint"></div>
+        </div>
         <form action="{{ route('facility_get_excel') }}" id="download-excel" method="post">
             <input type="hidden" name="keys" value="" />
             <input type="hidden" name="facility_id" value="{{ $current_facility->id }}" />
@@ -18,7 +19,6 @@
             <input type="hidden" name="end_date" value="" />
             {{ csrf_field() }}
         </form>
-
     </div>
 
     <script src="https://code.highcharts.com/stock/highstock.js"></script>

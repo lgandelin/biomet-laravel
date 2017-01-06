@@ -1,6 +1,5 @@
 @import "vendor/_reset";
 @import "vendor/_bootstrap";
-@import "vendor/_sbadmin";
 @import "vendor/_font-awesome";
 
 @import "includes/_bootstrap";
@@ -10,9 +9,12 @@
 @import "includes/_utils";
 @import "includes/_form";
 @import "includes/_sprites";
+@import "includes/_table";
+@import "includes/_structure";
 
 @import "partials/_header";
 @import "partials/_footer";
 
+@import "pages/_login";
 @import "pages/_dashboard";
 @import "pages/_facility";
