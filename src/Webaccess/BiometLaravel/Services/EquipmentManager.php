@@ -7,15 +7,34 @@ use Webaccess\BiometLaravel\Models\Equipment;
 
 class EquipmentManager
 {
+    /**
+     * @param $facilityID
+     * @return mixed
+     */
     public static function getAllByFacilityID($facilityID)
     {
         return Equipment::where('facility_id', '=', $facilityID)->orderBy('created_at', 'desc')->get();
     }
 
+    /**
+     * @param $equipmentID
+     * @return mixed
+     */
     public static function getByID($equipmentID)
     {
         return Equipment::find($equipmentID);
     }
+
+    /**
+     * @param $facilityID
+     * @param $equipmentTag
+     * @return mixed
+     */
+    public static function getByFacilityIDAndTag($facilityID, $equipmentTag)
+    {
+        return Equipment::where('facility_id', '=', $facilityID)->where('tag', '=', $equipmentTag)->first();
+    }
+
 
     /**
      * @param $name

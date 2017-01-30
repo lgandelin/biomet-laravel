@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use PHPExcel_IOFactory;
 use Webaccess\BiometLaravel\Services\AlarmManager;
+use Webaccess\BiometLaravel\Services\EquipmentManager;
 use Webaccess\BiometLaravel\Services\FacilityManager;
 
 class GenerateDataFromExcelCommand extends Command
@@ -148,6 +149,35 @@ class GenerateDataFromExcelCommand extends Command
                         $eventDate = DateTime::createFromFormat('Y/m/d H:i:s', $date . ' ' . $time)->format('Y-m-d H:i:s');
 
                         AlarmManager::createAlarm($facility->id, $eventDate, $title, $description);
+                    }
+                }
+            }
+
+            //Heures en fonctionnement
+            $objWorksheet = $objPHPExcel->getSheet(10);
+
+            $dateStepStart = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A3')->getValue());
+            $dateStepEnd = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A4')->getValue());
+
+            $timeStepInHours = 0;
+            if ($dateStepStart && $dateStepEnd) {
+                $timeStepInHours = $dateStepEnd->diff($dateStepStart)->format('%H');
+            }
+
+            foreach ($objWorksheet->getRowIterator() as $i => $row) {
+                if ($i > 1) {
+                    $cellIterator = $row->getCellIterator();
+                    $cellIterator->setIterateOnlyExistingCells(FALSE);
+
+                    foreach ($cellIterator as $j => $cell) {
+                        $tag = $objWorksheet->getCell($j . '1')->getValue();
+                        $equipment = EquipmentManager::getByFacilityIDAndTag($facility->id, $tag);
+
+                        //Si l'équipement a marché pendant le créneau
+                        if ($cell->getValue() == "1") {
+                            $equipment->hours_functionning = $equipment->hours_functionning + $timeStepInHours;
+                            $equipment->save();
+                        }
                     }
                 }
             }
