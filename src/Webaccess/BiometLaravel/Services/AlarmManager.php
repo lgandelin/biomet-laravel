@@ -8,7 +8,7 @@ use Webaccess\BiometLaravel\Models\Alarm;
 
 class AlarmManager
 {
-    public static function getAllByFacilityID($facilityID, DateTime $startDate = null, DateTime $endDate = null, $paginate = true)
+    public static function getAllByFacilityID($facilityID, DateTime $startDate = null, DateTime $endDate = null, $paginate = true, $limit = 0)
     {
         $alarms = Alarm::where('facility_id', '=', $facilityID)->orderBy('event_date', 'desc');
 
@@ -18,6 +18,10 @@ class AlarmManager
 
         if ($endDate) {
             $alarms->where('event_date', '<=', $endDate->add(new \DateInterval('P1D'))->format('Y-m-d H:i:s'));
+        }
+
+        if ($limit) {
+            $alarms->limit($limit);
         }
 
         return ($paginate) ? $alarms->paginate(10) : $alarms->get();

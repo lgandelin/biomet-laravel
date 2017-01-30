@@ -64,7 +64,7 @@
 
     <script src="{{ asset('js/filters.js') }}"></script>
     <script>
-        $('#valid').click(function() {
+        $('.valid').click(function() {
             $('#interventions-form').submit();
         });
     </script>

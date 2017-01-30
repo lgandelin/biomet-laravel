@@ -20,6 +20,7 @@ class FacilityController extends BaseController
         return view('biomet::pages.facility.index', [
             'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
             'current_facility' => FacilityManager::getByID($this->request->id),
+            'alarms' => AlarmManager::getAllByFacilityID($this->request->id, null, null, false, 5)
         ]);
     }
 

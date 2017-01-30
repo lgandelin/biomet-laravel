@@ -6,4 +6,20 @@
         height: 400px;
         margin: 50px auto;
     }
+
+    .dashboard {
+        .box {
+            margin-bottom: 30px;
+            padding-bottom: 0;
+
+            .box-content {
+                padding-left: 0;
+                padding-right: 0;
+                
+                .table {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
 }

@@ -1,22 +1,20 @@
 $(document).ready(function() {
 
     //Load graph on startup
-    $('#valid').trigger('click');
+    $('.valid').trigger('click');
 });
 
 //Load graphs
-$('#valid').on('click', function() {
+$('.valid').on('click', function() {
+    var box = $(this).closest('.box');
+
     //Delete old graphs on page
-    $('.entrypoint').empty();
-    $.each(Highcharts.charts, function(i, chart) {
-        if (typeof chart != 'undefined') {
-            chart.destroy();
-        }
-    });
+    box.find('.entrypoint').empty();
+    box.find('.highcharts-container').remove();
 
     //Load new graphs
-    $('.graph').each(function() {
-        load_graph($(this).attr('id'), $(this).data('title'), $(this).data('keys').split(','), $(this).data('legend'));
+    box.find('.graph').each(function() {
+        load_graph($(this).attr('id'), $(this).data('title'), $(this).data('keys').split(','), $(this).data('legend'), box);
     });
 });
 
@@ -28,7 +26,7 @@ $('.download-excel').on('click', function() {
     $('#download-excel').submit();
 });
 
-function load_graph(container_id, title, keys, legend) {
+function load_graph(container_id, title, keys, legend, box) {
     $.ajax({
         type: "POST",
         url: get_graph_route,
@@ -36,15 +34,15 @@ function load_graph(container_id, title, keys, legend) {
             container_id: container_id,
             title: title,
             facility_id: $('#facility_id').val(),
-            start_date: $('#start_date').val(),
-            end_date: $('#end_date').val(),
+            start_date: box.find('input[name="start_date"]').val(),
+            end_date: box.find('input[name="end_date"]').val(),
             keys: keys,
             legend: legend,
             _token: $('input[name="_token"]').val()
         },
         success: function(data) {
             if (data)
-                $('.entrypoint').append(data);
+                $('#' + container_id).next().append(data);
             else
                 $('#' + container_id).append('<div class="no-data">Aucune donnée trouvée pour cette période</div>');
         }
