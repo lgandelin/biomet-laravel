@@ -88,7 +88,7 @@ class FacilityController extends BaseController
         return view('biomet::pages.facility.includes.graph', [
             'container_id' => $this->request->container_id,
             'title' => $this->request->title,
-            'series' => json_encode(FacilityManager::getData(DateTime::createFromFormat('d/m/Y', $this->request->start_date), DateTime::createFromFormat('d/m/Y', $this->request->end_date), $this->request->facility_id, $this->request->keys)),
+            'series' => json_encode(FacilityManager::getData(DateTime::createFromFormat('d/m/Y', $this->request->start_date), DateTime::createFromFormat('d/m/Y', $this->request->end_date), $this->request->facility_id, $this->request->keys, isset($this->request->legend) ? boolval($this->request->legend) : true)),
         ])->render();
     }
 

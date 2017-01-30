@@ -16,7 +16,7 @@ $('#valid').on('click', function() {
 
     //Load new graphs
     $('.graph').each(function() {
-        load_graph($(this).attr('id'), $(this).data('title'), $(this).data('keys').split(','));
+        load_graph($(this).attr('id'), $(this).data('title'), $(this).data('keys').split(','), $(this).data('legend'));
     });
 });
 
@@ -28,7 +28,7 @@ $('.download-excel').on('click', function() {
     $('#download-excel').submit();
 });
 
-function load_graph(container_id, title, keys) {
+function load_graph(container_id, title, keys, legend) {
     $.ajax({
         type: "POST",
         url: get_graph_route,
@@ -39,6 +39,7 @@ function load_graph(container_id, title, keys) {
             start_date: $('#start_date').val(),
             end_date: $('#end_date').val(),
             keys: keys,
+            legend: legend,
             _token: $('input[name="_token"]').val()
         },
         success: function(data) {

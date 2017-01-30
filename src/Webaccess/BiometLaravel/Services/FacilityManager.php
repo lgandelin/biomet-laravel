@@ -131,9 +131,10 @@ class FacilityManager
      * @param DateTime $endDate
      * @param $facilityID
      * @param $keys
+     * @param bool $legend
      * @return mixed
      */
-    public static function getData(DateTime $startDate, DateTime $endDate, $facilityID, $keys)
+    public static function getData(DateTime $startDate, DateTime $endDate, $facilityID, $keys, $legend = true)
     {
         $series = [];
         $fileData = self::fetchData($startDate, $endDate, $facilityID);
@@ -163,7 +164,7 @@ class FacilityManager
             }
 
             $series[] = [
-                'name' => $key,
+                'name' => $legend ? self::getLegendFromKey($key) : $key,
                 'data' => $keyData
             ];
         }
@@ -287,5 +288,29 @@ class FacilityManager
         $objWriter->save($file);
 
         return $file;
+    }
+
+    private static function getLegendFromKey($key)
+    {
+        $legends = [
+            'FT0101F' => 'Biogaz brut (FT0101F)',
+            'FT0102F' => 'Biométhane (FT0102F)',
+            'FT0101F_VOLUME' => 'Biogaz brut (FT0101F)',
+            'FT0102F_VOLUME' => 'Biométhane (FT0102F)',
+
+            'AP0101_CH4' => 'CH4',
+            'AP0101_CO2' => 'CO2',
+            'AP0101_H2O' => 'H2O',
+            'AP0101_H2S' => 'H2S',
+            'AP0101_O2' => 'O2',
+
+            'AP0201_CH4' => 'CH4',
+            'AP0201_CO2' => 'CO2',
+            'AP0201_H2O' => 'H2O',
+            'AP0201_H2S' => 'H2S',
+            'AP0201_O2' => 'O2',
+        ];
+
+        return isset($legends[$key]) ? $legends[$key] : $key;
     }
 }
