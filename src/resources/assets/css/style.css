@@ -11329,7 +11329,7 @@ h1 {
 }
 
 /* line 34, ../sass/includes/_buttons.scss */
-.btn-edit, .btn-remove {
+.btn-edit, .btn-remove, .btn-reset {
   font-size: 20px;
 }
 
@@ -11546,7 +11546,7 @@ body {
 /* line 80, ../sass/partials/_header.scss */
 .left-column nav ul li a {
   display: block;
-  padding: 17px 0 17px 22px;
+  padding: 17px 0 17px 15px;
   font-size: 15px;
   color: white;
 }

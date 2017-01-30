@@ -8,6 +8,7 @@ use DirectoryIterator;
 use Illuminate\Support\Facades\Gate;
 use IteratorIterator;
 use Webaccess\BiometLaravel\Services\AlarmManager;
+use Webaccess\BiometLaravel\Services\EquipmentManager;
 use Webaccess\BiometLaravel\Services\FacilityManager;
 use Webaccess\BiometLaravel\Services\InterventionManager;
 
@@ -39,6 +40,12 @@ class FacilityController extends BaseController
         $yesterdayDate = (new DateTime())->sub(new DateInterval('P1D'));
 
         switch ($tab) {
+
+            //Fetch equipments list
+            case 8:
+                $data['equipments'] = EquipmentManager::getAllByFacilityID($this->request->id);
+            break;
+
             //Fetch alarms log
             case 9:
                 $data['alarms'] = AlarmManager::getAllByFacilityID(
