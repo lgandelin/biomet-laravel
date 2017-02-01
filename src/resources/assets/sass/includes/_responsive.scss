@@ -35,6 +35,19 @@
         padding-left: 20px;
         padding-right: 20px;
     }
+
+    .facility-template {
+
+        .dashboard {
+
+            .indicators {
+
+                .value {
+                    font-size: 21px;
+                }
+            }
+        }
+    }
 }
 
 @media only screen and (max-width:768px) {

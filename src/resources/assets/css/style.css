@@ -11286,6 +11286,11 @@ h1, h2, h3 {
 }
 
 /* line 33, ../sass/includes/_typography.scss */
+h4 {
+  margin-bottom: 10px;
+}
+
+/* line 37, ../sass/includes/_typography.scss */
 h1 {
   font-size: 19px;
   font-weight: bold;
@@ -11654,6 +11659,29 @@ body {
 .facility-template .dashboard .box .box-content .table {
   margin-bottom: 0;
 }
+/* line 25, ../sass/pages/_facility.scss */
+.facility-template .dashboard .indicators {
+  padding-left: 30px !important;
+  padding-right: 30px !important;
+  padding-bottom: 15px !important;
+}
+/* line 30, ../sass/pages/_facility.scss */
+.facility-template .dashboard .indicators > div {
+  text-align: center;
+  margin-bottom: 25px;
+}
+/* line 35, ../sass/pages/_facility.scss */
+.facility-template .dashboard .indicators .title {
+  font-size: 15px;
+  margin-bottom: 5px;
+  display: block;
+  color: #184667;
+}
+/* line 42, ../sass/pages/_facility.scss */
+.facility-template .dashboard .indicators .value {
+  font-size: 22px;
+  color: #fbb336;
+}
 
 @media only screen and (max-width: 1200px) {
   /* line 4, ../sass/includes/_responsive.scss */
@@ -11694,9 +11722,14 @@ body {
     padding-left: 20px;
     padding-right: 20px;
   }
+
+  /* line 45, ../sass/includes/_responsive.scss */
+  .facility-template .dashboard .indicators .value {
+    font-size: 21px;
+  }
 }
 @media only screen and (max-width: 768px) {
-  /* line 44, ../sass/includes/_responsive.scss */
+  /* line 57, ../sass/includes/_responsive.scss */
   .left-column {
     position: absolute;
     z-index: 99999;
@@ -11709,43 +11742,43 @@ body {
     display: none;
     background: none;
   }
-  /* line 56, ../sass/includes/_responsive.scss */
+  /* line 69, ../sass/includes/_responsive.scss */
   .left-column nav ul li {
     border-right: none;
   }
-  /* line 59, ../sass/includes/_responsive.scss */
+  /* line 72, ../sass/includes/_responsive.scss */
   .left-column nav ul li a {
     font-size: 13px;
     padding-top: 8px;
     padding-bottom: 8px;
   }
 
-  /* line 67, ../sass/includes/_responsive.scss */
+  /* line 80, ../sass/includes/_responsive.scss */
   .main-content {
     margin-left: 0px;
     margin-right: 0px;
     margin-top: 5px;
   }
-  /* line 72, ../sass/includes/_responsive.scss */
+  /* line 85, ../sass/includes/_responsive.scss */
   .main-content .box {
     margin-top: 0;
     border: none;
   }
-  /* line 76, ../sass/includes/_responsive.scss */
+  /* line 89, ../sass/includes/_responsive.scss */
   .main-content .box .box-title {
     padding-left: 10px;
   }
-  /* line 80, ../sass/includes/_responsive.scss */
+  /* line 93, ../sass/includes/_responsive.scss */
   .main-content .box .box-content {
     padding-left: 10px;
     padding-right: 10px;
   }
 
-  /* line 89, ../sass/includes/_responsive.scss */
+  /* line 102, ../sass/includes/_responsive.scss */
   .navigation {
     background: white;
   }
-  /* line 92, ../sass/includes/_responsive.scss */
+  /* line 105, ../sass/includes/_responsive.scss */
   .navigation .logo {
     padding-left: 50px;
     height: 65px;
@@ -11753,11 +11786,11 @@ body {
     border-right: none;
     text-align: center;
   }
-  /* line 99, ../sass/includes/_responsive.scss */
+  /* line 112, ../sass/includes/_responsive.scss */
   .navigation .logo img {
     height: 80%;
   }
-  /* line 104, ../sass/includes/_responsive.scss */
+  /* line 117, ../sass/includes/_responsive.scss */
   .navigation .facilities-switcher {
     padding-top: 15px;
     padding-bottom: 15px;
@@ -11766,14 +11799,14 @@ body {
     width: 100%;
     background: #f5f5f5;
   }
-  /* line 112, ../sass/includes/_responsive.scss */
+  /* line 125, ../sass/includes/_responsive.scss */
   .navigation .facilities-switcher .menu-icon {
     display: block;
     float: right;
     margin-right: 15px;
     cursor: pointer;
   }
-  /* line 118, ../sass/includes/_responsive.scss */
+  /* line 131, ../sass/includes/_responsive.scss */
   .navigation .facilities-switcher .menu-icon i {
     position: relative;
     top: -1px;
@@ -11781,15 +11814,15 @@ body {
     font-size: 20px;
     margin-left: 5px;
   }
-  /* line 127, ../sass/includes/_responsive.scss */
+  /* line 140, ../sass/includes/_responsive.scss */
   .navigation .facilities-switcher .menu-icon:hover {
     color: #fbb336;
   }
-  /* line 130, ../sass/includes/_responsive.scss */
+  /* line 143, ../sass/includes/_responsive.scss */
   .navigation .facilities-switcher .menu-icon:hover i {
     color: #fbb336;
   }
-  /* line 136, ../sass/includes/_responsive.scss */
+  /* line 149, ../sass/includes/_responsive.scss */
   .navigation .logout {
     float: right;
     padding-left: 20px;
@@ -11798,27 +11831,27 @@ body {
     width: 65px;
     height: 65px;
   }
-  /* line 144, ../sass/includes/_responsive.scss */
+  /* line 157, ../sass/includes/_responsive.scss */
   .navigation .logout .name {
     display: none;
   }
-  /* line 148, ../sass/includes/_responsive.scss */
+  /* line 161, ../sass/includes/_responsive.scss */
   .navigation .logout .logout-icon {
     margin-left: 0 !important;
   }
 
-  /* line 158, ../sass/includes/_responsive.scss */
+  /* line 171, ../sass/includes/_responsive.scss */
   .login-template .panel form {
     width: 95%;
   }
 
-  /* line 164, ../sass/includes/_responsive.scss */
+  /* line 177, ../sass/includes/_responsive.scss */
   .dashboard-template .google-map {
     left: 30px;
     top: 150px;
   }
 
-  /* line 171, ../sass/includes/_responsive.scss */
+  /* line 184, ../sass/includes/_responsive.scss */
   h1 {
     font-size: 16px;
   }

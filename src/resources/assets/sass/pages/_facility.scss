@@ -21,5 +21,28 @@
                 }
             }
         }
+        
+        .indicators {
+            padding-left: 30px !important;
+            padding-right: 30px !important;
+            padding-bottom: 15px !important;
+
+            > div {
+                text-align: center;
+                margin-bottom: 25px;
+            }
+
+            .title {
+                font-size: 15px;
+                margin-bottom: 5px;
+                display: block;
+                color: $darkblue;
+            }
+
+            .value {
+                font-size: 22px;
+                color: $orange;
+            }
+        }
     }
 }

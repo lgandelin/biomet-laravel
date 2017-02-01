@@ -18,10 +18,25 @@ class FacilityController extends BaseController
     {
         parent::__construct($this->request);
 
+        $dateFirstDayOfYear = new DateTime();
+        $dateFirstDayOfYear->setDate($dateFirstDayOfYear->format('Y'), 1, 1)->setTime(0, 0, 0);
+
         return view('biomet::pages.facility.index', [
             'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
             'current_facility' => FacilityManager::getByID($this->request->id),
-            'alarms' => AlarmManager::getAllByFacilityID($this->request->id, null, null, false, 5)
+            'alarms' => AlarmManager::getAllByFacilityID($this->request->id, null, null, false, 5),
+
+            'avg_igp_last_24h' => $this->getAverageValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('IGP')),
+            'avg_igp_last_week' => $this->getAverageValue($this->request->id, new DateTime(date("Y-m-d", strtotime('monday last week'))), new DateTime(date("Y-m-d", strtotime('sunday last week'))), array('IGP')),
+            'avg_igp_last_month' => $this->getAverageValue($this->request->id, (new DateTime(date('Y-m-d', strtotime( '-1 days' ))))->sub(new DateInterval('P1M')), new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('IGP')),
+            'avg_igp_current_year' => $this->getAverageValue($this->request->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('IGP')),
+
+            'avg_ap0201_last_24h' => $this->getAverageValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('AP0201_H2S')),
+            'avg_ap0202_last_24h' => $this->getAverageValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('AP0202_H2S')),
+            'avg_ap0203_last_24h' => $this->getAverageValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('AP0203_H2S')),
+
+            'sum_ft0101f_current_year' => $this->getSumValue($this->request->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('FT0101F')),
+            'sum_ft0102f_current_year' => $this->getSumValue($this->request->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('FT0102F')),
         ]);
     }
 
@@ -172,5 +187,48 @@ class FacilityController extends BaseController
         });
 
         return $entries;
+    }
+
+    /**
+     * @param $facilityID
+     * @param $startDate
+     * @param $endDate
+     * @param $keys
+     * @return float|int
+     */
+    private function getAverageValue($facilityID, $startDate, $endDate, $keys)
+    {
+        $data = FacilityManager::getData($startDate, $endDate, $facilityID, $keys, false);
+        $total = 0;
+        $count = 0;
+
+        foreach ($data as $file) {
+            foreach ($file['data'] as $value) {
+                $total += $value[1];
+                $count ++;
+            }
+        }
+
+        return ($count > 0) ? round($total / $count, 1) : 0;
+    }
+
+    /**
+     * @param $facilityID
+     * @param $startDate
+     * @param $endDate
+     * @param $keys
+     * @return float
+     */
+    private function getSumValue($facilityID, $startDate, $endDate, $keys)
+    {
+        $data = FacilityManager::getData($startDate, $endDate, $facilityID, $keys, false);
+        $total = 0;
+        foreach ($data as $file) {
+            foreach ($file['data'] as $value) {
+                $total += $value[1];
+            }
+        }
+
+        return round($total, 1);
     }
 }

@@ -32,7 +32,7 @@ class EquipmentManager
      */
     public static function getByFacilityIDAndTag($facilityID, $equipmentTag)
     {
-        return Equipment::where('facility_id', '=', $facilityID)->where('tag', '=', $equipmentTag)->first();
+        return Equipment::where('facility_id', '=', $facilityID)->where('tag', 'LIKE', '%' . $equipmentTag . '%')->first();
     }
 
 
