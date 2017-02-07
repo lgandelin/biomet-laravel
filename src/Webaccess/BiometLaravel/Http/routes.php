@@ -14,9 +14,6 @@ Route::group(['middleware' => ['web']], function () {
 
         Route::get('/', array('as' => 'dashboard', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\DashboardController@index'));
 
-        //HEURES EN FONCTIONNEMENT
-        Route::get('/site/equipements/{facility_id}/{id}/reset', array('as' => 'equipments_reset_functionning_hours', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\EquipmentController@reset_functionning_hours'));
-
         //FACILITY
         Route::get('/site/{id}', array('as' => 'facility', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\FacilityController@index'));
 

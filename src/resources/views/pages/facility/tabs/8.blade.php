@@ -27,7 +27,6 @@
                     <th>{{ trans('biomet::equipments.tag') }}</th>
                     <th>{{ trans('biomet::equipments.name') }}</th>
                     <th>{{ trans('biomet::equipments.hours_functionning') }}</th>
-                    <th>{{ trans('biomet::generic.action') }}</th>
                 </tr>
                 </thead>
 
@@ -38,7 +37,6 @@
                             <td>{{ $equipment->tag }}</td>
                             <td>{{ $equipment->name }}</td>
                             <td>{{ $equipment->hours_functionning }}</td>
-                            <td><a href="{{ route('equipments_reset_functionning_hours', ['id' => $equipment->id, 'facility_id' => $current_facility->id]) }}"><i class="btn-reset glyphicon glyphicon-repeat"></i></a></td>
                         </tr>
                     @endforeach
                 @else
@@ -48,13 +46,4 @@
             </table>
         </div>
     </div>
-
-    <script>
-        $('.btn-reset').click(function() {
-            if (!confirm('Etes-vous sûrs de vouloir réinitialiser le nombre d\'heures de cet équipement ?')) {
-                return false;
-            }
-        })
-    </script>
-
 @endsection

@@ -1,6 +1,6 @@
 $(document).ready(function() {
     $('.btn-remove').on('click', function() {
-        if (!confirm('Etes-vous sûrs de vouloir cet élément ?'))
+        if (!confirm('Etes-vous sûrs de vouloir supprimer cet élément ?'))
             return false;
     });
 

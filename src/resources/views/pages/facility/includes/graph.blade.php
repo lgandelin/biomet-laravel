@@ -9,12 +9,13 @@
             zoomType: 'x'
         },
         title: {
-            text: "{{ $title }}",
-             x: -20
+            text: "{!! $title !!}",
+             x: -20,
+            useHTML:true
         },
         subtitle: {
             text: '',
-            x: -20
+            x: -20,
         },
         rangeSelector: {
             enabled: 0,
@@ -34,7 +35,8 @@
             layout: 'vertical',
             align: 'right',
             verticalAlign: 'middle',
-            borderWidth: 0
+            borderWidth: 0,
+            useHTML:true
         },
         scrollbar: {
             enabled: false

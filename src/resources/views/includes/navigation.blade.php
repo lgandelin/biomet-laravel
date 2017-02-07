@@ -23,6 +23,8 @@
     @endif
 
     $('.facilities-switcher select').change(function() {
-        window.location.href = route.replace(/@@@/g,$(this).val())
+        if ($(this).val() != "") {
+            window.location.href = route.replace(/@@@/g,$(this).val())
+        }
     });
 </script>

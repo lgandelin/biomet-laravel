@@ -65,7 +65,7 @@
             <option value="1" @if (isset($facility_tabs) && in_array(1, $facility_tabs))selected="selected"@endif>Débit</option>
             <option value="2" @if (isset($facility_tabs) && in_array(2, $facility_tabs))selected="selected"@endif>Volume</option>
             <option value="3" @if (isset($facility_tabs) && in_array(3, $facility_tabs))selected="selected"@endif>Composition</option>
-            <option value="4" @if (isset($facility_tabs) && in_array(4, $facility_tabs))selected="selected"@endif>Suivi prétraitement</option>
+            <option value="4" @if (isset($facility_tabs) && in_array(4, $facility_tabs))selected="selected"@endif>Suivi prétraitements</option>
             <option value="5" @if (isset($facility_tabs) && in_array(5, $facility_tabs))selected="selected"@endif>Indicateur IGP</option>
             <option value="6" @if (isset($facility_tabs) && in_array(6, $facility_tabs))selected="selected"@endif>Consommation électrique</option>
             <option value="7" @if (isset($facility_tabs) && in_array(7, $facility_tabs))selected="selected"@endif>Puissance fournie</option>
