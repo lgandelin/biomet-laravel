@@ -43,7 +43,6 @@ class FacilityController extends BaseController
     public function tab()
     {
         parent::__construct($this->request);
-
         $tab = isset($this->request->tab) ? $this->request->tab : 1;
         if (!$this->canViewFacilityTab($this->request->id, $tab)) {
             $this->request->session()->flash('error', trans('biomet::generic.no_permission_error'));

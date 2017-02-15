@@ -2,6 +2,23 @@
 
     var seriesOptions = {!! $series !!};
 
+    Highcharts.setOptions({
+        global: {
+            useUTC: false
+        },
+        lang: {
+            months: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',  'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+            shortMonths: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin',  'Juil', 'Août', 'Sept', 'Oct', 'Nov', 'Déc'],
+            weekdays: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+            resetZoom: 'Réinitialiser zoom',
+            printChart: 'Imprimer le graphe',
+            downloadPDF: 'Télécharger en PDF',
+            downloadJPEG: 'Télécharger en JPG',
+            downloadPNG: 'Télécharger en PNG',
+            downloadSVG: 'Télécharger en SVG',
+        }
+    });
+
     window.chart = new Highcharts.StockChart({
         chart: {
             renderTo: "{{ $container_id }}",

@@ -157,8 +157,11 @@ class FacilityManager
             } else {
                 if (is_array($fileData) && sizeof($fileData) > 0) {
                     foreach ($fileData as $data) {
-                        if (isset($data->$key))
+                        if (isset($data->$key)) {
+                            if (!is_numeric($data->$key))
+                                $data->$key = null;
                             $keyData[] = [$data->timestamp * 1000, $data->$key];
+                        }
                     }
                 }
             }
@@ -195,12 +198,12 @@ class FacilityManager
         foreach ($jsonFiles as $jsonFile) {
             $data = json_decode(file_get_contents($jsonFile));
 
-            //TEMP : A SUPPRIMER
+            /*TEMP : A SUPPRIMER
             usort($data, function ($a, $b)
             {
                 return ($a->timestamp < $b->timestamp) ? -1 : 1;
             });
-            //TEMP : A SUPPRIMER
+            //TEMP : A SUPPRIMER*/
 
             foreach ($data as $d) {
                 $fileData[] = $d;

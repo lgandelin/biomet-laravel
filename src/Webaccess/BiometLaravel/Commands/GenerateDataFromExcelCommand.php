@@ -29,7 +29,9 @@ class GenerateDataFromExcelCommand extends Command
                 mkdir($folder, 0777, true);
             }
 
-            $folder = env('DATA_FOLDER_PATH') . '/xls/' . $facility->id . '/' . (new DateTime())->sub(new DateInterval('P1D'))->format('Y/m/d');
+            $yesterdayDate = (new DateTime())->sub(new DateInterval('P1D'))->format('Y/m/d');
+
+            $folder = env('DATA_FOLDER_PATH') . '/xls/' . $facility->id . '/' . $yesterdayDate;
             if (!is_dir($folder)) {
                 mkdir($folder, 0777, true);
             }
@@ -39,7 +41,7 @@ class GenerateDataFromExcelCommand extends Command
                 Log::error($errorMessage);
                 $this->error($errorMessage);
 
-                return;
+                break;
             }
 
             $objPHPExcel = PHPExcel_IOFactory::load($folder . '/data.xlsx');
@@ -133,8 +135,13 @@ class GenerateDataFromExcelCommand extends Command
 
             //JSON generation
             $data = array_values($data);
+            $jsonFolder = env('DATA_FOLDER_PATH') . '/json/' . $facility->id . '/' . $yesterdayDate;
+            if (!is_dir($jsonFolder)) {
+                mkdir($jsonFolder, 0777, true);
+            }
 
-            $jsonFile = env('DATA_FOLDER_PATH') . '/xls/data.json';
+            $jsonFile = env('DATA_FOLDER_PATH') . '/json/' . $facility->id . '/' . $yesterdayDate . '/data.json';
+
             file_put_contents($jsonFile, utf8_encode(json_encode($data, JSON_PRETTY_PRINT)));
 
             //Consignation
@@ -154,7 +161,7 @@ class GenerateDataFromExcelCommand extends Command
             }
 
             //Heures en fonctionnement
-            $objWorksheet = $objPHPExcel->getSheet(10);
+            //$objWorksheet = $objPHPExcel->getSheet(10);
 
             /*$dateStepStart = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A3')->getValue());
             $dateStepEnd = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A4')->getValue());
@@ -162,7 +169,7 @@ class GenerateDataFromExcelCommand extends Command
             $timeStepInHours = 0;
             if ($dateStepStart && $dateStepEnd) {
                 $timeStepInHours = $dateStepEnd->diff($dateStepStart)->format('%H');
-            }*/
+            }
 
             foreach ($objWorksheet->getRowIterator() as $i => $row) {
                 if ($i > 1) {
@@ -180,7 +187,7 @@ class GenerateDataFromExcelCommand extends Command
                         }
                     }
                 }
-            }
+            }*/
 
         }
 

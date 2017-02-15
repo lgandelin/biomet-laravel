@@ -1,7 +1,7 @@
 @extends('biomet::pages.facility.tabs.tab')
 
 @section('tab_name')
-    Suivi prétraitement
+    Suivi prétraitements
 @endsection
 
 @section('graphs')
