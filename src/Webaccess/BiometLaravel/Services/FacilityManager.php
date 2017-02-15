@@ -4,6 +4,7 @@ namespace Webaccess\BiometLaravel\Services;
 
 use DateInterval;
 use DateTime;
+use DateTimeZone;
 use PHPExcel;
 use PHPExcel_IOFactory;
 use Ramsey\Uuid\Uuid;
@@ -241,10 +242,11 @@ class FacilityManager
         $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Date');
 
         for ($col = 0; $col < sizeof($data); $col++) {
-            $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($col + 1, 1)->setValue($data[$col]['name']);
+            $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($col + 1, 1)->setValue(strip_tags($data[$col]['name']));
 
             for ($row = 0; $row < $length; $row++) {
                 $dateTime = (new DateTime())->setTimestamp($data[0]['data'][$row][0] / 1000);
+                $dateTime->setTimezone(new DateTimeZone('Europe/Paris'));
                 $objPHPExcel->getActiveSheet()->setCellValue('A' . ($row + 2), $dateTime->format('d/m/Y H:i:s'));
                 $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($col + 1, ($row + 2))->setValue($data[$col]['data'][$row][1]);
             }
