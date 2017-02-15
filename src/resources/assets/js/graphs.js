@@ -21,8 +21,8 @@ $('.valid').on('click', function() {
 //Download excel
 $('.download-excel').on('click', function() {
     $('#download-excel input[name="keys"]').val($(this).prev().data('keys'));
-    $('#download-excel input[name="start_date"]').val($('#start_date').val());
-    $('#download-excel input[name="end_date"]').val($('#end_date').val());
+    $('#download-excel input[name="start_date"]').val($('.date-filters input[name="start_date"]').val());
+    $('#download-excel input[name="end_date"]').val($('.date-filters input[name="end_date"]').val());
     $('#download-excel').submit();
 });
 
