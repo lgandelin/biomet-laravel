@@ -92,7 +92,7 @@
                         <h1 class="box-title">CH<sub>4</sub> et CO<sub>2</sub> du biogaz brut et biométhane (%)</h1>
                         <div class="box-content">
                             @include('biomet::pages.facility.includes.date_filters')
-                            <div class="graph" id="container3" data-title="Dernière semaine : CH<sub>4</sub> et CO<sub>2</sub> du biogaz brut et biométhane" data-keys="AP0201_CH4,AP0201_CO2,AP0101_CH4,AP0101_CO2" data-legend="0"></div>
+                            <div class="graph" id="container3" data-title="Dernière semaine : CH<sub>4</sub> et CO<sub>2</sub> du biogaz brut et biométhane" data-keys="AP0201_CH4,AP0201_CO2,AP0101_CH4,AP0101_CO2" data-legend="AP0201 CH<sub>4</sub> (%),AP0201 CO<sub>2</sub> (%),AP0101 CH<sub>4</sub> (%),AP0101 CO<sub>2</sub> (%)"></div>
                             <div class="entrypoint"></div>
                         </div>
                     </div>

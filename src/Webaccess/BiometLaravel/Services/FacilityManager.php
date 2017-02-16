@@ -132,15 +132,15 @@ class FacilityManager
      * @param DateTime $endDate
      * @param $facilityID
      * @param $keys
-     * @param bool $legend
+     * @param $legend
      * @return mixed
      */
-    public static function getData(DateTime $startDate, DateTime $endDate, $facilityID, $keys, $legend = true)
+    public static function getData(DateTime $startDate, DateTime $endDate, $facilityID, $keys, $legend = [])
     {
         $series = [];
         $fileData = self::fetchData($startDate, $endDate, $facilityID);
 
-        foreach ($keys as $key) {
+        foreach ($keys as $i => $key) {
             $keyData = [];
 
             //Average serie
@@ -168,7 +168,7 @@ class FacilityManager
             }
 
             $series[] = [
-                'name' => $legend ? self::getLegendFromKey($key) : $key,
+                'name' => isset($legend[$i]) ? $legend[$i] : $key,
                 'data' => $keyData
             ];
         }
@@ -293,41 +293,5 @@ class FacilityManager
         $objWriter->save($file);
 
         return $file;
-    }
-
-    private static function getLegendFromKey($key)
-    {
-        $legends = [
-            'FT0101F' => 'Biogaz brut (Nm<sup>3</sup>/h)',
-            'FT0102F' => 'Biométhane (Nm<sup>3</sup>/h)',
-            'FT0101F_VOLUME' => 'Biogaz brut (Nm<sup>3</sup>)',
-            'FT0102F_VOLUME' => 'Biométhane (Nm<sup>3</sup>)',
-
-            'AP0101_CH4' => 'CH<sub>4</sub> (%)',
-            'AP0101_CO2' => 'CO<sub>2</sub> (%)',
-            'AP0101_H2O' => 'H<sub>2</sub>O (%HR)',
-            'AP0101_H2S' => 'H<sub>2</sub>S (ppm)',
-            'AP0101_O2' => 'O<sub>2</sub> (%)',
-
-            'AP0201_CH4' => 'CH<sub>4</sub> (%)',
-            'AP0201_CO2' => 'CO<sub>2</sub> (%)',
-            'AP0201_H2O' => 'H<sub>2</sub>O (%HR)',
-            'AP0201_H2S' => 'H<sub>2</sub>S (ppm)',
-            'AP0201_O2' => 'O<sub>2</sub> (%)',
-
-            'IGP' => 'IGP (-)',
-            'IGP_AVG' => 'IGP moyen (-)',
-
-            'CONSO_ELEC_INSTAL' => 'CONSO_ELEC_INSTAL (kWh)',
-            'CONSO_ELEC_INSTAL_AVG' => 'CONSO_ELEC_INSTAL_AVG (kWh)',
-            'CONSO_ELEC_CHAUD' => 'CONSO_ELEC_CHAUD (kWh)',
-            'CONSO_ELEC_CHAUD_AVG' => 'CONSO_ELEC_CHAUD_AVG (kWh)',
-            'CONSO_ELEC_PEC' => 'CONSO_ELEC_PEC (kWh)',
-            'CONSO_ELEC_PEC_AVG' => 'CONSO_ELEC_PEC_AVG (kWh)',
-
-            'Q_DIGEST' => 'Q_DIGEST (kW)',
-        ];
-
-        return isset($legends[$key]) ? $legends[$key] : $key;
     }
 }

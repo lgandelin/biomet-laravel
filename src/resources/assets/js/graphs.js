@@ -14,13 +14,14 @@ $('.valid').on('click', function() {
 
     //Load new graphs
     box.find('.graph').each(function() {
-        load_graph($(this).attr('id'), $(this).data('title'), $(this).data('keys').split(','), $(this).data('legend'), box);
+        load_graph($(this).attr('id'), $(this).data('title'), $(this).data('keys').split(','), $(this).data('legend') ? $(this).data('legend').split(',') : [], box);
     });
 });
 
 //Download excel
 $('.download-excel').on('click', function() {
     $('#download-excel input[name="keys"]').val($(this).prev().data('keys'));
+    $('#download-excel input[name="legend"]').val($(this).prev().data('legend'));
     $('#download-excel input[name="start_date"]').val($('.date-filters input[name="start_date"]').val());
     $('#download-excel input[name="end_date"]').val($('.date-filters input[name="end_date"]').val());
     $('#download-excel').submit();

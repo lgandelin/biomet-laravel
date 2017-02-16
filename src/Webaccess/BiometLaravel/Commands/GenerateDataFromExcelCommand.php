@@ -13,7 +13,7 @@ use Webaccess\BiometLaravel\Services\FacilityManager;
 
 class GenerateDataFromExcelCommand extends Command
 {
-    protected $signature = 'biomet:generate-data-from-excel';
+    protected $signature = 'biomet:generate-data-from-excel {date}';
 
     protected $description = 'Génère les fichiers de données et extrait les informations à partir des fichiers Excel';
 
@@ -29,7 +29,7 @@ class GenerateDataFromExcelCommand extends Command
                 mkdir($folder, 0777, true);
             }
 
-            $yesterdayDate = (new DateTime())->sub(new DateInterval('P1D'))->format('Y/m/d');
+            $yesterdayDate = DateTime::createFromFormat('Y-m-d', $this->argument('date'))->sub(new DateInterval('P1D'))->format('Y/m/d');
 
             $folder = env('DATA_FOLDER_PATH') . '/xls/' . $facility->id . '/' . $yesterdayDate;
             if (!is_dir($folder)) {
@@ -117,12 +117,16 @@ class GenerateDataFromExcelCommand extends Command
             $objWorksheet = $objPHPExcel->getSheet(3);
             foreach ($objWorksheet->getRowIterator() as $i => $row) {
                 if ($i > 3) {
+                    $cellIterator = $row->getCellIterator();
+                    $cellIterator->setIterateOnlyExistingCells(FALSE);
                     $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A' . $i)->getValue())->getTimestamp();
 
-                    //calculation : value(t) - value(t-1)
-                    $data[$timestamp]['CONSO_ELEC_CHAUD'] = $objWorksheet->getCell('B' . $i)->getValue() - $objWorksheet->getCell('B' . ($i - 1))->getValue();
-                    $data[$timestamp]['CONSO_ELEC_INSTAL'] = $objWorksheet->getCell('C' . $i)->getValue() - $objWorksheet->getCell('C' . ($i - 1))->getValue();
-                    $data[$timestamp]['CONSO_ELEC_PEC'] = $objWorksheet->getCell('D' . $i)->getValue() - $objWorksheet->getCell('D' . ($i - 1))->getValue();
+                    foreach ($cellIterator as $j => $cell) {
+                        $data[$timestamp]['timestamp'] = $timestamp;
+                        if ($j == 'B') $data[$timestamp]['CONSO_ELEC_CHAUD'] = $cell->getValue();
+                        if ($j == 'C') $data[$timestamp]['CONSO_ELEC_INSTAL'] = $cell->getValue();
+                        if ($j == 'D') $data[$timestamp]['CONSO_ELEC_PEC'] = $cell->getValue();
+                    }
                 }
             }
 
@@ -130,8 +134,8 @@ class GenerateDataFromExcelCommand extends Command
             $date = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A3')->getValue());
             $date->setTime(0, 0, 0);
             $data[$date->getTimestamp()]['timestamp'] = $date->getTimestamp();
-            $data[$date->getTimestamp()]['FT0101F_VOLUME'] = $this->calculateSum($data, 'FT0101F');
-            $data[$date->getTimestamp()]['FT0102F_VOLUME'] = $this->calculateSum($data, 'FT0102F');
+            $data[$date->getTimestamp()]['FT0101F_VOLUME'] = $this->calculateSum($data, 'FT0101F') / 60;
+            $data[$date->getTimestamp()]['FT0102F_VOLUME'] = $this->calculateSum($data, 'FT0102F') / 60;
 
             //JSON generation
             $data = array_values($data);
@@ -191,7 +195,7 @@ class GenerateDataFromExcelCommand extends Command
 
         }
 
-        $this->info('Données générées avec succès');
+        $this->info('Données générées avec succès pour le site ' . $facility->id . ' à la date du ' . $yesterdayDate);
     }
 
     private function calculateSum($data, $key) {
