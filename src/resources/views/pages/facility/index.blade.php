@@ -98,6 +98,17 @@
                     </div>
                 </div>
             </div>
+
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 30px;">
+                        <div class="box">
+                            <h1 class="box-title">Consommation électrique depuis le début de l'année (kWh)</h1>
+                            <div class="box-content row indicators">
+                                <div class="col-lg-12 col-md-4 col-sm-12"><span class="value">{{ $sum_conso_elec_install_current_year }}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
         </div>
     </div>
 

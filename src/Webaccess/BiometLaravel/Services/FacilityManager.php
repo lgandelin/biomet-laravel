@@ -143,8 +143,21 @@ class FacilityManager
         foreach ($keys as $i => $key) {
             $keyData = [];
 
+            //Daily indicator
+            if (preg_match('/DAILY_INDICATOR/', $key)) {
+                $result = [];
+                if (is_array($fileData) && sizeof($fileData) > 0) {
+                    foreach ($fileData as $data) {
+                        if (isset($data->$key))
+                            $result[$data->timestamp] = $data->$key;
+                    }
+                }
+
+                return $result;
+            }
+
             //Average serie
-            if (preg_match('/_AVG/', $key)) {
+            elseif (preg_match('/_AVG/', $key)) {
                 $allData = [];
                 if (is_array($fileData) && sizeof($fileData) > 0) {
                     $avg = self::calculateAverage($fileData, $key, $allData);
