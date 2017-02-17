@@ -24,17 +24,27 @@ class HandleExcelCommand extends Command
                 mkdir($folder, 0777, true);
             }
 
-            $yesterdayDate = DateTime::createFromFormat('Y-m-d', $this->argument('date'))->sub(new DateInterval('P1D'));
+            $yesterdayDate = DateTime::createFromFormat('Y-m-d', $this->argument('date'))->setTime(0, 0, 0)->sub(new DateInterval('P1D'));
 
             //Récupération du fichier de tendances
             $files = glob($folder . '/EXP_TENDANCE_BIOMET*.xlsx', GLOB_NOSORT);
             array_multisort(array_map('filemtime', $files), SORT_NUMERIC, SORT_DESC, $files);
             $fileTendances = isset($files[0]) ? $files[0] : null;
+            foreach ($files as $file) {
+                if ((new DateTime())->setTimestamp(filemtime($file))->setTime(0, 0, 0)->sub(new DateInterval('P1D')) == $yesterdayDate) {
+                    $fileTendances = $file;
+                }
+            }
 
             //Récupération du fichier de consignation
             $files = glob($folder . '/EXP_CONSIGNATION_BIOMET*.xlsx', GLOB_NOSORT);
             array_multisort(array_map('filemtime', $files), SORT_NUMERIC, SORT_DESC, $files);
             $fileConsignation = isset($files[0]) ? $files[0] : null;
+            foreach ($files as $file) {
+                if ((new DateTime())->setTimestamp(filemtime($file))->setTime(0, 0, 0)->sub(new DateInterval('P1D')) == $yesterdayDate) {
+                    $fileConsignation = $file;
+                }
+            }
 
             if ($fileTendances) {
                 $objPHPExcel1 = PHPExcel_IOFactory::load($fileTendances);
