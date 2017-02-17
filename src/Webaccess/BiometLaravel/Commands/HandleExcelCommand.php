@@ -10,7 +10,7 @@ use Webaccess\BiometLaravel\Services\FacilityManager;
 
 class HandleExcelCommand extends Command
 {
-    protected $signature = 'biomet:handle-excel';
+    protected $signature = 'biomet:handle-excel {date}';
 
     protected $description = 'Récupère les fichiers Excel bruts, les regroupe et les place correctement dans l\'arborescence';
 
@@ -24,7 +24,7 @@ class HandleExcelCommand extends Command
                 mkdir($folder, 0777, true);
             }
 
-            $date = (new DateTime())->sub(new DateInterval('P1D'));
+            $yesterdayDate = DateTime::createFromFormat('Y-m-d', $this->argument('date'))->sub(new DateInterval('P1D'));
 
             //Récupération du fichier de tendances
             $files = glob($folder . '/EXP_TENDANCE_BIOMET*.xlsx', GLOB_NOSORT);
@@ -55,16 +55,16 @@ class HandleExcelCommand extends Command
                     }
                 }*/
 
-                $dayFolder = $folder . '/' . $date->format('Y/m/d');
+                $dayFolder = $folder . '/' . $yesterdayDate->format('Y/m/d');
                 if (!is_dir($dayFolder)) {
                     mkdir($dayFolder, 0777, true);
                 }
 
                 $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel1, "Excel2007");
                 $objWriter->save($dayFolder . '/data.xlsx');
-                $this->info('Fichiers déplacés avec succès pour le site ' . $facility->id . ' à la date du ' . $date->format('d/m/Y'));
+                $this->info('Fichiers déplacés avec succès pour le site ' . $facility->id . ' à la date du ' . $yesterdayDate->format('d/m/Y'));
             } else {
-                $this->info('Fichiers bruts manquants pour le site ' . $facility->id . ' à la date du ' . $date->format('d/m/Y'));
+                $this->info('Fichiers bruts manquants pour le site ' . $facility->id . ' à la date du ' . $yesterdayDate->format('d/m/Y'));
             }
         }
     }

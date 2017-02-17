@@ -38,7 +38,7 @@ class FacilityController extends BaseController
             'sum_ft0101f_current_year' => $this->getSumValue($this->request->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('FT0101F')),
             'sum_ft0102f_current_year' => $this->getSumValue($this->request->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('FT0102F')),
 
-            'sum_conso_elec_install_current_year' => $this->getSumOfPowerConsumptionAverageValue($this->request->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('CONSO_ELEC_INSTAL_AVG_DAILY_INDICATOR')),
+            'sum_conso_elec_install_current_year' => $this->getSumOfPowerConsumptionAverageValue($this->request->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' )))),
         ]);
     }
 
@@ -233,9 +233,9 @@ class FacilityController extends BaseController
         return round($total, 1);
     }
 
-    private function getSumOfPowerConsumptionAverageValue($facilityID, $startDate, $endDate, $keys)
+    private function getSumOfPowerConsumptionAverageValue($facilityID, $startDate, $endDate)
     {
-        $data = FacilityManager::getData($startDate, $endDate, $facilityID, $keys, false);
+        $data = FacilityManager::getData($startDate, $endDate, $facilityID, array('CONSO_ELEC_INSTAL_AVG_DAILY_INDICATOR'), false);
 
         return (is_array($data)) ? round(array_sum($data), 1) : 0;
     }
