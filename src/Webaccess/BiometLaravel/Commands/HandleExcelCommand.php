@@ -17,6 +17,7 @@ class HandleExcelCommand extends Command
     public function handle()
     {
         date_default_timezone_set('Europe/Paris');
+        ini_set('memory_limit', -1);
 
         foreach (FacilityManager::getAll(false) as $facility) {
             $folder = env('DATA_FOLDER_PATH') . '/xls/' . $facility->id;
@@ -46,6 +47,17 @@ class HandleExcelCommand extends Command
                 }
             }
 
+
+            //Récupération du fichier de maintenance
+            $files = glob($folder . '/EXP_MAINTENANCE_BIOMET*.xlsx', GLOB_NOSORT);
+            array_multisort(array_map('filemtime', $files), SORT_NUMERIC, SORT_DESC, $files);
+            $fileMaintenance = isset($files[0]) ? $files[0] : null;
+            foreach ($files as $file) {
+                if ((new DateTime())->setTimestamp(filemtime($file))->setTime(0, 0, 0)->sub(new DateInterval('P1D')) == $yesterdayDate) {
+                    $fileMaintenance = $file;
+                }
+            }
+
             if ($fileTendances) {
                 $objPHPExcel1 = PHPExcel_IOFactory::load($fileTendances);
 
@@ -57,13 +69,13 @@ class HandleExcelCommand extends Command
                     }
                 }
 
-                /*if (file_exists($folder . '/EXP_MAINTENANCE_BIOMET.xlsx')) {
-                    $objPHPExcel3 = PHPExcel_IOFactory::load($folder . '/EXP_MAINTENANCE_BIOMET.xlsx');
+                if ($fileMaintenance) {
+                    $objPHPExcel3 = PHPExcel_IOFactory::load($fileMaintenance);
 
                     foreach ($objPHPExcel3->getAllSheets() as $sheet) {
                         $objPHPExcel1->addExternalSheet($sheet);
                     }
-                }*/
+                }
 
                 $dayFolder = $folder . '/' . $yesterdayDate->format('Y/m/d');
                 if (!is_dir($dayFolder)) {

@@ -20,6 +20,7 @@ class GenerateDataFromExcelCommand extends Command
     public function handle()
     {
         date_default_timezone_set('Europe/Paris');
+        ini_set('memory_limit', -1);
 
         foreach (FacilityManager::getAll(false) as $facility) {
             $data = [];
@@ -157,7 +158,7 @@ class GenerateDataFromExcelCommand extends Command
 
             $jsonFile = env('DATA_FOLDER_PATH') . '/json/' . $facility->id . '/' . $yesterdayDate . '/data.json';
 
-            file_put_contents($jsonFile, utf8_encode(json_encode($data, JSON_PRETTY_PRINT)));
+            file_put_contents($jsonFile, utf8_encode(json_encode($data)));
 
             //Consignation
             $objWorksheet = $objPHPExcel->getSheet(9);
