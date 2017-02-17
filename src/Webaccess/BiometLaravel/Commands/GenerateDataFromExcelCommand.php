@@ -114,7 +114,7 @@ class GenerateDataFromExcelCommand extends Command
             }
 
             //Consommation électrique
-            $avg_conso_elec_instal = 0;
+            $total_conso_elec_instal = 0;
             $count_conso_elec_instal = 0;
             $objWorksheet = $objPHPExcel->getSheet(3);
             foreach ($objWorksheet->getRowIterator() as $i => $row) {
@@ -128,7 +128,7 @@ class GenerateDataFromExcelCommand extends Command
                         if ($j == 'B') $data[$timestamp]['CONSO_ELEC_CHAUD'] = $cell->getValue();
                         if ($j == 'C') {
                             $data[$timestamp]['CONSO_ELEC_INSTAL'] = $cell->getValue();
-                            $avg_conso_elec_instal += $cell->getValue();
+                            $total_conso_elec_instal += $cell->getValue();
                             $count_conso_elec_instal++;
                         }
                         if ($j == 'D') $data[$timestamp]['CONSO_ELEC_PEC'] = $cell->getValue();
@@ -139,7 +139,7 @@ class GenerateDataFromExcelCommand extends Command
             //Consommation électrique moyenne journalière
             $date = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A3')->getValue());
             $date->setTime(0, 0, 0);
-            $data[$date->getTimestamp()]['CONSO_ELEC_INSTAL_AVG_DAILY_INDICATOR'] = ($count_conso_elec_instal > 0) ? $avg_conso_elec_instal / $count_conso_elec_instal : 0;
+            $data[$date->getTimestamp()]['CONSO_ELEC_INSTAL_AVG_DAILY_INDICATOR'] = ($count_conso_elec_instal > 0) ? $total_conso_elec_instal / $count_conso_elec_instal : 0;
 
             //Volume
             $date = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A3')->getValue());

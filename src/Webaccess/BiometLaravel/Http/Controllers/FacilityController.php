@@ -35,10 +35,10 @@ class FacilityController extends BaseController
             'avg_ap0202_last_24h' => $this->getAverageValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('AP0202_H2S')),
             'avg_ap0203_last_24h' => $this->getAverageValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('AP0203_H2S')),
 
-            'sum_ft0101f_current_year' => $this->getSumValue($this->request->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('FT0101F')),
-            'sum_ft0102f_current_year' => $this->getSumValue($this->request->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('FT0102F')),
+            'sum_ft0101f_current_year' => $this->getSumValue($this->request->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('FT0101F')) / 60,
+            'sum_ft0102f_current_year' => $this->getSumValue($this->request->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('FT0102F')) / 60,
 
-            'sum_conso_elec_install_current_year' => $this->getSumOfPowerConsumptionAverageValue($this->request->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' )))),
+            'sum_conso_elec_install_current_year' => $this->getPowerConsumptionAverageValue($this->request->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' )))),
         ]);
     }
 
@@ -233,10 +233,11 @@ class FacilityController extends BaseController
         return round($total, 1);
     }
 
-    private function getSumOfPowerConsumptionAverageValue($facilityID, $startDate, $endDate)
+    private function getPowerConsumptionAverageValue($facilityID, $startDate, $endDate)
     {
         $data = FacilityManager::getData($startDate, $endDate, $facilityID, array('CONSO_ELEC_INSTAL_AVG_DAILY_INDICATOR'), false);
+        $total = array_sum($data);
 
-        return (is_array($data)) ? round(array_sum($data), 1) : 0;
+        return round($total * 24, 1);
     }
 }
