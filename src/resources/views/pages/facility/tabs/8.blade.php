@@ -26,7 +26,8 @@
                 <tr>
                     <th>{{ trans('biomet::equipments.tag') }}</th>
                     <th>{{ trans('biomet::equipments.name') }}</th>
-                    <th>{{ trans('biomet::equipments.hours_functionning') }}</th>
+                    <th>{{ trans('biomet::equipments.partial_counter') }}</th>
+                    <th>{{ trans('biomet::equipments.total_counter') }}</th>
                 </tr>
                 </thead>
 
@@ -36,7 +37,8 @@
                         <tr>
                             <td>{{ $equipment->tag }}</td>
                             <td>{{ $equipment->name }}</td>
-                            <td>{{ $equipment->hours_functionning }}</td>
+                            <td>{{ $equipment->partial_counter }}</td>
+                            <td>{{ $equipment->total_counter }}</td>
                         </tr>
                     @endforeach
                 @else

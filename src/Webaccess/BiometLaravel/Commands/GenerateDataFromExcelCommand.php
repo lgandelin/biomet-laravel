@@ -6,6 +6,7 @@ use DateInterval;
 use DateTime;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use PHPExcel_Cell;
 use PHPExcel_IOFactory;
 use Webaccess\BiometLaravel\Services\AlarmManager;
 use Webaccess\BiometLaravel\Services\EquipmentManager;
@@ -177,33 +178,34 @@ class GenerateDataFromExcelCommand extends Command
             }
 
             //Heures en fonctionnement
-            //$objWorksheet = $objPHPExcel->getSheet(10);
-
-            /*$dateStepStart = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A3')->getValue());
-            $dateStepEnd = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A4')->getValue());
-
-            $timeStepInHours = 0;
-            if ($dateStepStart && $dateStepEnd) {
-                $timeStepInHours = $dateStepEnd->diff($dateStepStart)->format('%H');
-            }
+            $objWorksheet = $objPHPExcel->getSheet(11);
+            $lastRow = $objWorksheet->getHighestRow();
 
             foreach ($objWorksheet->getRowIterator() as $i => $row) {
-                if ($i > 1) {
+                if ($i == 2) {
                     $cellIterator = $row->getCellIterator();
                     $cellIterator->setIterateOnlyExistingCells(FALSE);
 
-                    foreach ($cellIterator as $j => $cell) {
-                        $tag = $objWorksheet->getCell($j . '1')->getValue();
-                        if ($equipment = EquipmentManager::getByFacilityIDAndTag($facility->id, $tag)) {
-                            if ($cell->getValue() != "") {
-                                //$equipment->hours_functionning = $equipment->hours_functionning + $timeStepInHours;
-                                $equipment->hours_functionning = $cell->getValue();
-                                $equipment->save();
+                    foreach ($cellIterator as $letter => $cell) {
+                        if (preg_match('/([a-zA-Z0-9\-\_]*) :(.*)/', $objWorksheet->getCell($letter . '2')->getValue(), $matches)) {
+                            $tag = preg_replace('/CPT_/', '', $matches[1]);
+                            if ($tag != "") {
+                                if ($equipment = EquipmentManager::getByFacilityIDAndTag($facility->id, $tag)) {
+                                    $value = $objWorksheet->getCell($letter . $lastRow)->getValue();
+                                    $colIndex = PHPExcel_Cell::columnIndexFromString($letter);
+
+                                    if ($colIndex % 2 == 0) {
+                                        $equipment->partial_counter = $value;
+                                    } else {
+                                        $equipment->total_counter = $value;
+                                    }
+                                    $equipment->save();
+                                }
                             }
                         }
                     }
                 }
-            }*/
+            }
 
         }
 

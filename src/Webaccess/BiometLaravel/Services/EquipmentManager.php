@@ -13,7 +13,7 @@ class EquipmentManager
      */
     public static function getAllByFacilityID($facilityID)
     {
-        return Equipment::where('facility_id', '=', $facilityID)->orderBy('created_at', 'desc')->get();
+        return Equipment::where('facility_id', '=', $facilityID)->orderBy('order', 'asc')->get();
     }
 
     /**
@@ -47,7 +47,8 @@ class EquipmentManager
         $equipment = new Equipment();
         $equipment->id = Uuid::uuid4()->toString();
         $equipment->facility_id = $facilityID;
-        $equipment->hours_functionning = 0;
+        $equipment->partial_counter = 0;
+        $equipment->total_counter = 0;
         $equipment->name = $name;
         $equipment->tag = $tag;
 
@@ -58,17 +59,19 @@ class EquipmentManager
 
     /**
      * @param $equipmentID
-     * @param $name
-     * @param $tag
-     * @param int $hoursFunctionning
+     * @param string $name
+     * @param string $tag
+     * @param int $partialCounter
+     * @param int $totalCounter
      * @return bool
      */
-    public static function udpateEquipment($equipmentID, $name = '', $tag = '', $hoursFunctionning = 0)
+    public static function udpateEquipment($equipmentID, $name = '', $tag = '', $partialCounter = 0, $totalCounter = 0)
     {
         if ($equipment = Equipment::find($equipmentID)) {
             if ($name) $equipment->name = $name;
             if ($tag) $equipment->tag = $tag;
-            $equipment->hours_functionning = $hoursFunctionning;
+            $equipment->partial_counter = $partialCounter;
+            $equipment->total_counter = $totalCounter;
             $equipment->save();
 
             return true;

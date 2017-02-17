@@ -22,6 +22,7 @@ class Equipment extends Model
         'facility_id',
         'name',
         'tag',
-        'hours_functionning',
+        'partial_counter',
+        'total_counter',
     ];
 }
