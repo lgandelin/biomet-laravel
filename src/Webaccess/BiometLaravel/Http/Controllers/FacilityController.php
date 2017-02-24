@@ -27,7 +27,7 @@ class FacilityController extends BaseController
             'alarms' => AlarmManager::getAllByFacilityID($this->request->id, null, null, false, 5),
 
             'avg_igp_last_24h' => $this->getAverageValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('IGP')),
-            'avg_igp_last_week' => $this->getAverageValue($this->request->id, new DateTime(date("Y-m-d", strtotime('monday last week'))), new DateTime(date("Y-m-d", strtotime('sunday last week'))), array('IGP')),
+            'avg_igp_last_7_days' => $this->getAverageValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-7 days' ))), new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('IGP')),
             'avg_igp_last_month' => $this->getAverageValue($this->request->id, (new DateTime(date('Y-m-d', strtotime( '-1 days' ))))->sub(new DateInterval('P1M')), new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('IGP')),
             'avg_igp_current_year' => $this->getAverageValue($this->request->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('IGP')),
 

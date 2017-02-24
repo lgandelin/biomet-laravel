@@ -5,7 +5,7 @@
 
     <ul>
         <li><a class="date_filter_label last_24h @if (isset($current) && $current == false) @else current @endif" href="javascript:void(0)">Dernières 24h</a></li> |
-        <li><a class="date_filter_label last_week" href="javascript:void(0)">Dernière semaine</a></li> |
+        <li><a class="date_filter_label last_week" href="javascript:void(0)">Derniers 7 jours</a></li> |
         <li><a class="date_filter_label last_month" href="javascript:void(0)">Dernier mois</a></li> |
         <li><a class="date_filter_label current_year" href="javascript:void(0)">Année en cours</a></li>
     </ul>
