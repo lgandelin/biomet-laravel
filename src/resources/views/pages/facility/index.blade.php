@@ -64,23 +64,13 @@
             </div>
 
             <div class="row">
-                <div class="col-lg-6 col-md-12 col-sm-12" style="margin-bottom: 30px;">
+                <div class="col-lg-12 col-md-12 col-sm-12" style="margin-bottom: 30px;">
                     <div class="box">
                         <h1 class="box-title">Concentration H<sub>2</sub>S moyenne des dernières 24h (ppm)</h1>
                         <div class="box-content row indicators">
                             <div class="col-lg-4 col-md-4 col-sm-12"><span class="title">AP0201</span> <span class="value">{{ $avg_ap0201_last_24h }}</span></div>
                             <div class="col-lg-4 col-md-4 col-sm-12"><span class="title">AP0202</span> <span class="value">{{ $avg_ap0202_last_24h }}</span></div>
                             <div class="col-lg-4 col-md-4 col-sm-12"><span class="title">AP0203</span> <span class="value">{{ $avg_ap0203_last_24h }}</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-6 col-md-12 col-sm-12" style="margin-bottom: 30px;">
-                    <div class="box">
-                        <h1 class="box-title">Volumes cumulés depuis le début de l'année (Nm<sup>3</sup>)</h1>
-                        <div class="box-content row indicators">
-                            <div class="col-lg-6 col-md-6 col-sm-12"><span class="title">Biogaz brut (FT0101F)</span> <span class="value">{{ number_format($sum_ft0101f_current_year, 0, '.', ' ') }}</span></div>
-                            <div class="col-lg-6 col-md-6 col-sm-12"><span class="title">Biométhane (FT0102F)</span> <span class="value">{{ number_format($sum_ft0102f_current_year, 0, '.', ' ') }}</span></div>
                         </div>
                     </div>
                 </div>
@@ -99,16 +89,25 @@
                 </div>
             </div>
 
-                <div class="row">
-                    <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 30px;">
-                        <div class="box">
-                            <h1 class="box-title">Consommation électrique depuis le début de l'année (kWh)</h1>
-                            <div class="box-content row indicators">
-                                <div class="col-lg-12 col-md-4 col-sm-12"><span class="value">{{ $sum_conso_elec_install_current_year }}</span></div>
-                            </div>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12" style="margin-bottom: 30px;">
+                    <div class="box">
+                        <h1 class="box-title">Valeurs clés depuis le début de l'année</h1>
+                        <div class="box-content row indicators">
+                            <div class="col-lg-3 col-md-4 col-sm-12"><span class="title">Consommation électrique depuis le début de l'année (kWh)</span><span class="value">{{ $sum_conso_elec_install_current_year }}</span></div>
+                            <div class="col-lg-3 col-md-6 col-sm-12"><span class="title">Volume cumulé biogaz brut (Nm<sup>3</sup>) (FT0101F)</span> <span class="value">{{ number_format($sum_ft0101f_current_year, 0, '.', ' ') }}</span></div>
+                            <div class="col-lg-3 col-md-6 col-sm-12"><span class="title">Volume cumulé biométhane (Nm<sup>3</sup>) (FT0102F)</span> <span class="value">{{ number_format($sum_ft0102f_current_year, 0, '.', ' ') }}</span></div>
+                            <div class="col-lg-3 col-md-6 col-sm-12"><span class="title">Heures en fonctionnement (h)</span> <span class="value"><span class="value">{{ number_format($heures_en_fonctionnement_current_year, 0, '.', ' ') }}</span></div>
+                        </div>
+                        <div class="box-content row indicators">
+                            <div class="col-lg-3 col-md-4 col-sm-12"><span class="title">Quantité biométhane injecté (Nm<sup>3</sup>)</span><span class="value">{{ number_format($qte_biomethane_injecte_current_year, 0, '.', ' ') }}</span></div>
+                            <div class="col-lg-3 col-md-6 col-sm-12"><span class="title">PCS biométhane injecté (MWh PCS)</span> <span class="value">{{ number_format($pcs_biomethane_injecte_current_year, 0, '.', ' ') }}</span></div>
+                            <div class="col-lg-3 col-md-6 col-sm-12"><span class="title">Quantité biométhane non-conforme (Nm<sup>3</sup>)</span> <span class="value">{{ number_format($qte_biomethane_non_conforme_current_year, 0, '.', ' ') }}</span></div>
+                            <div class="col-lg-3 col-md-6 col-sm-12"><span class="title">PCS biométhane non-conforme  (MWh PCS)</span> <span class="value">{{ number_format($pcs_biomethane_non_conforme_current_year, 0, '.', ' ') }}</span></div>
                         </div>
                     </div>
                 </div>
+            </div>
         </div>
     </div>
 

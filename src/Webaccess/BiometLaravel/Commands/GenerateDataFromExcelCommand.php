@@ -150,6 +150,51 @@ class GenerateDataFromExcelCommand extends Command
             $data[$date->getTimestamp()]['FT0101F_VOLUME'] = $this->calculateSum($data, 'FT0101F') / 60;
             $data[$date->getTimestamp()]['FT0102F_VOLUME'] = $this->calculateSum($data, 'FT0102F') / 60;
 
+            //Quantités biométhane
+            $objWorksheet = $objPHPExcel->getSheet(10);
+            $lastRow = $objWorksheet->getHighestRow();
+            $date = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A3')->getValue());
+            $date->setTime(0, 0, 0);
+            $data[$date->getTimestamp()]['timestamp'] = $date->getTimestamp();
+            $data[$date->getTimestamp()]['QTE_BIOMETHANE_INJECTE'] = $objWorksheet->getCell('Y' . $lastRow)->getValue();
+            $data[$date->getTimestamp()]['QTE_BIOMETHANE_NON_CONFORME'] = $objWorksheet->getCell('Z' . $lastRow)->getValue();
+
+            //PCS biométhane
+            $sumPCSBiomethaneInjecte = 0;
+            $sumPCSBiomethaneNonConforme = 0;
+            foreach ($objWorksheet->getRowIterator() as $i => $row) {
+                if ($i > 2) {
+                    $cellIterator = $row->getCellIterator();
+                    $cellIterator->setIterateOnlyExistingCells(FALSE);
+                    $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A' . $i)->getValue())->getTimestamp();
+
+                    $dbtInjecte = 0;
+                    $dbtNonConforme = 0;
+                    $pcs = 0;
+                    foreach ($cellIterator as $j => $cell) {
+                        $data[$timestamp]['timestamp'] = $timestamp;
+                        if ($j == 'I') $dbtInjecte = $cell->getValue();
+                        if ($j == 'J') $dbtNonConforme = $cell->getValue();
+                        if ($j == 'P') $pcs = $cell->getValue();
+                    }
+                    $sumPCSBiomethaneInjecte += ($dbtInjecte  * $pcs);
+                    $sumPCSBiomethaneNonConforme += ($dbtNonConforme  * $pcs);
+                }
+            }
+            $date = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A3')->getValue());
+            $date->setTime(0, 0, 0);
+            $data[$date->getTimestamp()]['timestamp'] = $date->getTimestamp();
+            $data[$date->getTimestamp()]['PCS_BIOMETHANE_INJECTE'] = $sumPCSBiomethaneInjecte / 60;
+            $data[$date->getTimestamp()]['PCS_BIOMETHANE_NON_CONFORME'] = $sumPCSBiomethaneNonConforme / 60;
+
+            //Heures en fonctionnement depuis le début de l'année
+            $objWorksheet = $objPHPExcel->getSheet(11);
+            $lastRow = $objWorksheet->getHighestRow();
+
+            $data[$date->getTimestamp()]['HEURES_EN_FONCTIONNEMENT_TOTAL'] = $objWorksheet->getCell('C' . $lastRow)->getValue();
+            //@TODO : ne pas prendre le compteur total d'heures, mais bien depuis le début de l'année en cours !
+
+
             //JSON generation
             $data = array_values($data);
             $jsonFolder = env('DATA_FOLDER_PATH') . '/json/' . $facility->id . '/' . $yesterdayDate;
@@ -206,7 +251,6 @@ class GenerateDataFromExcelCommand extends Command
                     }
                 }
             }
-
         }
 
         $this->info('Données générées avec succès pour le site ' . $facility->id . ' à la date du ' . $yesterdayDate);
