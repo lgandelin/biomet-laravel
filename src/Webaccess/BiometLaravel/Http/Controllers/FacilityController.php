@@ -181,7 +181,7 @@ class FacilityController extends BaseController
             }
 
             //Files
-            if (preg_match('/\.xls/', $entry->getPathname())) {
+            if (preg_match('/data\.xls/', $entry->getPathname())) {
                 $entries[] = [
                     'type' => 'file',
                     'name' => preg_replace('#' . $path . '/#', '', $entry->getPathname()),
