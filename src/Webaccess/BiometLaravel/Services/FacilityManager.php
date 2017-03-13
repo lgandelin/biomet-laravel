@@ -272,6 +272,9 @@ class FacilityManager
 
     public static function groupExcelFiles($startDate, $endDate, $facilityID)
     {
+        set_time_limit(0);
+        ini_set('memory_limit', -1);
+
         $date = clone $startDate;
 
         $xlsFiles = [];
@@ -284,27 +287,31 @@ class FacilityManager
         }
 
         $baseFile = array_shift($xlsFiles);
-        $baseObjPHPExcel = PHPExcel_IOFactory::load($baseFile);
+        if ($baseFile) {
+            $baseObjPHPExcel = PHPExcel_IOFactory::load($baseFile);
 
-        foreach ($xlsFiles as $i => $xlsFile) {
+            foreach ($xlsFiles as $i => $xlsFile) {
 
-            $objPHPExcel = PHPExcel_IOFactory::load($xlsFile);
-            foreach ($objPHPExcel->getAllSheets() as $sheetIndex => $sheet) {
-                $startingRow = ($sheetIndex == 9) ? 2 : 3;
-                $findEndDataRow = $sheet->getHighestRow();
-                $findEndDataColumn = $sheet->getHighestColumn();
-                $findEndData = $findEndDataColumn . $findEndDataRow;
-                $fileData = $sheet->rangeToArray('A' . $startingRow . ':' . $findEndData);
-                $appendStartRow = $baseObjPHPExcel->getSheet($sheetIndex)->getHighestRow() + 1;
-                $baseObjPHPExcel->getSheet($sheetIndex)->fromArray($fileData, null, 'A' . $appendStartRow);
+                $objPHPExcel = PHPExcel_IOFactory::load($xlsFile);
+                foreach ($objPHPExcel->getAllSheets() as $sheetIndex => $sheet) {
+                    $startingRow = ($sheetIndex == 9) ? 2 : 3;
+                    $findEndDataRow = $sheet->getHighestRow();
+                    $findEndDataColumn = $sheet->getHighestColumn();
+                    $findEndData = $findEndDataColumn . $findEndDataRow;
+                    $fileData = $sheet->rangeToArray('A' . $startingRow . ':' . $findEndData);
+                    $appendStartRow = $baseObjPHPExcel->getSheet($sheetIndex)->getHighestRow() + 1;
+                    $baseObjPHPExcel->getSheet($sheetIndex)->fromArray($fileData, null, 'A' . $appendStartRow);
+                }
             }
+
+            $file = env('DATA_FOLDER_PATH') . '/temp/data-' . $startDate->format('Y-m-d') . '-' . $endDate->format('Y-m-d') . '-' . time() . '.xlsx';
+
+            $objWriter = PHPExcel_IOFactory::createWriter($baseObjPHPExcel, 'Excel2007');
+            $objWriter->save($file);
+
+            return $file;
         }
 
-        $file = env('DATA_FOLDER_PATH') . '/temp/data-' . $startDate->format('Y-m-d') . '-' . $endDate->format('Y-m-d'). '-' . time() . '.xlsx';
-
-        $objWriter = PHPExcel_IOFactory::createWriter($baseObjPHPExcel, 'Excel2007');
-        $objWriter->save($file);
-
-        return $file;
+        return false;
     }
 }

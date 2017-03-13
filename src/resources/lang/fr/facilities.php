@@ -21,4 +21,6 @@ return [
 
     'update_facility_error' => 'Une erreur est survenue lors de la mise à jour du site',
     'delete_facility_success' => 'Site supprimé avec succès',
+
+    'error_excel_grouping_no_files' => 'Une erreur est survenue lors du regroupement de fichiers',
 ];

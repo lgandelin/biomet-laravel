@@ -133,9 +133,13 @@ class FacilityController extends BaseController
 
     public function group_excel()
     {
-        $file = FacilityManager::groupExcelFiles(DateTime::createFromFormat('d/m/Y', $this->request->start_date), DateTime::createFromFormat('d/m/Y', $this->request->end_date), $this->request->facility_id);
+        if ($file = FacilityManager::groupExcelFiles(DateTime::createFromFormat('d/m/Y', $this->request->start_date), DateTime::createFromFormat('d/m/Y', $this->request->end_date), $this->request->facility_id)) {
 
-        return response()->download($file);
+            return response()->download($file);
+        }
+
+        $this->request->session()->flash('error', trans('biomet::facilities.error_excel_grouping_no_files'));
+        return redirect()->route('facility_tab', ['id' => $this->request->facility_id, 'tab' => 11]);
     }
 
     public function download_file()
@@ -245,7 +249,7 @@ class FacilityController extends BaseController
         $data = FacilityManager::getData($startDate, $endDate, $facilityID, array('CONSO_ELEC_INSTAL_AVG_DAILY_INDICATOR'), false);
         $total = array_sum($data);
 
-        return round($total * 24, 1);
+        return round($total * 24);
     }
 
     private function getValue($facilityID, $date, $keys)

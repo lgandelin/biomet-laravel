@@ -8,6 +8,12 @@
         <h1 class="box-title">{{ $current_facility->name }} - Fichiers de données</h1>
         <div class="box-content facility-template">
 
+            @if (isset($error))
+                <div class="alert alert-danger">
+                    {{ $error }}
+                </div>
+            @endif
+
             <div style="margin-bottom: 3rem;">
                 <h4>Regroupement de fichiers</h4>
 

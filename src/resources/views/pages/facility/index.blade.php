@@ -79,19 +79,6 @@
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12" style="margin-bottom: 30px;">
                     <div class="box">
-                        <h1 class="box-title">CH<sub>4</sub> et CO<sub>2</sub> du biogaz brut et biométhane (%)</h1>
-                        <div class="box-content">
-                            @include('biomet::pages.facility.includes.date_filters')
-                            <div class="graph" id="container3" data-title="CH<sub>4</sub> et CO<sub>2</sub> du biogaz brut et biométhane" data-keys="AP0201_CH4,AP0201_CO2,AP0101_CH4,AP0101_CO2" data-legend="AP0201 CH<sub>4</sub> (%),AP0201 CO<sub>2</sub> (%),AP0101 CH<sub>4</sub> (%),AP0101 CO<sub>2</sub> (%)"></div>
-                            <div class="entrypoint"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12" style="margin-bottom: 30px;">
-                    <div class="box">
                         <h1 class="box-title">Valeurs clés depuis le début de l'année</h1>
                         <div class="box-content row indicators">
                             <div class="col-lg-3 col-md-4 col-sm-12"><span class="title">Consommation électrique depuis le début de l'année (kWh)</span><span class="value">{{ $sum_conso_elec_install_current_year }}</span></div>
@@ -104,6 +91,19 @@
                             <div class="col-lg-3 col-md-6 col-sm-12"><span class="title">PCS biométhane injecté (MWh PCS)</span> <span class="value">{{ number_format($pcs_biomethane_injecte_current_year, 0, '.', ' ') }}</span></div>
                             <div class="col-lg-3 col-md-6 col-sm-12"><span class="title">Quantité biométhane non-conforme (Nm<sup>3</sup>)</span> <span class="value">{{ number_format($qte_biomethane_non_conforme_current_year, 0, '.', ' ') }}</span></div>
                             <div class="col-lg-3 col-md-6 col-sm-12"><span class="title">PCS biométhane non-conforme  (MWh PCS)</span> <span class="value">{{ number_format($pcs_biomethane_non_conforme_current_year, 0, '.', ' ') }}</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12" style="margin-bottom: 30px;">
+                    <div class="box">
+                        <h1 class="box-title">CH<sub>4</sub> et CO<sub>2</sub> du biogaz brut et biométhane (%)</h1>
+                        <div class="box-content">
+                            @include('biomet::pages.facility.includes.date_filters')
+                            <div class="graph" id="container3" data-title="CH<sub>4</sub> et CO<sub>2</sub> du biogaz brut et biométhane" data-keys="AP0201_CH4,AP0201_CO2,AP0101_CH4,AP0101_CO2" data-legend="AP0201 CH<sub>4</sub> (%),AP0201 CO<sub>2</sub> (%),AP0101 CH<sub>4</sub> (%),AP0101 CO<sub>2</sub> (%)"></div>
+                            <div class="entrypoint"></div>
                         </div>
                     </div>
                 </div>
