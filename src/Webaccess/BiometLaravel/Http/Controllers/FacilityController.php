@@ -18,9 +18,6 @@ class FacilityController extends BaseController
     {
         parent::__construct($this->request);
 
-        $dateFirstDayOfYear = new DateTime();
-        $dateFirstDayOfYear->setDate($dateFirstDayOfYear->format('Y'), 1, 1)->setTime(0, 0, 0);
-
         return view('biomet::pages.facility.index', [
             'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
             'current_facility' => FacilityManager::getByID($this->request->id),
@@ -29,7 +26,7 @@ class FacilityController extends BaseController
             'avg_igp_last_24h' => $this->getAverageValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('IGP')),
             'avg_igp_last_7_days' => $this->getAverageValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-7 days' ))), new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('IGP')),
             'avg_igp_last_month' => $this->getAverageValue($this->request->id, (new DateTime(date('Y-m-d', strtotime( '-1 days' ))))->sub(new DateInterval('P1M')), new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('IGP')),
-            'avg_igp_current_year' => $this->getAverageValue($this->request->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('IGP')),
+            'avg_igp_current_year' => $this->getValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('AVG_IGP_CURRENT_YEAR')),
 
             'avg_ap0201_last_24h' => $this->getAverageValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('AP0201_H2S')),
             'avg_ap0202_last_24h' => $this->getAverageValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('AP0202_H2S')),
@@ -224,6 +221,12 @@ class FacilityController extends BaseController
         return ($count > 0) ? round($total / $count, 1) : 0;
     }
 
+    /**
+     * @param $facilityID
+     * @param $date
+     * @param $keys
+     * @return int
+     */
     private function getValue($facilityID, $date, $keys)
     {
         $data = FacilityManager::getData($date, $date, $facilityID, $keys, false);

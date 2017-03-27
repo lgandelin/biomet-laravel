@@ -198,6 +198,8 @@ class GenerateDataFromExcelCommand extends Command
             $dateFirstDayOfYear = new DateTime();
             $dateFirstDayOfYear->setDate($dateFirstDayOfYear->format('Y'), 1, 1)->setTime(0, 0, 0);
 
+            $data[$date->getTimestamp()]['AVG_IGP_CURRENT_YEAR'] = $this->getAverageValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('IGP'));
+
             $data[$date->getTimestamp()]['SUM_FT0101F_CURRENT_YEAR'] = $this->getSumValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('FT0101F')) / 60;
             $data[$date->getTimestamp()]['SUM_FT0102F_CURRENT_YEAR'] = $this->getSumValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('FT0102F')) / 60;
 
@@ -299,6 +301,12 @@ class GenerateDataFromExcelCommand extends Command
         return round($total, 1);
     }
 
+    /**
+     * @param $facilityID
+     * @param $startDate
+     * @param $endDate
+     * @return float
+     */
     private function getPowerConsumptionAverageValue($facilityID, $startDate, $endDate)
     {
         $data = FacilityManager::getData($startDate, $endDate, $facilityID, array('CONSO_ELEC_INSTAL_AVG_DAILY_INDICATOR'), false);
@@ -307,4 +315,26 @@ class GenerateDataFromExcelCommand extends Command
         return round($total * 24);
     }
 
+    /**
+     * @param $facilityID
+     * @param $startDate
+     * @param $endDate
+     * @param $keys
+     * @return float|int
+     */
+    private function getAverageValue($facilityID, $startDate, $endDate, $keys)
+    {
+        $data = FacilityManager::getData($startDate, $endDate, $facilityID, $keys, false);
+        $total = 0;
+        $count = 0;
+
+        foreach ($data as $file) {
+            foreach ($file['data'] as $value) {
+                $total += $value[1];
+                $count ++;
+            }
+        }
+
+        return ($count > 0) ? round($total / $count, 1) : 0;
+    }
 }
