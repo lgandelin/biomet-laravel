@@ -212,13 +212,6 @@ class FacilityManager
         foreach ($jsonFiles as $jsonFile) {
             $data = json_decode(file_get_contents($jsonFile));
 
-            /*TEMP : A SUPPRIMER
-            usort($data, function ($a, $b)
-            {
-                return ($a->timestamp < $b->timestamp) ? -1 : 1;
-            });
-            //TEMP : A SUPPRIMER*/
-
             foreach ($data as $d) {
                 $fileData[] = $d;
             }

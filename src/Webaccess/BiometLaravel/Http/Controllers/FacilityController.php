@@ -35,17 +35,17 @@ class FacilityController extends BaseController
             'avg_ap0202_last_24h' => $this->getAverageValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('AP0202_H2S')),
             'avg_ap0203_last_24h' => $this->getAverageValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('AP0203_H2S')),
 
-            'sum_ft0101f_current_year' => $this->getSumValue($this->request->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('FT0101F')) / 60,
-            'sum_ft0102f_current_year' => $this->getSumValue($this->request->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('FT0102F')) / 60,
+            'sum_ft0101f_current_year' => $this->getValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('SUM_FT0101F_CURRENT_YEAR')),
+            'sum_ft0102f_current_year' => $this->getValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('SUM_FT0102F_CURRENT_YEAR')),
 
-            'sum_conso_elec_install_current_year' => $this->getPowerConsumptionAverageValue($this->request->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' )))),
+            'sum_conso_elec_install_current_year' => $this->getValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('SUM_CONSO_ELEC_INSTALL_CURRENT_YEAR')),
 
-            'qte_biomethane_injecte_current_year' => $this->getSumValue($this->request->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('QTE_BIOMETHANE_INJECTE')),
-            'pcs_biomethane_injecte_current_year' => $this->getSumValue($this->request->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('PCS_BIOMETHANE_INJECTE')),
-            'qte_biomethane_non_conforme_current_year' => $this->getSumValue($this->request->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('QTE_BIOMETHANE_NON_CONFORME')),
-            'pcs_biomethane_non_conforme_current_year' => $this->getSumValue($this->request->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('PCS_BIOMETHANE_NON_CONFORME')),
+            'qte_biomethane_injecte_current_year' => $this->getValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('QTE_BIOMETHANE_INJECTE_CURRENT_YEAR')),
+            'pcs_biomethane_injecte_current_year' => $this->getValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('PCS_BIOMETHANE_INJECTE_CURRENT_YEAR')),
+            'qte_biomethane_non_conforme_current_year' => $this->getValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('QTE_BIOMETHANE_NON_CONFORME_CURRENT_YEAR')),
+            'pcs_biomethane_non_conforme_current_year' => $this->getValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('PCS_BIOMETHANE_NON_CONFORME_CURRENT_YEAR')),
 
-            'heures_en_fonctionnement_current_year' => $this->getValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('HEURES_EN_FONCTIONNEMENT_TOTAL')),
+            'heures_en_fonctionnement_current_year' => $this->getValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('HEURES_EN_FONCTIONNEMENT_CURRENT_YEAR')),
         ]);
     }
 
@@ -222,34 +222,6 @@ class FacilityController extends BaseController
         }
 
         return ($count > 0) ? round($total / $count, 1) : 0;
-    }
-
-    /**
-     * @param $facilityID
-     * @param $startDate
-     * @param $endDate
-     * @param $keys
-     * @return float
-     */
-    private function getSumValue($facilityID, $startDate, $endDate, $keys)
-    {
-        $data = FacilityManager::getData($startDate, $endDate, $facilityID, $keys, false);
-        $total = 0;
-        foreach ($data as $file) {
-            foreach ($file['data'] as $value) {
-                $total += $value[1];
-            }
-        }
-
-        return round($total, 1);
-    }
-
-    private function getPowerConsumptionAverageValue($facilityID, $startDate, $endDate)
-    {
-        $data = FacilityManager::getData($startDate, $endDate, $facilityID, array('CONSO_ELEC_INSTAL_AVG_DAILY_INDICATOR'), false);
-        $total = array_sum($data);
-
-        return round($total * 24);
     }
 
     private function getValue($facilityID, $date, $keys)

@@ -191,9 +191,22 @@ class GenerateDataFromExcelCommand extends Command
             $objWorksheet = $objPHPExcel->getSheet(11);
             $lastRow = $objWorksheet->getHighestRow();
 
-            $data[$date->getTimestamp()]['HEURES_EN_FONCTIONNEMENT_TOTAL'] = $objWorksheet->getCell('C' . $lastRow)->getValue();
             //@TODO : ne pas prendre le compteur total d'heures, mais bien depuis le début de l'année en cours !
+            $data[$date->getTimestamp()]['HEURES_EN_FONCTIONNEMENT_CURRENT_YEAR'] = $objWorksheet->getCell('C' . $lastRow)->getValue();
 
+            //Valeurs depuis le début de l'année (tableau bord)
+            $dateFirstDayOfYear = new DateTime();
+            $dateFirstDayOfYear->setDate($dateFirstDayOfYear->format('Y'), 1, 1)->setTime(0, 0, 0);
+
+            $data[$date->getTimestamp()]['SUM_FT0101F_CURRENT_YEAR'] = $this->getSumValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('FT0101F')) / 60;
+            $data[$date->getTimestamp()]['SUM_FT0102F_CURRENT_YEAR'] = $this->getSumValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('FT0102F')) / 60;
+
+            $data[$date->getTimestamp()]['SUM_CONSO_ELEC_INSTALL_CURRENT_YEAR'] = $this->getPowerConsumptionAverageValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))));
+
+            $data[$date->getTimestamp()]['QTE_BIOMETHANE_INJECTE_CURRENT_YEAR'] = $this->getSumValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('QTE_BIOMETHANE_INJECTE'));
+            $data[$date->getTimestamp()]['PCS_BIOMETHANE_INJECTE_CURRENT_YEAR'] = $this->getSumValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('PCS_BIOMETHANE_INJECTE'));
+            $data[$date->getTimestamp()]['QTE_BIOMETHANE_NON_CONFORME_CURRENT_YEAR'] = $this->getSumValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('QTE_BIOMETHANE_NON_CONFORME'));
+            $data[$date->getTimestamp()]['PCS_BIOMETHANE_NON_CONFORME_CURRENT_YEAR'] = $this->getSumValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('PCS_BIOMETHANE_NON_CONFORME'));
 
             //JSON generation
             $data = array_values($data);
@@ -265,4 +278,33 @@ class GenerateDataFromExcelCommand extends Command
 
         return $sum;
     }
+
+    /**
+     * @param $facilityID
+     * @param $startDate
+     * @param $endDate
+     * @param $keys
+     * @return float
+     */
+    private function getSumValue($facilityID, $startDate, $endDate, $keys)
+    {
+        $data = FacilityManager::getData($startDate, $endDate, $facilityID, $keys, false);
+        $total = 0;
+        foreach ($data as $file) {
+            foreach ($file['data'] as $value) {
+                $total += $value[1];
+            }
+        }
+
+        return round($total, 1);
+    }
+
+    private function getPowerConsumptionAverageValue($facilityID, $startDate, $endDate)
+    {
+        $data = FacilityManager::getData($startDate, $endDate, $facilityID, array('CONSO_ELEC_INSTAL_AVG_DAILY_INDICATOR'), false);
+        $total = array_sum($data);
+
+        return round($total * 24);
+    }
+
 }
