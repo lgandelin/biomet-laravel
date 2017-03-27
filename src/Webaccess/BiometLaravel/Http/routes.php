@@ -56,6 +56,9 @@ Route::group(['middleware' => ['web']], function () {
             Route::get('/admin/sites/{id}', array('as' => 'facilities_edit', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\Admin\FacilityController@edit'));
             Route::post('/admin/sites', array('as' => 'facilities_update', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\Admin\FacilityController@update'));
             Route::get('/admin/sites/supprimer/{id}', array('as' => 'facilities_delete', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\Admin\FacilityController@delete'));
+
+            Route::get('/admin/regenerer_donneees', array('as' => 'regenerate_data', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\Admin\RegenerateFacilitiesDataController@index'));
+            Route::post('/admin/regenerer_donneees', array('as' => 'regenerate_data_handler', 'uses' => 'Webaccess\BiometLaravel\Http\Controllers\Admin\RegenerateFacilitiesDataController@regenerate_data_handler'));
         });
 
         //ADMIN CLIENT

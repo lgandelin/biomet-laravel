@@ -23,4 +23,7 @@ return [
     'delete_facility_success' => 'Site supprimé avec succès',
 
     'error_excel_grouping_no_files' => 'Une erreur est survenue lors du regroupement de fichiers',
+
+    'regenerate_data_facility_success' => 'Données régénérées avec succès',
+    'regenerate_data_facility_error' => 'Une erreur est survenue lors de la régénération des données',
 ];
