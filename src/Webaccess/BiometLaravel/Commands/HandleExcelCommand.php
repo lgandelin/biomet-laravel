@@ -29,8 +29,7 @@ class HandleExcelCommand extends Command
 
             //Récupération du fichier de tendances
             $files = glob($folder . '/EXP_TENDANCE_BIOMET*.xlsx', GLOB_NOSORT);
-            array_multisort(array_map('filemtime', $files), SORT_NUMERIC, SORT_DESC, $files);
-            $fileTendances = isset($files[0]) ? $files[0] : null;
+            $fileTendances = null;
             foreach ($files as $file) {
                 if ((new DateTime())->setTimestamp(filemtime($file))->setTime(0, 0, 0)->sub(new DateInterval('P1D')) == $yesterdayDate) {
                     $fileTendances = $file;
@@ -39,8 +38,7 @@ class HandleExcelCommand extends Command
 
             //Récupération du fichier de consignation
             $files = glob($folder . '/EXP_CONSIGNATION_BIOMET*.xlsx', GLOB_NOSORT);
-            array_multisort(array_map('filemtime', $files), SORT_NUMERIC, SORT_DESC, $files);
-            $fileConsignation = isset($files[0]) ? $files[0] : null;
+            $fileConsignation = null;
             foreach ($files as $file) {
                 if ((new DateTime())->setTimestamp(filemtime($file))->setTime(0, 0, 0)->sub(new DateInterval('P1D')) == $yesterdayDate) {
                     $fileConsignation = $file;
@@ -50,8 +48,7 @@ class HandleExcelCommand extends Command
 
             //Récupération du fichier de maintenance
             $files = glob($folder . '/EXP_MAINTENANCE_BIOMET*.xlsx', GLOB_NOSORT);
-            array_multisort(array_map('filemtime', $files), SORT_NUMERIC, SORT_DESC, $files);
-            $fileMaintenance = isset($files[0]) ? $files[0] : null;
+            $fileMaintenance = null;
             foreach ($files as $file) {
                 if ((new DateTime())->setTimestamp(filemtime($file))->setTime(0, 0, 0)->sub(new DateInterval('P1D')) == $yesterdayDate) {
                     $fileMaintenance = $file;
