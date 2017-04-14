@@ -12,7 +12,6 @@ class RegenerateFacilitiesDataController extends BaseController
     public function index()
     {
         parent::__construct($this->request);
-        $itemsPerPage = isset($this->request->items_per_page) ? $this->request->items_per_page : 10;
 
         return view('biomet::pages.regenerate_data.index', [
             'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,

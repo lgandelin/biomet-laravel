@@ -17,7 +17,8 @@ class FacilityController extends BaseController
     public function index()
     {
         parent::__construct($this->request);
-
+        ini_set('memory_limit', -1);
+        
         return view('biomet::pages.facility.index', [
             'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
             'current_facility' => FacilityManager::getByID($this->request->id),
@@ -37,10 +38,10 @@ class FacilityController extends BaseController
 
             'sum_conso_elec_install_current_year' => $this->getValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('SUM_CONSO_ELEC_INSTALL_CURRENT_YEAR')),
 
-            'qte_biomethane_injecte_current_year' => $this->getValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('QTE_BIOMETHANE_INJECTE_CURRENT_YEAR')),
-            'pcs_biomethane_injecte_current_year' => $this->getValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('PCS_BIOMETHANE_INJECTE_CURRENT_YEAR')),
-            'qte_biomethane_non_conforme_current_year' => $this->getValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('QTE_BIOMETHANE_NON_CONFORME_CURRENT_YEAR')),
-            'pcs_biomethane_non_conforme_current_year' => $this->getValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('PCS_BIOMETHANE_NON_CONFORME_CURRENT_YEAR')),
+            'qte_biomethane_injecte_current_year' => $this->getValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('QTE_BIOMETHANE_INJECTE')),
+            'pcs_biomethane_injecte_current_year' => $this->getValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('PCS_BIOMETHANE_INJECTE')),
+            'qte_biomethane_non_conforme_current_year' => $this->getValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('QTE_BIOMETHANE_NON_CONFORME')),
+            'pcs_biomethane_non_conforme_current_year' => $this->getValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('PCS_BIOMETHANE_NON_CONFORME')),
 
             'heures_en_fonctionnement_current_year' => $this->getValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('HEURES_EN_FONCTIONNEMENT_CURRENT_YEAR')),
         ]);
