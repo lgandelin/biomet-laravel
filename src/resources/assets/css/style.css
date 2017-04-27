@@ -11407,29 +11407,36 @@ table:not(.ui-datepicker-calendar) thead tr {
   color: white;
   background: #004468 !important;
 }
-/* line 13, ../sass/includes/_table.scss */
+/* line 11, ../sass/includes/_table.scss */
+table:not(.ui-datepicker-calendar) thead tr a {
+  color: white;
+  text-decoration: underline;
+  display: block;
+  cursor: pointer;
+}
+/* line 20, ../sass/includes/_table.scss */
 table:not(.ui-datepicker-calendar) td {
   padding-top: 20px !important;
   padding-bottom: 20px !important;
   border-top: none !important;
 }
 
-/* line 20, ../sass/includes/_table.scss */
+/* line 27, ../sass/includes/_table.scss */
 .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
   vertical-align: middle;
 }
 
-/* line 24, ../sass/includes/_table.scss */
+/* line 31, ../sass/includes/_table.scss */
 .table > tbody > tr > td:first-child {
   padding-left: 30px;
 }
 
-/* line 28, ../sass/includes/_table.scss */
+/* line 35, ../sass/includes/_table.scss */
 .table > tbody > tr > td:last-child {
   padding-right: 30px;
 }
 
-/* line 32, ../sass/includes/_table.scss */
+/* line 39, ../sass/includes/_table.scss */
 .pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover {
   background: #184667;
 }
@@ -11645,40 +11652,41 @@ body {
   min-width: 310px;
   height: 400px;
   margin: 50px auto;
+  background: url(../img/loading.gif) no-repeat center center;
 }
-/* line 11, ../sass/pages/_facility.scss */
+/* line 13, ../sass/pages/_facility.scss */
 .facility-template .dashboard .box {
   margin-bottom: 30px;
   padding-bottom: 0;
 }
-/* line 15, ../sass/pages/_facility.scss */
+/* line 17, ../sass/pages/_facility.scss */
 .facility-template .dashboard .box .box-content {
   padding-left: 0;
   padding-right: 0;
 }
-/* line 19, ../sass/pages/_facility.scss */
+/* line 21, ../sass/pages/_facility.scss */
 .facility-template .dashboard .box .box-content .table {
   margin-bottom: 0;
 }
-/* line 25, ../sass/pages/_facility.scss */
+/* line 27, ../sass/pages/_facility.scss */
 .facility-template .dashboard .indicators {
   padding-left: 30px !important;
   padding-right: 30px !important;
   padding-bottom: 15px !important;
 }
-/* line 30, ../sass/pages/_facility.scss */
+/* line 32, ../sass/pages/_facility.scss */
 .facility-template .dashboard .indicators > div {
   text-align: center;
   margin-bottom: 25px;
 }
-/* line 35, ../sass/pages/_facility.scss */
+/* line 37, ../sass/pages/_facility.scss */
 .facility-template .dashboard .indicators .title {
   font-size: 15px;
   margin-bottom: 5px;
   display: block;
   color: #184667;
 }
-/* line 42, ../sass/pages/_facility.scss */
+/* line 44, ../sass/pages/_facility.scss */
 .facility-template .dashboard .indicators .value {
   font-size: 22px;
   color: #fbb336;

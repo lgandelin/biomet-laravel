@@ -13,9 +13,9 @@ use Webaccess\BiometLaravel\Models\Facility;
 class FacilityManager
 {
 
-    public static function getAll($itemsPerPage = false, $clientID = null, $clientName = null)
+    public static function getAll($itemsPerPage = false, $clientID = null, $clientName = null, $orderBy = null, $order = null)
     {
-        $facilities = Facility::orderBy('created_at');
+        $facilities = Facility::orderBy($orderBy ? $orderBy : 'created_at', $order ? $order : 'asc');
 
         if ($clientName)
             $facilities->where('name', 'LIKE', '%' . $clientName . '%');

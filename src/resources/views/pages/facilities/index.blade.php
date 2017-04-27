@@ -39,8 +39,8 @@
             <table class="table table-stripped">
                 <thead>
                 <tr>
-                    <th align="left">{{ trans('biomet::facilities.name') }}</th>
-                    <th align="center">{{ trans('biomet::facilities.client') }}</th>
+                    <th align="left"><a href="{{ route('facilities', ['order_by' => 'name', 'order' => ($order == 'asc') ? 'desc' : 'asc']) }}" title="Trier par nom">{{ trans('biomet::facilities.name') }}</a></th>
+                    <th align="center"><a href="{{ route('facilities', ['order_by' => 'client_id', 'order' => ($order == 'asc') ? 'desc' : 'asc']) }}" title="Trier par client">{{ trans('biomet::facilities.client') }}</a></th>
                     <th align="left">{{ trans('biomet::generic.action') }}</th>
                 </tr>
                 </thead>
@@ -62,7 +62,7 @@
 
         <div class="text-center">
             @include('biomet::includes.items_per_page')
-            {{ $facilities->appends(['items_per_page' => $items_per_page])->links() }}
+            {{ $facilities->appends(['items_per_page' => $items_per_page, 'order_by' => $order_by, 'order' => $order])->links() }}
         </div>
     </div>
 

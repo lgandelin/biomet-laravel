@@ -7,6 +7,13 @@ table:not(.ui-datepicker-calendar) {
         tr {
             color: white;
             background: $darkblue2 !important;
+
+            a {
+                color: white;
+                text-decoration: underline;
+                display: block;
+                cursor: pointer;
+            }
         }
     }
 

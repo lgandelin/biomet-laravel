@@ -48,10 +48,10 @@
             <table class="table table-stripped">
                 <thead>
                 <tr>
-                    <th>{{ trans('biomet::users.name') }}</th>
-                    <th>{{ trans('biomet::users.email') }}</th>
-                    <th>{{ trans('biomet::users.client') }}</th>
-                    <th>{{ trans('biomet::users.profile') }}</th>
+                    <th><a href="{{ route('users', ['order_by' => 'last_name', 'order' => ($order == 'asc') ? 'desc' : 'asc']) }}" title="Trier par nom">{{ trans('biomet::users.name') }}</a></th>
+                    <th><a href="{{ route('users', ['order_by' => 'email', 'order' => ($order == 'asc') ? 'desc' : 'asc']) }}" title="Trier par email">{{ trans('biomet::users.email') }}</a></th>
+                    <th><a href="{{ route('users', ['order_by' => 'client_id', 'order' => ($order == 'asc') ? 'desc' : 'asc']) }}" title="Trier par client">{{ trans('biomet::users.client') }}</a></th>
+                    <th><a href="{{ route('users', ['order_by' => 'profile_id', 'order' => ($order == 'asc') ? 'desc' : 'asc']) }}" title="Trier par nom">{{ trans('biomet::users.profile') }}</a></th>
                     <th>{{ trans('biomet::generic.action') }}</th>
                 </tr>
                 </thead>
@@ -80,7 +80,7 @@
 
         <div class="text-center">
             @include('biomet::includes.items_per_page')
-            {{ $users->appends(['items_per_page' => $items_per_page])->links() }}
+            {{ $users->appends(['filter_client_name' => $filter_client_name, 'filter_client_id' => $filter_client_id, 'filter_profile_id' => $filter_profile_id, 'items_per_page' => $items_per_page, 'order' => $order, 'order_by' => $order_by])->links() }}
         </div>
     </div>
 

@@ -14,8 +14,10 @@ class UserController extends BaseController
         $itemsPerPage = isset($this->request->items_per_page) ? $this->request->items_per_page : 10;
         
         return view('biomet::pages.users.index', [
-            'users' => UserManager::getAll($itemsPerPage, $this->request->filter_client_id, $this->request->filter_client_name, $this->request->filter_profile_id),
+            'users' => UserManager::getAll($itemsPerPage, $this->request->filter_client_id, $this->request->filter_client_name, $this->request->filter_profile_id, $this->request->order_by, $this->request->order),
             'clients' => ClientManager::getAll(false),
+            'order_by' => $this->request->order_by,
+            'order' => $this->request->order,
             'filter_client_id' => $this->request->filter_client_id,
             'filter_client_name' => $this->request->filter_client_name,
             'filter_profile_id' => $this->request->filter_profile_id,

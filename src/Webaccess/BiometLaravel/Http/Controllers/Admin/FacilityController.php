@@ -15,10 +15,12 @@ class FacilityController extends BaseController
         $itemsPerPage = isset($this->request->items_per_page) ? $this->request->items_per_page : 10;
 
         return view('biomet::pages.facilities.index', [
-            'facilities' => FacilityManager::getAll($itemsPerPage, $this->request->filter_client_id, $this->request->filter_client_name),
+            'facilities' => FacilityManager::getAll($itemsPerPage, $this->request->filter_client_id, $this->request->filter_client_name, $this->request->order_by, $this->request->order),
             'clients' => ClientManager::getAll(false),
             'filter_client_id' => $this->request->filter_client_id,
             'filter_client_name' => $this->request->filter_client_name,
+            'order_by' => $this->request->order_by,
+            'order' => $this->request->order,
             'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
             'confirmation' => ($this->request->session()->has('confirmation')) ? $this->request->session()->get('confirmation') : null,
             'items_per_page' => $this->request->items_per_page,

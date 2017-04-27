@@ -21,7 +21,7 @@
             <table class="table table-stripped">
                 <thead>
                 <tr>
-                    <th>{{ trans('biomet::clients.name') }}</th>
+                    <th><a href="{{ route('clients', ['order_by' => 'name', 'order' => ($order == 'asc') ? 'desc' : 'asc']) }}" title="Trier par nom">{{ trans('biomet::clients.name') }}</a></th>
                     <th>{{ trans('biomet::clients.access_limit_date') }}</th>
                     <th>{{ trans('biomet::clients.users_limit') }}</th>
                     <th>{{ trans('biomet::generic.action') }}</th>
