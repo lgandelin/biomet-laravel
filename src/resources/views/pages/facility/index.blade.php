@@ -81,7 +81,7 @@
                     <div class="box">
                         <h1 class="box-title">Valeurs clés depuis le début de l'année</h1>
                         <div class="box-content row indicators">
-                            <div class="col-lg-3 col-md-4 col-sm-12"><span class="title">Consommation électrique depuis le début de l'année (kWh)</span><span class="value">{{ $sum_conso_elec_install_current_year }}</span></div>
+                            <div class="col-lg-3 col-md-4 col-sm-12"><span class="title">Consommation électrique depuis le début de l'année (kWh)</span><span class="value">{{ number_format($sum_conso_elec_install_current_year, 0, '.', ' ') }}</span></div>
                             <div class="col-lg-3 col-md-6 col-sm-12"><span class="title">Volume cumulé biogaz brut (Nm<sup>3</sup>) (FT0101F)</span> <span class="value">{{ number_format($sum_ft0101f_current_year, 0, '.', ' ') }}</span></div>
                             <div class="col-lg-3 col-md-6 col-sm-12"><span class="title">Volume cumulé biométhane (Nm<sup>3</sup>) (FT0102F)</span> <span class="value">{{ number_format($sum_ft0102f_current_year, 0, '.', ' ') }}</span></div>
                             <div class="col-lg-3 col-md-6 col-sm-12"><span class="title">Heures en fonctionnement (h)</span> <span class="value"><span class="value">{{ number_format($heures_en_fonctionnement_current_year, 0, '.', ' ') }}</span></div>
