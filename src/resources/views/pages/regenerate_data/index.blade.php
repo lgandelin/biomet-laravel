@@ -21,6 +21,15 @@
             <form action="{{ route('regenerate_data_handler') }}" method="post">
 
                 <div class="form-group">
+                    <label>Site</label><br/>
+                    <select name="facility_id">
+                        @foreach ($facilities as $facility)
+                            <option value="{{ $facility->id }}">{{ $facility->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="form-group">
                     <label>Date de début</label>
                     <input name="start_date" class="datepicker form-control" value="{{ date('d/m/Y', strtotime( '-1 days' )) }}" />
                 </div>

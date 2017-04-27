@@ -10,7 +10,7 @@ use Webaccess\BiometLaravel\Services\FacilityManager;
 
 class HandleExcelCommand extends Command
 {
-    protected $signature = 'biomet:handle-excel {date}';
+    protected $signature = 'biomet:handle-excel {date} {facility_id?}';
 
     protected $description = 'Récupère les fichiers Excel bruts, les regroupe et les place correctement dans l\'arborescence';
 
@@ -19,7 +19,12 @@ class HandleExcelCommand extends Command
         date_default_timezone_set('Europe/Paris');
         ini_set('memory_limit', -1);
 
-        foreach (FacilityManager::getAll(false) as $facility) {
+        $facilities = FacilityManager::getAll(false);
+        if ($this->argument('facility_id')) {
+           $facilities = array(FacilityManager::getByID($this->argument('facility_id')));
+        }
+
+        foreach ($facilities as $facility) {
             $folder = env('DATA_FOLDER_PATH') . '/xls/' . $facility->id;
             if (!is_dir($folder)) {
                 mkdir($folder, 0777, true);

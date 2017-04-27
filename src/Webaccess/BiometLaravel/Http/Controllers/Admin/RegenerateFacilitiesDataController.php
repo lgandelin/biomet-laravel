@@ -14,6 +14,7 @@ class RegenerateFacilitiesDataController extends BaseController
         parent::__construct($this->request);
 
         return view('biomet::pages.regenerate_data.index', [
+            'facilities' => $this->getFacilities(),
             'error' => ($this->request->session()->has('error')) ? $this->request->session()->get('error') : null,
             'confirmation' => ($this->request->session()->has('confirmation')) ? $this->request->session()->get('confirmation') : null,
         ]);
@@ -33,11 +34,13 @@ class RegenerateFacilitiesDataController extends BaseController
                 $date->add(new DateInterval('P1D'));
 
                 Artisan::call('biomet:handle-excel', [
-                    'date' => $date->format('Y-m-d')
+                    'date' => $date->format('Y-m-d'),
+                    'facility_id' => $this->request->input('facility_id')
                 ]);
 
                 Artisan::call('biomet:generate-data-from-excel', [
-                    'date' => $date->format('Y-m-d')
+                    'date' => $date->format('Y-m-d'),
+                    'facility_id' => $this->request->input('facility_id')
                 ]);
             }
 

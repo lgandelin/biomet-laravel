@@ -14,7 +14,7 @@ use Webaccess\BiometLaravel\Services\FacilityManager;
 
 class GenerateDataFromExcelCommand extends Command
 {
-    protected $signature = 'biomet:generate-data-from-excel {date}';
+    protected $signature = 'biomet:generate-data-from-excel {date} {facility_id?}';
 
     protected $description = 'Génère les fichiers de données et extrait les informations à partir des fichiers Excel';
 
@@ -23,7 +23,12 @@ class GenerateDataFromExcelCommand extends Command
         date_default_timezone_set('Europe/Paris');
         ini_set('memory_limit', -1);
 
-        foreach (FacilityManager::getAll(false) as $facility) {
+        $facilities = FacilityManager::getAll(false);
+        if ($this->argument('facility_id')) {
+            $facilities = array(FacilityManager::getByID($this->argument('facility_id')));
+        }
+
+        foreach ($facilities as $facility) {
             $data = [];
 
             $folder = env('DATA_FOLDER_PATH') . '/xls/' . $facility->id;
@@ -111,6 +116,7 @@ class GenerateDataFromExcelCommand extends Command
                     foreach ($cellIterator as $j => $cell) {
                         if ($j == 'G') $data[$timestamp]['IGP'] = $cell->getValue();
                         if ($j == 'M') $data[$timestamp]['Q_DIGEST'] = $cell->getValue();
+                        if ($j == 'U') $data[$timestamp]['QV_BIO_EA'] = $cell->getValue();
                     }
                 }
             }
@@ -149,6 +155,21 @@ class GenerateDataFromExcelCommand extends Command
             $data[$date->getTimestamp()]['timestamp'] = $date->getTimestamp();
             $data[$date->getTimestamp()]['FT0101F_VOLUME'] = $this->calculateSum($data, 'FT0101F') / 60;
             $data[$date->getTimestamp()]['FT0102F_VOLUME'] = $this->calculateSum($data, 'FT0102F') / 60;
+
+            //Prétraitement
+            $objWorksheet = $objPHPExcel->getSheet(6);
+            foreach ($objWorksheet->getRowIterator() as $i => $row) {
+                if ($i > 2) {
+                    $cellIterator = $row->getCellIterator();
+                    $cellIterator->setIterateOnlyExistingCells(FALSE);
+                    $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A' . $i)->getValue())->getTimestamp();
+
+                    foreach ($cellIterator as $j => $cell) {
+                        $data[$timestamp]['timestamp'] = $timestamp;
+                        if ($j == 'B') $data[$timestamp]['FT0201F'] = $cell->getValue();
+                    }
+                }
+            }
 
             //Quantités biométhane
             $objWorksheet = $objPHPExcel->getSheet(10);
