@@ -149,13 +149,6 @@ class GenerateDataFromExcelCommand extends Command
             $date->setTime(0, 0, 0);
             $data[$date->getTimestamp()]['CONSO_ELEC_INSTAL_AVG_DAILY_INDICATOR'] = ($count_conso_elec_instal > 0) ? $total_conso_elec_instal / $count_conso_elec_instal : 0;
 
-            //Volume
-            $date = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A3')->getValue());
-            $date->setTime(0, 0, 0);
-            $data[$date->getTimestamp()]['timestamp'] = $date->getTimestamp();
-            $data[$date->getTimestamp()]['FT0101F_VOLUME'] = $this->calculateSum($data, 'FT0101F') / 60;
-            $data[$date->getTimestamp()]['FT0102F_VOLUME'] = $this->calculateSum($data, 'FT0102F') / 60;
-
             //Prétraitement
             $objWorksheet = $objPHPExcel->getSheet(6);
             foreach ($objWorksheet->getRowIterator() as $i => $row) {
@@ -170,6 +163,16 @@ class GenerateDataFromExcelCommand extends Command
                     }
                 }
             }
+
+            //Volume (onglet Calcul)
+            $objWorksheet = $objPHPExcel->getSheet(3);
+            $date = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A3')->getValue());
+            $date->setTime(0, 0, 0);
+            $data[$date->getTimestamp()]['timestamp'] = $date->getTimestamp();
+            $data[$date->getTimestamp()]['FT0101F_VOLUME'] = $this->calculateSum($data, 'FT0101F') / 60;
+            $data[$date->getTimestamp()]['FT0102F_VOLUME'] = $this->calculateSum($data, 'FT0102F') / 60;
+            $data[$date->getTimestamp()]['FT0201F_VOLUME'] = $this->calculateSum($data, 'FT0201F') / 60;
+            $data[$date->getTimestamp()]['QV_BIO_EA_VOLUME'] = $this->calculateSum($data, 'QV_BIO_EA') / 60;
 
             //Quantités biométhane
             $objWorksheet = $objPHPExcel->getSheet(10);
