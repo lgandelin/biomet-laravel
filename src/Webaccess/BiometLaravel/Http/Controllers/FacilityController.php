@@ -114,6 +114,9 @@ class FacilityController extends BaseController
 
     public function graph()
     {
+        parent::__construct($this->request);
+        ini_set('memory_limit', -1);
+
         return view('biomet::pages.facility.includes.graph', [
             'container_id' => $this->request->container_id,
             'title' => $this->request->title,
