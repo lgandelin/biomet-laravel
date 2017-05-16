@@ -7,7 +7,7 @@ use DateTime;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use PHPExcel_Cell;
-use PHPExcel_IOFactory;
+use PHPExcel_Reader_Excel2007;
 use Webaccess\BiometLaravel\Services\AlarmManager;
 use Webaccess\BiometLaravel\Services\EquipmentManager;
 use Webaccess\BiometLaravel\Services\FacilityManager;
@@ -51,7 +51,9 @@ class GenerateDataFromExcelCommand extends Command
                 break;
             }
 
-            $objPHPExcel = PHPExcel_IOFactory::load($folder . '/data.xlsx');
+            $objReader = new PHPExcel_Reader_Excel2007();
+            $objReader->setReadDataOnly(true);
+            $objPHPExcel = $objReader->load($folder . '/data.xlsx');
 
             //Alimentation
             $objWorksheet = $objPHPExcel->getSheet(0);
@@ -285,6 +287,9 @@ class GenerateDataFromExcelCommand extends Command
                     }
                 }
             }
+
+            $objPHPExcel->disconnectWorksheets();
+            unset($objPHPExcel);
         }
 
         $this->info('Données générées avec succès pour le site ' . $facility->id . ' à la date du ' . $yesterdayDate);

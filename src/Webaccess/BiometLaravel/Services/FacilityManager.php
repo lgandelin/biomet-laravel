@@ -7,6 +7,7 @@ use DateTime;
 use DateTimeZone;
 use PHPExcel;
 use PHPExcel_IOFactory;
+use PHPExcel_Reader_Excel2007;
 use Ramsey\Uuid\Uuid;
 use Webaccess\BiometLaravel\Models\Facility;
 
@@ -281,20 +282,24 @@ class FacilityManager
 
         $baseFile = array_shift($xlsFiles);
         if ($baseFile) {
-            $baseObjPHPExcel = PHPExcel_IOFactory::load($baseFile);
+            $objReader = new PHPExcel_Reader_Excel2007();
+            $objReader->setReadDataOnly(true);
+            $baseObjPHPExcel = $objReader->load($baseFile);
 
             foreach ($xlsFiles as $i => $xlsFile) {
-
-                $objPHPExcel = PHPExcel_IOFactory::load($xlsFile);
+                $objPHPExcel = $objReader->load($xlsFile);
                 foreach ($objPHPExcel->getAllSheets() as $sheetIndex => $sheet) {
+                    $baseObjPHPExcel->setActiveSheetIndex($sheetIndex);
                     $startingRow = ($sheetIndex == 9) ? 2 : 3;
                     $findEndDataRow = $sheet->getHighestRow();
                     $findEndDataColumn = $sheet->getHighestColumn();
                     $findEndData = $findEndDataColumn . $findEndDataRow;
                     $fileData = $sheet->rangeToArray('A' . $startingRow . ':' . $findEndData);
                     $appendStartRow = $baseObjPHPExcel->getSheet($sheetIndex)->getHighestRow() + 1;
-                    $baseObjPHPExcel->getSheet($sheetIndex)->fromArray($fileData, null, 'A' . $appendStartRow);
+                    $baseObjPHPExcel->getActiveSheet()->fromArray($fileData, null, 'A' . $appendStartRow);
                 }
+                $objPHPExcel->disconnectWorksheets();
+                unset($objPHPExcel);
             }
 
             $file = env('DATA_FOLDER_PATH') . '/temp/data-' . $startDate->format('Y-m-d') . '-' . $endDate->format('Y-m-d') . '-' . time() . '.xlsx';

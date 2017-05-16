@@ -5,7 +5,8 @@ namespace Webaccess\BiometLaravel\Commands;
 use DateInterval;
 use DateTime;
 use Illuminate\Console\Command;
-use PHPExcel_IOFactory;
+use PHPExcel_Reader_Excel2007;
+use PHPExcel_Writer_Excel2007;
 use Webaccess\BiometLaravel\Services\FacilityManager;
 
 class HandleExcelCommand extends Command
@@ -50,7 +51,6 @@ class HandleExcelCommand extends Command
                 }
             }
 
-
             //Récupération du fichier de maintenance
             $files = glob($folder . '/EXP_MAINTENANCE_BIOMET*.xlsx', GLOB_NOSORT);
             $fileMaintenance = null;
@@ -60,23 +60,32 @@ class HandleExcelCommand extends Command
                 }
             }
 
+            $objReader = new PHPExcel_Reader_Excel2007();
+            $objReader->setReadDataOnly(true);
+
             if ($fileTendances) {
-                $objPHPExcel1 = PHPExcel_IOFactory::load($fileTendances);
+                $objPHPExcel1 = $objReader->load($fileTendances);
 
                 if ($fileConsignation) {
-                    $objPHPExcel2 = PHPExcel_IOFactory::load($fileConsignation);
+                    $objPHPExcel2 = $objReader->load($fileConsignation);
 
                     foreach ($objPHPExcel2->getAllSheets() as $sheet) {
                         $objPHPExcel1->addExternalSheet($sheet);
                     }
+
+                    $objPHPExcel2->disconnectWorksheets();
+                    unset($objPHPExcel2);
                 }
 
                 if ($fileMaintenance) {
-                    $objPHPExcel3 = PHPExcel_IOFactory::load($fileMaintenance);
+                    $objPHPExcel3 = $objReader->load($fileMaintenance);
 
                     foreach ($objPHPExcel3->getAllSheets() as $sheet) {
                         $objPHPExcel1->addExternalSheet($sheet);
                     }
+
+                    $objPHPExcel3->disconnectWorksheets();
+                    unset($objPHPExcel3);
                 }
 
                 $dayFolder = $folder . '/' . $yesterdayDate->format('Y/m/d');
@@ -84,8 +93,9 @@ class HandleExcelCommand extends Command
                     mkdir($dayFolder, 0777, true);
                 }
 
-                $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel1, "Excel2007");
+                $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel1);
                 $objWriter->save($dayFolder . '/data.xlsx');
+
                 $this->info('Fichiers déplacés avec succès pour le site ' . $facility->id . ' à la date du ' . $yesterdayDate->format('d/m/Y'));
             } else {
                 $this->info('Fichiers bruts manquants pour le site ' . $facility->id . ' à la date du ' . $yesterdayDate->format('d/m/Y'));
