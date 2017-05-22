@@ -4,17 +4,19 @@ namespace Webaccess\BiometLaravel\Services;
 
 use DateInterval;
 use DateTime;
+use DateTimeZone;
 use PHPExcel;
 use PHPExcel_IOFactory;
+use PHPExcel_Reader_Excel2007;
 use Ramsey\Uuid\Uuid;
 use Webaccess\BiometLaravel\Models\Facility;
 
 class FacilityManager
 {
 
-    public static function getAll($itemsPerPage = false, $clientID = null, $clientName = null)
+    public static function getAll($itemsPerPage = false, $clientID = null, $clientName = null, $orderBy = null, $order = null)
     {
-        $facilities = Facility::orderBy('created_at');
+        $facilities = Facility::orderBy($orderBy ? $orderBy : 'created_at', $order ? $order : 'asc');
 
         if ($clientName)
             $facilities->where('name', 'LIKE', '%' . $clientName . '%');
@@ -131,18 +133,32 @@ class FacilityManager
      * @param DateTime $endDate
      * @param $facilityID
      * @param $keys
+     * @param $legend
      * @return mixed
      */
-    public static function getData(DateTime $startDate, DateTime $endDate, $facilityID, $keys)
+    public static function getData(DateTime $startDate, DateTime $endDate, $facilityID, $keys, $legend = [])
     {
         $series = [];
         $fileData = self::fetchData($startDate, $endDate, $facilityID);
 
-        foreach ($keys as $key) {
+        foreach ($keys as $i => $key) {
             $keyData = [];
 
+            //Daily indicator
+            if (preg_match('/DAILY_INDICATOR/', $key)) {
+                $result = [];
+                if (is_array($fileData) && sizeof($fileData) > 0) {
+                    foreach ($fileData as $data) {
+                        if (isset($data->$key))
+                            $result[$data->timestamp] = $data->$key;
+                    }
+                }
+
+                return $result;
+            }
+
             //Average serie
-            if (preg_match('/_AVG/', $key)) {
+            elseif (preg_match('/_AVG/', $key)) {
                 $allData = [];
                 if (is_array($fileData) && sizeof($fileData) > 0) {
                     $avg = self::calculateAverage($fileData, $key, $allData);
@@ -156,14 +172,17 @@ class FacilityManager
             } else {
                 if (is_array($fileData) && sizeof($fileData) > 0) {
                     foreach ($fileData as $data) {
-                        if (isset($data->$key))
+                        if (isset($data->$key)) {
+                            if (!is_numeric($data->$key))
+                                $data->$key = null;
                             $keyData[] = [$data->timestamp * 1000, $data->$key];
+                        }
                     }
                 }
             }
 
             $series[] = [
-                'name' => $key,
+                'name' => isset($legend[$i]) ? $legend[$i] : $key,
                 'data' => $keyData
             ];
         }
@@ -193,13 +212,6 @@ class FacilityManager
 
         foreach ($jsonFiles as $jsonFile) {
             $data = json_decode(file_get_contents($jsonFile));
-
-            //TEMP : A SUPPRIMER
-            usort($data, function ($a, $b)
-            {
-                return ($a->timestamp < $b->timestamp) ? -1 : 1;
-            });
-            //TEMP : A SUPPRIMER
 
             foreach ($data as $d) {
                 $fileData[] = $d;
@@ -237,10 +249,11 @@ class FacilityManager
         $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Date');
 
         for ($col = 0; $col < sizeof($data); $col++) {
-            $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($col + 1, 1)->setValue($data[$col]['name']);
+            $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($col + 1, 1)->setValue(strip_tags($data[$col]['name']));
 
             for ($row = 0; $row < $length; $row++) {
                 $dateTime = (new DateTime())->setTimestamp($data[0]['data'][$row][0] / 1000);
+                $dateTime->setTimezone(new DateTimeZone('Europe/Paris'));
                 $objPHPExcel->getActiveSheet()->setCellValue('A' . ($row + 2), $dateTime->format('d/m/Y H:i:s'));
                 $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($col + 1, ($row + 2))->setValue($data[$col]['data'][$row][1]);
             }
@@ -253,6 +266,9 @@ class FacilityManager
 
     public static function groupExcelFiles($startDate, $endDate, $facilityID)
     {
+        set_time_limit(0);
+        ini_set('memory_limit', -1);
+
         $date = clone $startDate;
 
         $xlsFiles = [];
@@ -265,27 +281,35 @@ class FacilityManager
         }
 
         $baseFile = array_shift($xlsFiles);
-        $baseObjPHPExcel = PHPExcel_IOFactory::load($baseFile);
+        if ($baseFile) {
+            $objReader = new PHPExcel_Reader_Excel2007();
+            $objReader->setReadDataOnly(true);
+            $baseObjPHPExcel = $objReader->load($baseFile);
 
-        foreach ($xlsFiles as $i => $xlsFile) {
-
-            $objPHPExcel = PHPExcel_IOFactory::load($xlsFile);
-            foreach ($objPHPExcel->getAllSheets() as $sheetIndex => $sheet) {
-                $startingRow = ($sheetIndex == 9) ? 2 : 3;
-                $findEndDataRow = $sheet->getHighestRow();
-                $findEndDataColumn = $sheet->getHighestColumn();
-                $findEndData = $findEndDataColumn . $findEndDataRow;
-                $fileData = $sheet->rangeToArray('A' . $startingRow . ':' . $findEndData);
-                $appendStartRow = $baseObjPHPExcel->getSheet($sheetIndex)->getHighestRow() + 1;
-                $baseObjPHPExcel->getSheet($sheetIndex)->fromArray($fileData, null, 'A' . $appendStartRow);
+            foreach ($xlsFiles as $i => $xlsFile) {
+                $objPHPExcel = $objReader->load($xlsFile);
+                foreach ($objPHPExcel->getAllSheets() as $sheetIndex => $sheet) {
+                    $baseObjPHPExcel->setActiveSheetIndex($sheetIndex);
+                    $startingRow = ($sheetIndex == 9) ? 2 : 3;
+                    $findEndDataRow = $sheet->getHighestRow();
+                    $findEndDataColumn = $sheet->getHighestColumn();
+                    $findEndData = $findEndDataColumn . $findEndDataRow;
+                    $fileData = $sheet->rangeToArray('A' . $startingRow . ':' . $findEndData);
+                    $appendStartRow = $baseObjPHPExcel->getSheet($sheetIndex)->getHighestRow() + 1;
+                    $baseObjPHPExcel->getActiveSheet()->fromArray($fileData, null, 'A' . $appendStartRow);
+                }
+                $objPHPExcel->disconnectWorksheets();
+                unset($objPHPExcel);
             }
+
+            $file = env('DATA_FOLDER_PATH') . '/temp/data-' . $startDate->format('Y-m-d') . '-' . $endDate->format('Y-m-d') . '-' . time() . '.xlsx';
+
+            $objWriter = PHPExcel_IOFactory::createWriter($baseObjPHPExcel, 'Excel2007');
+            $objWriter->save($file);
+
+            return $file;
         }
 
-        $file = env('DATA_FOLDER_PATH') . '/temp/data-' . $startDate->format('Y-m-d') . '-' . $endDate->format('Y-m-d'). '-' . time() . '.xlsx';
-
-        $objWriter = PHPExcel_IOFactory::createWriter($baseObjPHPExcel, 'Excel2007');
-        $objWriter->save($file);
-
-        return $file;
+        return false;
     }
 }

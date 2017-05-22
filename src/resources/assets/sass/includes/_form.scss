@@ -1,0 +1,11 @@
+label {
+    font-weight: normal;
+}
+
+.form-control {
+    box-shadow: none;
+}
+
+.form-control:focus {
+    border: 1px solid $orange;
+}

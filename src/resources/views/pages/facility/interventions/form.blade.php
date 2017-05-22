@@ -1,7 +1,7 @@
 <form action="{{ $form_action }}" method="post" enctype="multipart/form-data">
     <div class="form-group">
         <label for="event_date">{{ trans('biomet::interventions.event_date') }}</label>
-        <input class="form-control" type="date" placeholder="{{ trans('biomet::interventions.event_date') }}" name="event_date" @if (isset($intervention_event_date))value="{{ $intervention_event_date }}"@endif />
+        <input class="form-control datepicker" type="text" placeholder="{{ trans('biomet::interventions.event_date') }}" name="event_date" @if (isset($intervention_event_date))value="{{ $intervention_event_date }}"@endif />
     </div>
 
     <div class="form-group">
@@ -25,7 +25,7 @@
     </div>
 
     <div class="form-group">
-        <button class="btn btn-success" type="submit">{{ trans('biomet::generic.valid') }}</button>
+        <button class="btn btn-valid" type="submit">{{ trans('biomet::generic.valid') }}</button>
         <a class="btn btn-default" href="{{ route('facility_tab', ['id' => $facility_id, 'tab' => 10]) }}">{{ trans('biomet::generic.back') }}</a>
     </div>
 
@@ -54,9 +54,10 @@
                     <td>{{ $file['name'] }}</td>
                     <td width="10%">{{ $file['size'] }}</td>
                     <td width="15%">
-                        <a class="btn btn-success" href="{{ route('interventions_download_file', ['id' => $intervention_id, 'file_name' => $file['name']]) }}">{{ trans('biomet::generic.download') }}</a>
+                        <a class="btn btn-valid" href="{{ route('interventions_download_file', ['id' => $intervention_id, 'file_name' => $file['name']]) }}">{{ trans('biomet::generic.download') }}</a>
                         <a class="btn btn-danger" href="{{ route('interventions_delete_file', ['id' => $intervention_id, 'file_name' => $file['name']]) }}">{{ trans('biomet::generic.delete') }}</a>
                     </td>
+                </tr>
             @endforeach
         </table>
     </div>

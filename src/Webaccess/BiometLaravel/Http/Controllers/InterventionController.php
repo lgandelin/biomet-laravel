@@ -2,6 +2,7 @@
 
 namespace Webaccess\BiometLaravel\Http\Controllers;
 
+use DateTime;
 use Webaccess\BiometLaravel\Services\InterventionManager;
 use Webaccess\BiometLaravel\Services\UploadManager;
 
@@ -24,7 +25,7 @@ class InterventionController extends BaseController
         try {
             $interventionID = InterventionManager::createIntervention(
                 $this->request->input('facility_id'),
-                $this->request->input('event_date'),
+                DateTime::createFromFormat('d/m/Y', $this->request->input('event_date'))->format('Y-m-d'),
                 $this->request->input('title'),
                 $this->request->input('personal_information'),
                 $this->request->input('description')
@@ -145,7 +146,7 @@ class InterventionController extends BaseController
                 $this->request->session()->flash('confirmation', trans('biomet::interventions.delete_file_success'));
             }
         } catch (\Exception $e) {
-            $this->request->session()->flash('error', trans('biomet::interventions.delete_file__error'));
+            $this->request->session()->flash('error', trans('biomet::interventions.delete_file_error'));
         }
 
         return redirect()->route('interventions_edit', ['id' => $this->request->id]);

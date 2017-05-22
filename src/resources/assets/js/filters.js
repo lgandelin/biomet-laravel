@@ -1,58 +1,80 @@
-function last_24h() {
+$(document).ready(function() {
+
+    $('.last_24h').on('click', function() {
+        last_24h($(this).closest('.box'))
+    });
+
+    $('.last_week').on('click', function() {
+        last_week($(this).closest('.box'))
+    });
+
+    $('.last_month').on('click', function() {
+        last_month($(this).closest('.box'))
+    });
+
+    $('.current_year').on('click', function() {
+        current_year($(this).closest('.box'))
+    });
+});
+
+function last_24h(box) {
     var current_date = new Date();
     current_date.setHours(0, 0, 0, 0);
     current_date.setDate(current_date.getDate() - 1);
 
-    $('#start_date').val(format_date(current_date));
-    $('#end_date').val(format_date(current_date));
-    $('#valid').trigger('click');
+    box.find('input[name="start_date"]').val(format_date(current_date));
+    box.find('input[name="end_date"]').val(format_date(current_date));
+    box.find('.valid').trigger('click');
+
+    box.find('.date_filter_label').removeClass('current');
+    box.find('.last_24h').addClass('current');
 }
 
-function last_week() {
+function last_week(box) {
     var current_date = new Date();
     current_date.setHours(0, 0, 0, 0);
-    current_date = get_monday(current_date);
+    current_date.setDate(current_date.getDate() - 1);
 
-    var end_date = current_date;
-    end_date.setDate(end_date.getDate() - 1);
-    $('#end_date').val(format_date(end_date));
+    box.find('input[name="end_date"]').val(format_date(current_date));
 
-    current_date = get_monday(current_date.setDate(current_date.getDate() - 1));
-    $('#start_date').val(format_date(current_date));
-    $('#valid').trigger('click');
+    current_date.setDate(current_date.getDate() - 6);
+    box.find('input[name="start_date"]').val(format_date(current_date));
+    box.find('.valid').trigger('click');
+
+    box.find('.date_filter_label').removeClass('current');
+    box.find('.last_week').addClass('current');
 }
 
-function last_month() {
+function last_month(box) {
     var current_date = new Date();
     current_date.setHours(0, 0, 0, 0);
     current_date.setDate(1);
 
-    current_date.setDate(current_date.getDate() - 1);
-    $('#end_date').val(format_date(current_date));
+    current_date.setDate(current_date.getDate());
+    box.find('input[name="end_date"]').val(format_date(current_date));
 
     current_date.setMonth(current_date.getMonth() - 1);
-    $('#start_date').val(format_date(current_date));
-    $('#valid').trigger('click');
+    box.find('input[name="start_date"]').val(format_date(current_date));
+    box.find('.valid').trigger('click');
+
+    box.find('.date_filter_label').removeClass('current');
+    box.find('.last_month').addClass('current');
 }
 
-function current_year() {
+function current_year(box) {
     var current_date = new Date();
     current_date.setHours(0, 0, 0, 0);
     current_date.setDate(1);
     current_date.setMonth(0);
 
-    $('#start_date').val(format_date(current_date));
-    $('#end_date').val(format_date(new Date()));
-    $('#valid').trigger('click');
+    box.find('input[name="start_date"]').val(format_date(current_date));
+    box.find('input[name="end_date"]').val(format_date(new Date()));
+    box.find('.valid').trigger('click');
+
+    box.find('.date_filter_label').removeClass('current');
+    box.find('.current_year').addClass('current');
 }
 
 function format_date(date) {
     return ("0" + date.getDate()).slice(-2) + "/" + ("0" + (date.getMonth() + 1)).slice(-2) + "/" + date.getFullYear();
-}
-
-function get_monday(d) {
-    d = new Date(d);
-    var day = d.getDay(),
-        diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
-    return new Date(d.setDate(diff));
 }

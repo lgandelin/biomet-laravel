@@ -3,8 +3,6 @@
 @section('page-title'){{ trans('biomet::dashboard.meta_title') }}@endsection
 
 @section('page-content')
-    <h1>{{ trans('biomet::dashboard.title') }}</h1>
-
     <div class="dashboard-template">
 
         @if (isset($error))

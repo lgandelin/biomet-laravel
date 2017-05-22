@@ -5,11 +5,11 @@ namespace Webaccess\BiometLaravel\Services;
 use Ramsey\Uuid\Uuid;
 use Webaccess\BiometLaravel\Models\Client;
 
-class ClientManager
+class   ClientManager
 {
-    public static function getAll($paginate = false)
+    public static function getAll($paginate = false, $orderBy = null, $order = null)
     {
-        $clients = Client::orderBy('created_at');
+        $clients = Client::orderBy($orderBy ? $orderBy : 'created_at', $order ? $order : 'asc');
 
         return ($paginate) ? $clients->paginate($paginate) : $clients->get();
     }
@@ -45,7 +45,7 @@ class ClientManager
      * @param $usersLimit
      * @return bool
      */
-    public static function udpateClient($clientID, $name, $accessLimitDate, $usersLimit)
+    public static function udpateClient($clientID, $name, $accessLimitDate = null, $usersLimit = null)
     {
         if ($client = Client::find($clientID)) {
             $client->name = $name;

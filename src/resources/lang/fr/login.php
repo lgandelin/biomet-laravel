@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'title' => 'Se connecter',
     'login' => 'Login',
     'email' => 'Adresse email',
     'password' => 'Mot de passe',

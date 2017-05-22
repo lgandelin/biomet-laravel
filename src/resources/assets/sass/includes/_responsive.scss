@@ -1,0 +1,187 @@
+@media only screen and (max-width:1200px) {
+
+    table:not(.ui-datepicker-calendar) {
+        td {
+            padding-top: 10px !important;
+            padding-bottom: 10px !important;
+        }
+    }
+
+    .table > tbody > tr > td:first-child {
+        padding-left: 10px;
+    }
+
+    .table > tbody > tr > td:last-child {
+        padding-right: 10px;
+    }
+
+    .btn-edit {
+        margin-right: 0px;
+    }
+
+    .btn {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .filters {
+        input[type="text"], select {
+            min-width: 100px;
+        }
+    }
+
+    .navigation .logout {
+        font-size: 14px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .facility-template {
+
+        .dashboard {
+
+            .indicators {
+
+                .value {
+                    font-size: 21px;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width:768px) {
+
+    //STRUCTURE
+
+    .left-column {
+        position: absolute;
+        z-index: 99999;
+        width: 100%;
+        left: 0;
+        right: 0;
+        top: 117px;
+        float: none;
+        border-right: none;
+        display: none;
+        background: none;
+
+        nav ul li {
+            border-right: none;
+
+            a {
+                font-size: 13px;
+                padding-top: 8px;
+                padding-bottom: 8px;
+            }
+        }
+    }
+
+    .main-content {
+        margin-left: 0px;
+        margin-right: 0px;
+        margin-top: 5px;
+
+        .box {
+            margin-top: 0;
+            border: none;
+
+            .box-title {
+                padding-left: 10px;
+            }
+
+            .box-content {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+        }
+    }
+
+    //HEADER
+    
+    .navigation {
+        background: white;
+
+        .logo {
+            padding-left: 50px;
+            height: 65px;
+            overflow: hidden;
+            border-right: none;
+            text-align: center;
+
+            img {
+                height: 80%;
+            }
+        }
+
+        .facilities-switcher {
+            padding-top: 15px;
+            padding-bottom: 15px;
+            padding-left: 15px;
+            margin: 0;
+            width: 100%;
+            background: $lightgray;
+            
+            .menu-icon {
+                display: block;
+                float: right;
+                margin-right: 15px;
+                cursor: pointer;
+
+                i {
+                    position: relative;
+                    top: -1px;
+                    vertical-align: middle;
+                    font-size: 20px;
+                    margin-left: 5px;
+                }
+            }
+
+            .menu-icon:hover {
+                color: $orange;
+
+                i {
+                    color: $orange;
+                }
+            }
+        }
+
+        .logout {
+            float: right;
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-top: 22px;
+            width: 65px;
+            height: 65px;
+
+            .name {
+                display: none;
+            }
+
+            .logout-icon {
+                margin-left: 0 !important;
+            }
+        }
+    }
+
+    //PAGES
+
+    .login-template {
+        .panel {
+            form {
+                width: 95%;
+            }
+        }
+    }
+
+    .dashboard-template .google-map {
+        left: 30px;
+        top: 150px;
+    }
+
+    //TYPOGRAPHY
+
+    h1 {
+        font-size: 16px;
+    }
+}

@@ -1,9 +1,50 @@
 .facility-template {
-    padding-top: 5rem;
+    padding-top: 3rem;
 
     .graph {
         min-width: 310px;
         height: 400px;
         margin: 50px auto;
+
+        background: url(../img/loading.gif) no-repeat center center;
+    }
+
+    .dashboard {
+        .box {
+            margin-bottom: 30px;
+            padding-bottom: 0;
+
+            .box-content {
+                padding-left: 0;
+                padding-right: 0;
+                
+                .table {
+                    margin-bottom: 0;
+                }
+            }
+        }
+        
+        .indicators {
+            padding-left: 30px !important;
+            padding-right: 30px !important;
+            padding-bottom: 15px !important;
+
+            > div {
+                text-align: center;
+                margin-bottom: 25px;
+            }
+
+            .title {
+                font-size: 15px;
+                margin-bottom: 5px;
+                display: block;
+                color: $darkblue;
+            }
+
+            .value {
+                font-size: 22px;
+                color: $orange;
+            }
+        }
     }
 }

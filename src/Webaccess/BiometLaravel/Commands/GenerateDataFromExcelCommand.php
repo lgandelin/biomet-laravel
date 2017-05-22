@@ -6,21 +6,29 @@ use DateInterval;
 use DateTime;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use PHPExcel_IOFactory;
+use PHPExcel_Cell;
+use PHPExcel_Reader_Excel2007;
 use Webaccess\BiometLaravel\Services\AlarmManager;
+use Webaccess\BiometLaravel\Services\EquipmentManager;
 use Webaccess\BiometLaravel\Services\FacilityManager;
 
 class GenerateDataFromExcelCommand extends Command
 {
-    protected $signature = 'biomet:generate-data-from-excel';
+    protected $signature = 'biomet:generate-data-from-excel {date} {facility_id?}';
 
     protected $description = 'Génère les fichiers de données et extrait les informations à partir des fichiers Excel';
 
     public function handle()
     {
         date_default_timezone_set('Europe/Paris');
+        ini_set('memory_limit', -1);
 
-        foreach (FacilityManager::getAll(false) as $facility) {
+        $facilities = FacilityManager::getAll(false);
+        if ($this->argument('facility_id')) {
+            $facilities = array(FacilityManager::getByID($this->argument('facility_id')));
+        }
+
+        foreach ($facilities as $facility) {
             $data = [];
 
             $folder = env('DATA_FOLDER_PATH') . '/xls/' . $facility->id;
@@ -28,7 +36,9 @@ class GenerateDataFromExcelCommand extends Command
                 mkdir($folder, 0777, true);
             }
 
-            $folder = env('DATA_FOLDER_PATH') . '/xls/' . $facility->id . '/' . (new DateTime())->sub(new DateInterval('P1D'))->format('Y/m/d');
+            $yesterdayDate = DateTime::createFromFormat('Y-m-d', $this->argument('date'))->sub(new DateInterval('P1D'))->format('Y/m/d');
+
+            $folder = env('DATA_FOLDER_PATH') . '/xls/' . $facility->id . '/' . $yesterdayDate;
             if (!is_dir($folder)) {
                 mkdir($folder, 0777, true);
             }
@@ -38,10 +48,12 @@ class GenerateDataFromExcelCommand extends Command
                 Log::error($errorMessage);
                 $this->error($errorMessage);
 
-                return;
+                break;
             }
 
-            $objPHPExcel = PHPExcel_IOFactory::load($folder . '/data.xlsx');
+            $objReader = new PHPExcel_Reader_Excel2007();
+            $objReader->setReadDataOnly(true);
+            $objPHPExcel = $objReader->load($folder . '/data.xlsx');
 
             //Alimentation
             $objWorksheet = $objPHPExcel->getSheet(0);
@@ -106,35 +118,132 @@ class GenerateDataFromExcelCommand extends Command
                     foreach ($cellIterator as $j => $cell) {
                         if ($j == 'G') $data[$timestamp]['IGP'] = $cell->getValue();
                         if ($j == 'M') $data[$timestamp]['Q_DIGEST'] = $cell->getValue();
+                        if ($j == 'U') $data[$timestamp]['QV_BIO_EA'] = $cell->getValue();
                     }
                 }
             }
 
             //Consommation électrique
+            $total_conso_elec_instal = 0;
+            $count_conso_elec_instal = 0;
             $objWorksheet = $objPHPExcel->getSheet(3);
             foreach ($objWorksheet->getRowIterator() as $i => $row) {
-                if ($i > 3) {
+                if ($i > 2) {
+                    $cellIterator = $row->getCellIterator();
+                    $cellIterator->setIterateOnlyExistingCells(FALSE);
                     $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A' . $i)->getValue())->getTimestamp();
 
-                    //calculation : value(t) - value(t-1)
-                    $data[$timestamp]['CONSO_ELEC_CHAUD'] = $objWorksheet->getCell('B' . $i)->getValue() - $objWorksheet->getCell('B' . ($i - 1))->getValue();
-                    $data[$timestamp]['CONSO_ELEC_INSTAL'] = $objWorksheet->getCell('C' . $i)->getValue() - $objWorksheet->getCell('C' . ($i - 1))->getValue();
-                    $data[$timestamp]['CONSO_ELEC_PEC'] = $objWorksheet->getCell('D' . $i)->getValue() - $objWorksheet->getCell('D' . ($i - 1))->getValue();
+                    foreach ($cellIterator as $j => $cell) {
+                        $data[$timestamp]['timestamp'] = $timestamp;
+                        if ($j == 'B') $data[$timestamp]['CONSO_ELEC_CHAUD'] = $cell->getValue();
+                        if ($j == 'C') {
+                            $data[$timestamp]['CONSO_ELEC_INSTAL'] = $cell->getValue();
+                            $total_conso_elec_instal += $cell->getValue();
+                            $count_conso_elec_instal++;
+                        }
+                        if ($j == 'D') $data[$timestamp]['CONSO_ELEC_PEC'] = $cell->getValue();
+                    }
                 }
             }
 
-            //Volume
+            //Consommation électrique moyenne journalière
+            $date = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A3')->getValue());
+            $date->setTime(0, 0, 0);
+            $data[$date->getTimestamp()]['CONSO_ELEC_INSTAL_AVG_DAILY_INDICATOR'] = ($count_conso_elec_instal > 0) ? $total_conso_elec_instal / $count_conso_elec_instal : 0;
+
+            //Prétraitement
+            $objWorksheet = $objPHPExcel->getSheet(6);
+            foreach ($objWorksheet->getRowIterator() as $i => $row) {
+                if ($i > 2) {
+                    $cellIterator = $row->getCellIterator();
+                    $cellIterator->setIterateOnlyExistingCells(FALSE);
+                    $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A' . $i)->getValue())->getTimestamp();
+
+                    foreach ($cellIterator as $j => $cell) {
+                        $data[$timestamp]['timestamp'] = $timestamp;
+                        if ($j == 'B') $data[$timestamp]['FT0201F'] = $cell->getValue();
+                    }
+                }
+            }
+
+            //Volume (onglet Calcul)
+            $objWorksheet = $objPHPExcel->getSheet(3);
             $date = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A3')->getValue());
             $date->setTime(0, 0, 0);
             $data[$date->getTimestamp()]['timestamp'] = $date->getTimestamp();
-            $data[$date->getTimestamp()]['FT0101F_VOLUME'] = $this->calculateSum($data, 'FT0101F');
-            $data[$date->getTimestamp()]['FT0102F_VOLUME'] = $this->calculateSum($data, 'FT0102F');
+            $data[$date->getTimestamp()]['FT0101F_VOLUME'] = $this->calculateSum($data, 'FT0101F') / 60;
+            $data[$date->getTimestamp()]['FT0102F_VOLUME'] = $this->calculateSum($data, 'FT0102F') / 60;
+            $data[$date->getTimestamp()]['FT0201F_VOLUME'] = $this->calculateSum($data, 'FT0201F') / 60;
+            $data[$date->getTimestamp()]['QV_BIO_EA_VOLUME'] = $this->calculateSum($data, 'QV_BIO_EA') / 60;
+
+            //Quantités biométhane
+            $objWorksheet = $objPHPExcel->getSheet(10);
+            $lastRow = $objWorksheet->getHighestRow();
+            $date = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A3')->getValue());
+            $date->setTime(0, 0, 0);
+            $data[$date->getTimestamp()]['timestamp'] = $date->getTimestamp();
+            $data[$date->getTimestamp()]['QTE_BIOMETHANE_INJECTE'] = $objWorksheet->getCell('Y' . $lastRow)->getValue();
+            $data[$date->getTimestamp()]['QTE_BIOMETHANE_NON_CONFORME'] = $objWorksheet->getCell('Z' . $lastRow)->getValue();
+
+            //PCS biométhane
+            $sumPCSBiomethaneInjecte = 0;
+            $sumPCSBiomethaneNonConforme = 0;
+            foreach ($objWorksheet->getRowIterator() as $i => $row) {
+                if ($i > 2) {
+                    $cellIterator = $row->getCellIterator();
+                    $cellIterator->setIterateOnlyExistingCells(FALSE);
+                    $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A' . $i)->getValue())->getTimestamp();
+
+                    $dbtInjecte = 0;
+                    $dbtNonConforme = 0;
+                    $pcs = 0;
+                    foreach ($cellIterator as $j => $cell) {
+                        $data[$timestamp]['timestamp'] = $timestamp;
+                        if ($j == 'I') $dbtInjecte = $cell->getValue();
+                        if ($j == 'J') $dbtNonConforme = $cell->getValue();
+                        if ($j == 'P') $pcs = $cell->getValue();
+                    }
+                    $sumPCSBiomethaneInjecte += ($dbtInjecte * $pcs);
+                    $sumPCSBiomethaneNonConforme += ($dbtNonConforme * $pcs);
+                }
+            }
+            $date = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A3')->getValue());
+            $date->setTime(0, 0, 0);
+            $data[$date->getTimestamp()]['timestamp'] = $date->getTimestamp();
+            $data[$date->getTimestamp()]['PCS_BIOMETHANE_INJECTE'] = $sumPCSBiomethaneInjecte / 60;
+            $data[$date->getTimestamp()]['PCS_BIOMETHANE_NON_CONFORME'] = $sumPCSBiomethaneNonConforme / 60;
+
+            //Heures en fonctionnement depuis le début de l'année
+            $objWorksheet = $objPHPExcel->getSheet(11);
+            $lastRow = $objWorksheet->getHighestRow();
+
+            //@TODO : ne pas prendre le compteur total d'heures, mais bien depuis le début de l'année en cours !
+            $data[$date->getTimestamp()]['HEURES_EN_FONCTIONNEMENT_CURRENT_YEAR'] = $objWorksheet->getCell('C' . $lastRow)->getValue();
+
+            //Valeurs depuis le début de l'année (tableau bord)
+            $dateFirstDayOfYear = new DateTime();
+            $dateFirstDayOfYear->setDate($dateFirstDayOfYear->format('Y'), 1, 1)->setTime(0, 0, 0);
+
+            $data[$date->getTimestamp()]['AVG_IGP_CURRENT_YEAR'] = $this->getAverageValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('IGP'));
+
+            $data[$date->getTimestamp()]['SUM_FT0101F_CURRENT_YEAR'] = $this->getSumValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('FT0101F')) / 60;
+            $data[$date->getTimestamp()]['SUM_FT0102F_CURRENT_YEAR'] = $this->getSumValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('FT0102F')) / 60;
+
+            $data[$date->getTimestamp()]['SUM_CONSO_ELEC_INSTALL_CURRENT_YEAR'] = $this->getPowerConsumptionAverageValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))));
+
+            $data[$date->getTimestamp()]['SUM_PCS_BIOMETHANE_INJECTE_CURRENT_YEAR'] = $this->getSumValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('PCS_BIOMETHANE_INJECTE'));
+            $data[$date->getTimestamp()]['SUM_PCS_BIOMETHANE_NON_CONFORME_CURRENT_YEAR'] = $this->getSumValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('PCS_BIOMETHANE_NON_CONFORME'));
 
             //JSON generation
             $data = array_values($data);
+            $jsonFolder = env('DATA_FOLDER_PATH') . '/json/' . $facility->id . '/' . $yesterdayDate;
+            if (!is_dir($jsonFolder)) {
+                mkdir($jsonFolder, 0777, true);
+            }
 
-            $jsonFile = env('DATA_FOLDER_PATH') . '/xls/data.json';
-            file_put_contents($jsonFile, utf8_encode(json_encode($data, JSON_PRETTY_PRINT)));
+            $jsonFile = env('DATA_FOLDER_PATH') . '/json/' . $facility->id . '/' . $yesterdayDate . '/data.json';
+
+            file_put_contents($jsonFile, utf8_encode(json_encode($data)));
 
             //Consignation
             $objWorksheet = $objPHPExcel->getSheet(9);
@@ -152,9 +261,41 @@ class GenerateDataFromExcelCommand extends Command
                 }
             }
 
+            //Heures en fonctionnement
+            $objWorksheet = $objPHPExcel->getSheet(11);
+            $lastRow = $objWorksheet->getHighestRow();
+
+            foreach ($objWorksheet->getRowIterator() as $i => $row) {
+                if ($i == 2) {
+                    $cellIterator = $row->getCellIterator();
+                    $cellIterator->setIterateOnlyExistingCells(FALSE);
+
+                    foreach ($cellIterator as $letter => $cell) {
+                        if (preg_match('/([a-zA-Z0-9\-\_]*) :(.*)/', $objWorksheet->getCell($letter . '2')->getValue(), $matches)) {
+                            $tag = preg_replace('/CPT_/', '', $matches[1]);
+                            if ($tag != "") {
+                                if ($equipment = EquipmentManager::getByFacilityIDAndTag($facility->id, $tag)) {
+                                    $value = $objWorksheet->getCell($letter . $lastRow)->getValue();
+                                    $colIndex = PHPExcel_Cell::columnIndexFromString($letter);
+
+                                    if ($colIndex % 2 == 0) {
+                                        $equipment->partial_counter = $value;
+                                    } else {
+                                        $equipment->total_counter = $value;
+                                    }
+                                    $equipment->save();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            $objPHPExcel->disconnectWorksheets();
+            unset($objPHPExcel);
         }
 
-        $this->info('Données générées avec succès');
+        $this->info('Données générées avec succès pour le site ' . $facility->id . ' à la date du ' . $yesterdayDate);
     }
 
     private function calculateSum($data, $key) {
@@ -165,5 +306,62 @@ class GenerateDataFromExcelCommand extends Command
         }
 
         return $sum;
+    }
+
+    /**
+     * @param $facilityID
+     * @param $startDate
+     * @param $endDate
+     * @param $keys
+     * @return float
+     */
+    private function getSumValue($facilityID, $startDate, $endDate, $keys)
+    {
+        $data = FacilityManager::getData($startDate, $endDate, $facilityID, $keys, false);
+        $total = 0;
+        foreach ($data as $file) {
+            foreach ($file['data'] as $value) {
+                $total += $value[1];
+            }
+        }
+
+        return round($total, 1);
+    }
+
+    /**
+     * @param $facilityID
+     * @param $startDate
+     * @param $endDate
+     * @return float
+     */
+    private function getPowerConsumptionAverageValue($facilityID, $startDate, $endDate)
+    {
+        $data = FacilityManager::getData($startDate, $endDate, $facilityID, array('CONSO_ELEC_INSTAL_AVG_DAILY_INDICATOR'), false);
+        $total = array_sum($data);
+
+        return round($total * 24);
+    }
+
+    /**
+     * @param $facilityID
+     * @param $startDate
+     * @param $endDate
+     * @param $keys
+     * @return float|int
+     */
+    private function getAverageValue($facilityID, $startDate, $endDate, $keys)
+    {
+        $data = FacilityManager::getData($startDate, $endDate, $facilityID, $keys, false);
+        $total = 0;
+        $count = 0;
+
+        foreach ($data as $file) {
+            foreach ($file['data'] as $value) {
+                $total += $value[1];
+                $count ++;
+            }
+        }
+
+        return ($count > 0) ? round($total / $count, 1) : 0;
     }
 }

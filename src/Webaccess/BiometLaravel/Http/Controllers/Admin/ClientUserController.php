@@ -57,7 +57,7 @@ class ClientUserController extends BaseController
                     $this->request->input('email'),
                     $this->request->input('password'),
                     $this->getUser()->client_id,
-                    User::PROFILE_ID_CLIENT_USER
+                    $this->request->input('profile_id')
                 );
                 $this->request->session()->flash('confirmation', trans('biomet::users.add_user_success'));
 
@@ -104,7 +104,7 @@ class ClientUserController extends BaseController
                     $this->request->input('email'),
                     $this->request->input('password'),
                     $this->getUser()->client_id,
-                    User::PROFILE_ID_CLIENT_USER
+                    $this->request->input('profile_id')
                 );
                 $this->request->session()->flash('confirmation', trans('biomet::users.edit_user_success'));
             }

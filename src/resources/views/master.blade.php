@@ -1,7 +1,5 @@
 @include('biomet::includes.header')
 
-<div id="wrapper">
-    @yield('main-content')
-</div>
+@yield('main-content')
 
 @include('biomet::includes.footer')
