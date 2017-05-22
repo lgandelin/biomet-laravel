@@ -203,8 +203,8 @@ class GenerateDataFromExcelCommand extends Command
                         if ($j == 'J') $dbtNonConforme = $cell->getValue();
                         if ($j == 'P') $pcs = $cell->getValue();
                     }
-                    $sumPCSBiomethaneInjecte += ($dbtInjecte  * $pcs);
-                    $sumPCSBiomethaneNonConforme += ($dbtNonConforme  * $pcs);
+                    $sumPCSBiomethaneInjecte += ($dbtInjecte * $pcs);
+                    $sumPCSBiomethaneNonConforme += ($dbtNonConforme * $pcs);
                 }
             }
             $date = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A3')->getValue());
@@ -230,6 +230,9 @@ class GenerateDataFromExcelCommand extends Command
             $data[$date->getTimestamp()]['SUM_FT0102F_CURRENT_YEAR'] = $this->getSumValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('FT0102F')) / 60;
 
             $data[$date->getTimestamp()]['SUM_CONSO_ELEC_INSTALL_CURRENT_YEAR'] = $this->getPowerConsumptionAverageValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))));
+
+            $data[$date->getTimestamp()]['SUM_PCS_BIOMETHANE_INJECTE_CURRENT_YEAR'] = $this->getSumValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('PCS_BIOMETHANE_INJECTE'));
+            $data[$date->getTimestamp()]['SUM_PCS_BIOMETHANE_NON_CONFORME_CURRENT_YEAR'] = $this->getSumValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('PCS_BIOMETHANE_NON_CONFORME'));
 
             //JSON generation
             $data = array_values($data);
