@@ -11,8 +11,8 @@
     "require": {
         "php": ">=5.6.4",
         "fzaninotto/faker": "~1.4",
-        "drauta/ovh-object-storage-laravel": "dev-master",
-        "phpoffice/phpexcel": "1.8.0"
+        "rackspace/php-opencloud": "~1.14",
+        "phpoffice/phpexcel": "1.8.1"
     },
     "autoload": {
         "psr-4": {
