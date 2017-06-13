@@ -37,7 +37,7 @@
             </table>
 
             <div class="text-center">
-                {!! $data['alarms']->render() !!}
+                {!! $data['alarms']->appends(['start_date' => $data['filter_start_date'], 'end_date' => $data['filter_end_date']])->links() !!}
             </div>
         </div>
     </div>

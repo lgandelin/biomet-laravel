@@ -50,8 +50,8 @@ function last_month(box) {
     current_date.setHours(0, 0, 0, 0);
     current_date.setDate(1);
 
-    current_date.setDate(current_date.getDate());
-    box.find('input[name="end_date"]').val(format_date(current_date));
+    var lastDayOfMonth = new Date(current_date.getFullYear(), current_date.getMonth(), 0);
+    box.find('input[name="end_date"]').val(format_date(lastDayOfMonth));
 
     current_date.setMonth(current_date.getMonth() - 1);
     box.find('input[name="start_date"]').val(format_date(current_date));
