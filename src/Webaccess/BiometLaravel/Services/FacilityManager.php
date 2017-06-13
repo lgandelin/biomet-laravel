@@ -139,7 +139,7 @@ class FacilityManager
     public static function getData(DateTime $startDate, DateTime $endDate, $facilityID, $keys, $legend = [])
     {
         $series = [];
-        $fileData = self::fetchData($startDate, $endDate, $facilityID);
+        $fileData = self::fetchData($startDate, $endDate, $facilityID, $keys);
 
         foreach ($keys as $i => $key) {
             $keyData = [];
@@ -194,9 +194,10 @@ class FacilityManager
      * @param DateTime $startDate
      * @param DateTime $endDate
      * @param $facilityID
+     * @param array $keys
      * @return array
      */
-    private static function fetchData(DateTime $startDate, DateTime $endDate, $facilityID)
+    private static function fetchData(DateTime $startDate, DateTime $endDate, $facilityID, $keys = array())
     {
         $date = clone $startDate;
         $jsonFiles = [];
@@ -212,9 +213,20 @@ class FacilityManager
 
         foreach ($jsonFiles as $jsonFile) {
             $data = json_decode(file_get_contents($jsonFile));
-
             foreach ($data as $d) {
-                $fileData[] = $d;
+                if (is_array($keys) && sizeof($keys) > 0) {
+                    $row = new \StdClass();
+
+                    foreach ($keys as $key) {
+                        if (isset($d->$key)) {
+                            $row->$key = $d->$key;
+                        }
+                    }
+                    $row->timestamp = $d->timestamp;
+                    $fileData[] = $row;
+                } else {
+                    $fileData[]= $d;
+                }
             }
         }
 

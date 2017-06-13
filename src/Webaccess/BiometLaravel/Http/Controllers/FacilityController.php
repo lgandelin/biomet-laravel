@@ -5,6 +5,7 @@ namespace Webaccess\BiometLaravel\Http\Controllers;
 use DateInterval;
 use DateTime;
 use DirectoryIterator;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 use IteratorIterator;
 use Webaccess\BiometLaravel\Services\AlarmManager;
@@ -117,10 +118,22 @@ class FacilityController extends BaseController
         parent::__construct($this->request);
         ini_set('memory_limit', -1);
 
+        $startDate = DateTime::createFromFormat('d/m/Y', $this->request->start_date);
+        $endDate = DateTime::createFromFormat('d/m/Y', $this->request->end_date);
+        $cacheKey = implode('#', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d'), $this->request->facility_id, implode('-', $this->request->keys)]);
+
+        $series = [];
+        if (!Cache::has($cacheKey)) {
+            $series = json_encode(FacilityManager::getData($startDate, $endDate, $this->request->facility_id, $this->request->keys, $this->request->legend));
+            Cache::put($cacheKey, $series, 1440);
+        } else {
+            $series = Cache::get($cacheKey);
+        }
+
         return view('biomet::pages.facility.includes.graph', [
             'container_id' => $this->request->container_id,
             'title' => $this->request->title,
-            'series' => json_encode(FacilityManager::getData(DateTime::createFromFormat('d/m/Y', $this->request->start_date), DateTime::createFromFormat('d/m/Y', $this->request->end_date), $this->request->facility_id, $this->request->keys, $this->request->legend)),
+            'series' => $series,
         ])->render();
     }
 
