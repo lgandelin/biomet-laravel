@@ -138,8 +138,10 @@ class GenerateDataFromExcelCommand extends Command
                         if ($j == 'B') $data[$timestamp]['CONSO_ELEC_CHAUD'] = $cell->getValue();
                         if ($j == 'C') {
                             $data[$timestamp]['CONSO_ELEC_INSTAL'] = $cell->getValue();
-                            $total_conso_elec_instal += $cell->getValue();
-                            $count_conso_elec_instal++;
+                            if (is_numeric($cell->getValue())) {
+                                $total_conso_elec_instal += $cell->getValue();
+                                $count_conso_elec_instal++;
+                            }
                         }
                         if ($j == 'D') $data[$timestamp]['CONSO_ELEC_PEC'] = $cell->getValue();
                     }
@@ -203,8 +205,8 @@ class GenerateDataFromExcelCommand extends Command
                         if ($j == 'J') $dbtNonConforme = $cell->getValue();
                         if ($j == 'P') $pcs = $cell->getValue();
                     }
-                    $sumPCSBiomethaneInjecte += ($dbtInjecte * $pcs);
-                    $sumPCSBiomethaneNonConforme += ($dbtNonConforme * $pcs);
+                    if (is_numeric($dbtInjecte) && is_numeric($pcs)) $sumPCSBiomethaneInjecte += ($dbtInjecte * $pcs);
+                    if (is_numeric($dbtNonConforme) && is_numeric($pcs)) $sumPCSBiomethaneNonConforme += ($dbtNonConforme * $pcs);
                 }
             }
             $date = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A3')->getValue());
@@ -301,7 +303,7 @@ class GenerateDataFromExcelCommand extends Command
     private function calculateSum($data, $key) {
         $sum = 0;
         foreach ($data as $timestamp => $intervalData) {
-            if (isset($intervalData[$key]))
+            if (isset($intervalData[$key]) && is_numeric($intervalData[$key]))
                 $sum += $intervalData[$key];
         }
 
