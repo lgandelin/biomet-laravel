@@ -187,34 +187,6 @@ class GenerateDataFromExcelCommand extends Command
             $data[$date->getTimestamp()]['QTE_BIOMETHANE_INJECTE'] = $objWorksheet->getCell('Y' . $lastRow)->getValue();
             $data[$date->getTimestamp()]['QTE_BIOMETHANE_NON_CONFORME'] = $objWorksheet->getCell('Z' . $lastRow)->getValue();
 
-            //PCS biométhane
-            $sumPCSBiomethaneInjecte = 0;
-            $sumPCSBiomethaneNonConforme = 0;
-            foreach ($objWorksheet->getRowIterator() as $i => $row) {
-                if ($i > 2) {
-                    $cellIterator = $row->getCellIterator();
-                    $cellIterator->setIterateOnlyExistingCells(FALSE);
-                    $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A' . $i)->getValue())->getTimestamp();
-
-                    $dbtInjecte = 0;
-                    $dbtNonConforme = 0;
-                    $pcs = 0;
-                    foreach ($cellIterator as $j => $cell) {
-                        $data[$timestamp]['timestamp'] = $timestamp;
-                        if ($j == 'I') $dbtInjecte = $cell->getValue();
-                        if ($j == 'J') $dbtNonConforme = $cell->getValue();
-                        if ($j == 'P') $pcs = $cell->getValue();
-                    }
-                    if (is_numeric($dbtInjecte) && is_numeric($pcs)) $sumPCSBiomethaneInjecte += ($dbtInjecte * $pcs);
-                    if (is_numeric($dbtNonConforme) && is_numeric($pcs)) $sumPCSBiomethaneNonConforme += ($dbtNonConforme * $pcs);
-                }
-            }
-            $date = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A3')->getValue());
-            $date->setTime(0, 0, 0);
-            $data[$date->getTimestamp()]['timestamp'] = $date->getTimestamp();
-            $data[$date->getTimestamp()]['PCS_BIOMETHANE_INJECTE'] = $sumPCSBiomethaneInjecte / 60;
-            $data[$date->getTimestamp()]['PCS_BIOMETHANE_NON_CONFORME'] = $sumPCSBiomethaneNonConforme / 60;
-
             //Heures en fonctionnement depuis le début de l'année
             $objWorksheet = $objPHPExcel->getSheet(11);
             $lastRow = $objWorksheet->getHighestRow();
@@ -232,9 +204,6 @@ class GenerateDataFromExcelCommand extends Command
             $data[$date->getTimestamp()]['SUM_FT0102F_CURRENT_YEAR'] = $this->getSumValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('FT0102F')) / 60;
 
             $data[$date->getTimestamp()]['SUM_CONSO_ELEC_INSTALL_CURRENT_YEAR'] = $this->getPowerConsumptionAverageValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))));
-
-            $data[$date->getTimestamp()]['SUM_PCS_BIOMETHANE_INJECTE_CURRENT_YEAR'] = $this->getSumValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('PCS_BIOMETHANE_INJECTE'));
-            $data[$date->getTimestamp()]['SUM_PCS_BIOMETHANE_NON_CONFORME_CURRENT_YEAR'] = $this->getSumValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('PCS_BIOMETHANE_NON_CONFORME'));
 
             //JSON generation
             $data = array_values($data);
