@@ -31,34 +31,30 @@ class HandleExcelCommand extends Command
                 mkdir($folder, 0777, true);
             }
 
-            $yesterdayDate = DateTime::createFromFormat('Y-m-d', $this->argument('date'))->setTime(0, 0, 0)->sub(new DateInterval('P1D'));
+            $todayDate = DateTime::createFromFormat('Y-m-d', $this->argument('date'))->setTime(0, 0, 0);
 
             //Récupération du fichier de tendances
-            $files = glob($folder . '/EXP_TENDANCE_BIOMET*.xlsx', GLOB_NOSORT);
+            $files = glob($folder . '/EXP_TENDANCE_BIOMET*' . $todayDate->format('Ymd') . '.xlsx', GLOB_NOSORT);
             $fileTendances = null;
-            foreach ($files as $file) {
-                if ((new DateTime())->setTimestamp(filemtime($file))->setTime(0, 0, 0)->sub(new DateInterval('P1D')) == $yesterdayDate) {
-                    $fileTendances = $file;
-                }
+            if (is_array($files) && sizeof($files) > 0) {
+                $fileTendances = $files[0];
             }
 
             //Récupération du fichier de consignation
-            $files = glob($folder . '/EXP_CONSIGNATION_BIOMET*.xlsx', GLOB_NOSORT);
+            $files = glob($folder . '/EXP_CONSIGNATION_BIOMET*' . $todayDate->format('Ymd') . '.xlsx', GLOB_NOSORT);
             $fileConsignation = null;
-            foreach ($files as $file) {
-                if ((new DateTime())->setTimestamp(filemtime($file))->setTime(0, 0, 0)->sub(new DateInterval('P1D')) == $yesterdayDate) {
-                    $fileConsignation = $file;
-                }
+            if (is_array($files) && sizeof($files) > 0) {
+                $fileConsignation = $files[0];
             }
 
             //Récupération du fichier de maintenance
-            $files = glob($folder . '/EXP_MAINTENANCE_BIOMET*.xlsx', GLOB_NOSORT);
+            $files = glob($folder . '/EXP_MAINTENANCE_BIOMET*' . $todayDate->format('Ymd') . '.xlsx', GLOB_NOSORT);
             $fileMaintenance = null;
-            foreach ($files as $file) {
-                if ((new DateTime())->setTimestamp(filemtime($file))->setTime(0, 0, 0)->sub(new DateInterval('P1D')) == $yesterdayDate) {
-                    $fileMaintenance = $file;
-                }
+            if (is_array($files) && sizeof($files) > 0) {
+                $fileMaintenance = $files[0];
             }
+
+            $yesterdayDate = $todayDate->sub(new DateInterval('P1D'));
 
             $objReader = new PHPExcel_Reader_Excel2007();
             $objReader->setReadDataOnly(true);
