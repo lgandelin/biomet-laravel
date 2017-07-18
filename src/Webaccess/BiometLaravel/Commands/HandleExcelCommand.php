@@ -54,12 +54,13 @@ class HandleExcelCommand extends Command
                 $fileMaintenance = $files[0];
             }
 
-            $yesterdayDate = $todayDate->sub(new DateInterval('P1D'));
+            $yesterdayDate = clone $todayDate;
+            $yesterdayDate->sub(new DateInterval('P1D'));
 
             $objReader = new PHPExcel_Reader_Excel2007();
             $objReader->setReadDataOnly(true);
 
-            if ($fileTendances) {
+            if ($fileTendances && $fileConsignation && $fileMaintenance) {
                 $objPHPExcel1 = $objReader->load($fileTendances);
 
                 if ($fileConsignation) {
@@ -92,9 +93,20 @@ class HandleExcelCommand extends Command
                 $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel1);
                 $objWriter->save($dayFolder . '/data.xlsx');
 
-                $this->info('Fichiers déplacés avec succès pour le site ' . $facility->id . ' à la date du ' . $yesterdayDate->format('d/m/Y'));
+                $this->info('Fichier de données déplacé avec succès pour le site ' . $facility->id . ' à la date du ' . $yesterdayDate->format('d/m/Y'));
+
+
+                //Traitement fichier client
+                $files = glob($folder . '/EXP_CLIENT*' . $todayDate->format('Ymd') . '.xlsx', GLOB_NOSORT);
+                if (is_array($files) && sizeof($files) > 0) {
+                    if (copy($files[0], $dayFolder . '/data_client.xlsx')) {
+                        $this->info('Fichier client déplacé avec succès pour le site ' . $facility->id . ' à la date du ' . $yesterdayDate->format('d/m/Y'));
+                    } else {
+                        $this->error('Une erreur est survenue lors du traitement du fichier client pour le site ' . $facility->id . ' à la date du ' . $yesterdayDate->format('d/m/Y'));
+                    }
+                }
             } else {
-                $this->info('Fichiers bruts manquants pour le site ' . $facility->id . ' à la date du ' . $yesterdayDate->format('d/m/Y'));
+                $this->error('Fichiers bruts manquants pour le site ' . $facility->id . ' à la date du ' . $yesterdayDate->format('d/m/Y'));
             }
         }
     }

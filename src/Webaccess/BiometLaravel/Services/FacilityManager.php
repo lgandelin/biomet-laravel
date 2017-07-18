@@ -285,7 +285,7 @@ class FacilityManager
 
         $xlsFiles = [];
         while ($date <= $endDate) {
-            $xlsFile = env('DATA_FOLDER_PATH') . '/xls/' . $facilityID . '/' . $date->format('Y/m/d') . '/data.xlsx';
+            $xlsFile = env('DATA_FOLDER_PATH') . '/xls/' . $facilityID . '/' . $date->format('Y/m/d') . '/data_client.xlsx';
             if (file_exists($xlsFile)) {
                 $xlsFiles[] = $xlsFile;
             }

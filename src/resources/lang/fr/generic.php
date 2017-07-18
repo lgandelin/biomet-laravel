@@ -10,4 +10,5 @@ return [
     'download' => 'Télécharger',
     'choose_value' => 'Choisir une valeur',
     'no_permission_error' => 'Vous n\'avez pas la permission d\'accéder à cette page',
+    'file_doesnt_exists' => 'Fichier non existant',
 ];

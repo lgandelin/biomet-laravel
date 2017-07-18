@@ -164,7 +164,16 @@ class FacilityController extends BaseController
             return redirect()->route('facility', ['id' => $this->request->id]);
         }
 
-        return response()->download(env('DATA_FOLDER_PATH') . '/xls/' . implode([$this->request->id, $this->request->year, $this->request->month, $this->request->day, 'data.xlsx'], '/'));
+        $filePath = env('DATA_FOLDER_PATH') . '/xls/' . implode([$this->request->id, $this->request->year, $this->request->month, $this->request->day, 'data_client.xlsx'], '/');
+        $fileName = 'data-' . $this->request->year . $this->request->month . $this->request->day . '_client.xlsx';
+
+        if (!file_exists($filePath)) {
+            $this->request->session()->flash('error', trans('biomet::generic.file_doesnt_exists'));
+
+            return redirect()->route('facility_tab', ['id' => $this->request->id, 'tab' => 11]);
+        }
+
+        return response()->download($filePath, $fileName);
     }
 
     /**
