@@ -32,6 +32,8 @@ class StoreExcelDataToCloudCommand extends Command
             $dayFolder = $folder . '/' . $yesterdayDate->format('Y/m/d');
 
             $containerName = $facility->id;
+
+            //Updload data file
             $fileName = $dayFolder . '/data.xlsx';
             $fileNameInContainer = 'data-' . $yesterdayDate->format('Y-m-d') . '.xlsx';
 
@@ -41,6 +43,18 @@ class StoreExcelDataToCloudCommand extends Command
                 $this->info('Fichier de données archivé sur le cloud avec succès pour le site ' . $facility->id . ' à la date du ' . $yesterdayDate->format('d/m/Y'));
             } else {
                 $this->error('Data file not existing : ' . $fileName);
+            }
+
+            //Uploat client file
+            $fileName = $dayFolder . '/data_client.xlsx';
+            $fileNameInContainer = 'data_client-' . $yesterdayDate->format('Y-m-d') . '.xlsx';
+
+            if (file_exists($fileName)) {
+                (new OVHObjectStorage())->uploadFileToContainer($containerName, $fileName, $fileNameInContainer);
+
+                $this->info('Fichier client archivé sur le cloud avec succès pour le site ' . $facility->id . ' à la date du ' . $yesterdayDate->format('d/m/Y'));
+            } else {
+                $this->error('Client file not existing : ' . $fileName);
             }
         }
     }
