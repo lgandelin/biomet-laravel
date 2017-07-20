@@ -10,6 +10,7 @@ use Webaccess\BiometLaravel\Commands\GenerateRandomDatabaseDataCommand;
 use Webaccess\BiometLaravel\Commands\GenerateRandomJSONDataCommand;
 use Webaccess\BiometLaravel\Commands\GenerateSampleExcelDataCommand;
 use Webaccess\BiometLaravel\Commands\HandleExcelCommand;
+use Webaccess\BiometLaravel\Commands\PurgeDataFilesCommand;
 use Webaccess\BiometLaravel\Commands\StoreExcelDataToCloudCommand;
 use Webaccess\BiometLaravel\Http\Middlewares\AdminClientsMiddleware;
 use Webaccess\BiometLaravel\Http\Middlewares\AdminMiddleware;
@@ -51,6 +52,7 @@ class BiometLaravelServiceProvider extends ServiceProvider
             HandleExcelCommand::class,
             GenerateDataFromExcelCommand::class,
             StoreExcelDataToCloudCommand::class,
+            PurgeDataFilesCommand::class,
         ]);
 
         $this->app->register(
