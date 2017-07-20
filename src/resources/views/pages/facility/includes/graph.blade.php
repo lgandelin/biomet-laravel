@@ -1,6 +1,6 @@
 <script type="text/javascript">
 
-    var seriesOptions = {!! $series !!};
+    var series = {!! $series !!};
 
     Highcharts.setOptions({
         global: {
@@ -58,6 +58,6 @@
         scrollbar: {
             enabled: false
         },
-        series: seriesOptions
+        series: series
     });
 </script>

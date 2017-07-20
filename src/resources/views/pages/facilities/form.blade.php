@@ -62,6 +62,7 @@
     <div class="form-group">
         <label for="tabs[]">{{ trans('biomet::facilities.tabs') }}</label>
         <select multiple class="form-control" name="tabs[]" autocomplete="off" style="height:200px">
+            <option value="12" @if (isset($facility_tabs) && in_array(12, $facility_tabs))selected="selected"@endif>Suivi mensuel</option>
             <option value="1" @if (isset($facility_tabs) && in_array(1, $facility_tabs))selected="selected"@endif>Débit</option>
             <option value="2" @if (isset($facility_tabs) && in_array(2, $facility_tabs))selected="selected"@endif>Volume</option>
             <option value="3" @if (isset($facility_tabs) && in_array(3, $facility_tabs))selected="selected"@endif>Composition</option>

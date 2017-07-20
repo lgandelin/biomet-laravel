@@ -1,5 +1,6 @@
 @if (isset($current_facility))
     <li @if ($current_route == 'facility')class="active"@endif><a href="{{ route('facility', ['id' => $current_facility->id]) }}"><i class="glyphicon glyphicon-home"></i> Tableau de bord</a></li>
+    @if (in_array(12, $current_facility->tabs))<li @if ($current_tab == 12)class="active"@endif><a href="{{ route('facility_tab', ['id' => $current_facility->id, 'tab' => 12]) }}"><i class="fa fa-area-chart"></i> Suivi mensuel</a></li>@endif
     @if (in_array(1, $current_facility->tabs))<li @if ($current_tab == 1)class="active"@endif><a href="{{ route('facility_tab', ['id' => $current_facility->id, 'tab' => 1]) }}"><i class="glyphicon glyphicon-signal"></i> Débit</a></li>@endif
     @if (in_array(2, $current_facility->tabs))<li @if ($current_tab == 2)class="active"@endif><a href="{{ route('facility_tab', ['id' => $current_facility->id, 'tab' => 2]) }}"><i class="fa fa-tint"></i> Volume</a></li>@endif
     @if (in_array(3, $current_facility->tabs))<li @if ($current_tab == 3)class="active"@endif><a href="{{ route('facility_tab', ['id' => $current_facility->id, 'tab' => 3]) }}"><i class="glyphicon glyphicon-tasks"></i> Composition</a></li>@endif

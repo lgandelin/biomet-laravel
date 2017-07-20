@@ -48,6 +48,8 @@ class FacilityController extends BaseController
 
     public function tab()
     {
+        setlocale(LC_ALL, 'fr_FR.UTF8');
+
         parent::__construct($this->request);
         $tab = isset($this->request->tab) ? $this->request->tab : 1;
         if (!$this->canViewFacilityTab($this->request->id, $tab)) {
@@ -96,6 +98,48 @@ class FacilityController extends BaseController
                 if (isset($this->request->day)) $queryString .= '/' . $this->request->day;
                 $data['query_string'] = $queryString;
                 $data['entries'] = $this->getFacilitiesDataFiles($this->request->id, $queryString);
+            break;
+
+            //Fetch monthly report
+            case 12:
+                $year = (isset($this->request->year)) ? $this->request->year : date('Y');
+
+                $data['year'] = $year;
+
+                $series = [];
+                $months = [];
+                for ($m = 1; $m <= 12; $m++) {
+                    $startOfMonth = new DateTime($year . '-' . $m . '-01');
+                    $endOfMonth = clone $startOfMonth;
+                    $endOfMonth = $endOfMonth->setDate($year, $m, $startOfMonth->format('t'));
+                    $totals = $this->getMonthlySum($this->request->id, $startOfMonth, $endOfMonth, array('FT0101F_VOLUME', 'FT0102F_VOLUME', 'FT0201F_VOLUME', 'QV_BIO_EA_VOLUME'));
+
+                    $consommation_electrique = $this->getPowerConsumptionAverageValue($this->request->id, $startOfMonth, $endOfMonth);
+
+                    $months[]= [
+                        'name' => strftime("%B", $startOfMonth->getTimestamp()),
+                        'biogaz' => isset($totals['FT0101F_VOLUME']) ? $totals['FT0101F_VOLUME'] : 0,
+                        'biomethane' => isset($totals['FT0102F_VOLUME']) ? $totals['FT0102F_VOLUME'] : 0,
+                        'chaudiere' => isset($totals['FT0201F_VOLUME']) ? $totals['FT0201F_VOLUME'] : 0,
+                        'amines' => isset($totals['QV_BIO_EA_VOLUME']) ? $totals['QV_BIO_EA_VOLUME'] : 0,
+                        'consommation_electrique' => $consommation_electrique
+                    ];
+
+                    $series[0]['data'][]= [$startOfMonth->getTimestamp() * 1000, isset($totals['FT0101F_VOLUME']) ? $totals['FT0101F_VOLUME'] : 0];
+                    $series[1]['data'][]= [$startOfMonth->getTimestamp() * 1000, isset($totals['FT0102F_VOLUME']) ? $totals['FT0102F_VOLUME'] : 0];
+                    $series[2]['data'][]= [$startOfMonth->getTimestamp() * 1000, isset($totals['FT0201F_VOLUME']) ? $totals['FT0201F_VOLUME'] : 0];
+                    $series[3]['data'][]= [$startOfMonth->getTimestamp() * 1000, isset($totals['QV_BIO_EA_VOLUME']) ? $totals['QV_BIO_EA_VOLUME'] : 0];
+                    $series[4]['data'][]= [$startOfMonth->getTimestamp() * 1000, $consommation_electrique];
+                }
+
+                $series[0]['name'] = 'Biogaz brut (Nm<sup>3</sup>)';
+                $series[1]['name'] = 'Biométhane (Nm<sup>3</sup>)';
+                $series[2]['name'] = 'Chaudière (Nm<sup>3</sup>)';
+                $series[3]['name'] = 'Section amines (Nm<sup>3</sup>)';
+                $series[4]['name'] = 'Consommation électrique (kW)';
+
+                $data['months'] = $months;
+                $data['series'] = json_encode($series);
             break;
 
             default:
@@ -206,7 +250,7 @@ class FacilityController extends BaseController
             }
 
             //Files
-            if (preg_match('/data\.xls/', $entry->getPathname())) {
+            if (preg_match('/data_client\.xls/', $entry->getPathname())) {
                 $entries[] = [
                     'type' => 'file',
                     'name' => preg_replace('#' . $path . '/#', '', $entry->getPathname()),
@@ -247,6 +291,34 @@ class FacilityController extends BaseController
 
     /**
      * @param $facilityID
+     * @param $startDate
+     * @param $endDate
+     * @param $keys
+     * @return float|int
+     */
+    private function getMonthlySum($facilityID, $startDate, $endDate, $keys)
+    {
+        $data = FacilityManager::getData($startDate, $endDate, $facilityID, $keys, false);
+        $totals = [];
+
+        foreach ($data as $keyData) {
+            $key = $keyData['name'];
+
+            if (!isset($totals[$key]))
+                $totals[$key] = 0;
+
+            foreach ($keyData['data'] as $i => $day) {
+                if (isset($day[1])) {
+                    $totals[$key] += $day[1];
+                }
+            }
+        }
+
+        return $totals;
+    }
+
+    /**
+     * @param $facilityID
      * @param $date
      * @param $keys
      * @return int
@@ -261,5 +333,19 @@ class FacilityController extends BaseController
         }
 
         return 0;
+    }
+
+    /**
+     * @param $facilityID
+     * @param $startDate
+     * @param $endDate
+     * @return float
+     */
+    private function getPowerConsumptionAverageValue($facilityID, $startDate, $endDate)
+    {
+        $data = FacilityManager::getData($startDate, $endDate, $facilityID, array('CONSO_ELEC_INSTAL_AVG_DAILY_INDICATOR'), false);
+        $total = array_sum($data);
+
+        return round($total * 24);
     }
 }
