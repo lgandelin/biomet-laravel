@@ -141,50 +141,52 @@ class FacilityManager
         $series = [];
         $fileData = self::fetchData($startDate, $endDate, $facilityID, $keys);
 
-        foreach ($keys as $i => $key) {
-            $keyData = [];
+        if (is_array($keys) && sizeof($keys) > 0) {
+            foreach ($keys as $i => $key) {
+                $keyData = [];
 
-            //Daily indicator
-            if (preg_match('/DAILY_INDICATOR/', $key)) {
-                $result = [];
-                if (is_array($fileData) && sizeof($fileData) > 0) {
-                    foreach ($fileData as $data) {
-                        if (isset($data->$key))
-                            $result[$data->timestamp] = $data->$key;
+                //Daily indicator
+                if (preg_match('/DAILY_INDICATOR/', $key)) {
+                    $result = [];
+                    if (is_array($fileData) && sizeof($fileData) > 0) {
+                        foreach ($fileData as $data) {
+                            if (isset($data->$key))
+                                $result[$data->timestamp] = $data->$key;
+                        }
                     }
+
+                    return $result;
                 }
 
-                return $result;
-            }
+                //Average serie
+                elseif (preg_match('/_AVG/', $key)) {
+                    $allData = [];
+                    if (is_array($fileData) && sizeof($fileData) > 0) {
+                        $avg = self::calculateAverage($fileData, $key, $allData);
 
-            //Average serie
-            elseif (preg_match('/_AVG/', $key)) {
-                $allData = [];
-                if (is_array($fileData) && sizeof($fileData) > 0) {
-                    $avg = self::calculateAverage($fileData, $key, $allData);
-
-                    foreach ($fileData as $data) {
-                        $keyData[]= [$data->timestamp * 1000, $avg];
+                        foreach ($fileData as $data) {
+                            $keyData[]= [$data->timestamp * 1000, $avg];
+                        }
                     }
-                }
 
-            //Standard serie
-            } else {
-                if (is_array($fileData) && sizeof($fileData) > 0) {
-                    foreach ($fileData as $data) {
-                        if (isset($data->$key)) {
-                            if (!is_numeric($data->$key))
-                                $data->$key = null;
-                            $keyData[] = [$data->timestamp * 1000, $data->$key];
+                //Standard serie
+                } else {
+                    if (is_array($fileData) && sizeof($fileData) > 0) {
+                        foreach ($fileData as $data) {
+                            if (isset($data->$key)) {
+                                if (!is_numeric($data->$key))
+                                    $data->$key = null;
+                                $keyData[] = [$data->timestamp * 1000, $data->$key];
+                            }
                         }
                     }
                 }
-            }
 
-            $series[] = [
-                'name' => isset($legend[$i]) ? $legend[$i] : $key,
-                'data' => $keyData
-            ];
+                $series[] = [
+                    'name' => isset($legend[$i]) ? $legend[$i] : $key,
+                    'data' => $keyData
+                ];
+            }
         }
 
         return $series;
@@ -211,21 +213,25 @@ class FacilityManager
             $date->add(new DateInterval('P1D'));
         }
 
-        foreach ($jsonFiles as $jsonFile) {
-            $data = json_decode(file_get_contents($jsonFile));
-            foreach ($data as $d) {
-                if (is_array($keys) && sizeof($keys) > 0) {
-                    $row = new \StdClass();
+        if (is_array($jsonFiles) && sizeof($jsonFiles) > 0) {
+            foreach ($jsonFiles as $jsonFile) {
+                $data = json_decode(file_get_contents($jsonFile));
+                if (is_array($data) && sizeof($data) > 0) {
+                    foreach ($data as $d) {
+                        if (is_array($keys) && sizeof($keys) > 0) {
+                            $row = new \StdClass();
 
-                    foreach ($keys as $key) {
-                        if (isset($d->$key)) {
-                            $row->$key = $d->$key;
+                            foreach ($keys as $key) {
+                                if (isset($d->$key)) {
+                                    $row->$key = $d->$key;
+                                }
+                            }
+                            $row->timestamp = $d->timestamp;
+                            $fileData[] = $row;
+                        } else {
+                            $fileData[]= $d;
                         }
                     }
-                    $row->timestamp = $d->timestamp;
-                    $fileData[] = $row;
-                } else {
-                    $fileData[]= $d;
                 }
             }
         }
@@ -241,10 +247,12 @@ class FacilityManager
      */
     private static function calculateAverage($fileData, $key, $allData)
     {
-        foreach ($fileData as $data) {
-            $targetedKey = preg_replace('/_AVG/', '', $key);
-            if (isset($data->$targetedKey))
-                $allData[] = $data->$targetedKey;
+        if (is_array($fileData) && sizeof($fileData) > 0) {
+            foreach ($fileData as $data) {
+                $targetedKey = preg_replace('/_AVG/', '', $key);
+                if (isset($data->$targetedKey))
+                    $allData[] = $data->$targetedKey;
+            }
         }
 
         return count($allData) > 0 ? array_sum($allData) / count($allData) : 0;
@@ -298,20 +306,22 @@ class FacilityManager
             $objReader->setReadDataOnly(true);
             $baseObjPHPExcel = $objReader->load($baseFile);
 
-            foreach ($xlsFiles as $i => $xlsFile) {
-                $objPHPExcel = $objReader->load($xlsFile);
-                foreach ($objPHPExcel->getAllSheets() as $sheetIndex => $sheet) {
-                    $baseObjPHPExcel->setActiveSheetIndex($sheetIndex);
-                    $startingRow = ($sheetIndex == 9) ? 2 : 3;
-                    $findEndDataRow = $sheet->getHighestRow();
-                    $findEndDataColumn = $sheet->getHighestColumn();
-                    $findEndData = $findEndDataColumn . $findEndDataRow;
-                    $fileData = $sheet->rangeToArray('A' . $startingRow . ':' . $findEndData);
-                    $appendStartRow = $baseObjPHPExcel->getSheet($sheetIndex)->getHighestRow() + 1;
-                    $baseObjPHPExcel->getActiveSheet()->fromArray($fileData, null, 'A' . $appendStartRow);
+            if (is_array($xlsFile) && sizeof($xlsFiles) > 0) {
+                foreach ($xlsFiles as $i => $xlsFile) {
+                    $objPHPExcel = $objReader->load($xlsFile);
+                    foreach ($objPHPExcel->getAllSheets() as $sheetIndex => $sheet) {
+                        $baseObjPHPExcel->setActiveSheetIndex($sheetIndex);
+                        $startingRow = ($sheetIndex == 9) ? 2 : 3;
+                        $findEndDataRow = $sheet->getHighestRow();
+                        $findEndDataColumn = $sheet->getHighestColumn();
+                        $findEndData = $findEndDataColumn . $findEndDataRow;
+                        $fileData = $sheet->rangeToArray('A' . $startingRow . ':' . $findEndData);
+                        $appendStartRow = $baseObjPHPExcel->getSheet($sheetIndex)->getHighestRow() + 1;
+                        $baseObjPHPExcel->getActiveSheet()->fromArray($fileData, null, 'A' . $appendStartRow);
+                    }
+                    $objPHPExcel->disconnectWorksheets();
+                    unset($objPHPExcel);
                 }
-                $objPHPExcel->disconnectWorksheets();
-                unset($objPHPExcel);
             }
 
             $file = env('DATA_FOLDER_PATH') . '/temp/data-' . $startDate->format('Y-m-d') . '-' . $endDate->format('Y-m-d') . '-' . time() . '.xlsx';

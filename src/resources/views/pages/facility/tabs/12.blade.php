@@ -22,7 +22,7 @@
                         <th>Biométhane (Nm<sup>3</sup>)</th>
                         <th>Chaudière (Nm<sup>3</sup>)</th>
                         <th>Section amines (Nm<sup>3</sup>)</th>
-                        <th>Consommation électrique (kW)</th>
+                        <th>Consommation électrique (kWh)</th>
                     </tr>
                 </thead>
 

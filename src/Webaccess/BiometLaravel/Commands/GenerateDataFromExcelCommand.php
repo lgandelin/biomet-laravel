@@ -271,9 +271,12 @@ class GenerateDataFromExcelCommand extends Command
 
     private function calculateSum($data, $key) {
         $sum = 0;
-        foreach ($data as $timestamp => $intervalData) {
-            if (isset($intervalData[$key]) && is_numeric($intervalData[$key]))
-                $sum += $intervalData[$key];
+
+        if (is_array($data) && sizeof($data) > 0) {
+            foreach ($data as $timestamp => $intervalData) {
+                if (isset($intervalData[$key]) && is_numeric($intervalData[$key]))
+                    $sum += $intervalData[$key];
+            }
         }
 
         return $sum;
@@ -290,9 +293,14 @@ class GenerateDataFromExcelCommand extends Command
     {
         $data = FacilityManager::getData($startDate, $endDate, $facilityID, $keys, false);
         $total = 0;
-        foreach ($data as $file) {
-            foreach ($file['data'] as $value) {
-                $total += $value[1];
+
+        if (is_array($data) && sizeof($data) > 0) {
+            foreach ($data as $file) {
+                if (is_array($file['data']) && sizeof($file['data']) > 0) {
+                    foreach ($file['data'] as $value) {
+                        $total += $value[1];
+                    }
+                }
             }
         }
 
@@ -326,10 +334,14 @@ class GenerateDataFromExcelCommand extends Command
         $total = 0;
         $count = 0;
 
-        foreach ($data as $file) {
-            foreach ($file['data'] as $value) {
-                $total += $value[1];
-                $count ++;
+        if (is_array($data) && sizeof($data) > 0) {
+            foreach ($data as $file) {
+                if (is_array($file['data']) && sizeof($file['data']) > 0) {
+                    foreach ($file['data'] as $value) {
+                        $total += $value[1];
+                        $count++;
+                    }
+                }
             }
         }
 

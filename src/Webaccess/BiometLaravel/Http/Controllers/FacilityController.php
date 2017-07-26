@@ -136,7 +136,7 @@ class FacilityController extends BaseController
                 $series[1]['name'] = 'Biométhane (Nm<sup>3</sup>)';
                 $series[2]['name'] = 'Chaudière (Nm<sup>3</sup>)';
                 $series[3]['name'] = 'Section amines (Nm<sup>3</sup>)';
-                $series[4]['name'] = 'Consommation électrique (kW)';
+                $series[4]['name'] = 'Consommation électrique (kWh)';
 
                 $data['months'] = $months;
                 $data['series'] = json_encode($series);
