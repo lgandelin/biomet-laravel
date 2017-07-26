@@ -306,7 +306,7 @@ class FacilityManager
             $objReader->setReadDataOnly(true);
             $baseObjPHPExcel = $objReader->load($baseFile);
 
-            if (is_array($xlsFile) && sizeof($xlsFiles) > 0) {
+            if (is_array($xlsFiles) && sizeof($xlsFiles) > 0) {
                 foreach ($xlsFiles as $i => $xlsFile) {
                     $objPHPExcel = $objReader->load($xlsFile);
                     foreach ($objPHPExcel->getAllSheets() as $sheetIndex => $sheet) {
