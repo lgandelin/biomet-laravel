@@ -19,7 +19,7 @@
             @endif
 
             <div class="row">
-                <div class="col-lg-8 col-md-12 col-sm-12" style="margin-bottom: 30px;">
+                <div class="@if ($current_facility->id != '6dc0272e-be4e-4d94-bccd-7f6f3b78289c') col-lg-8 @else col-lg-12 @endif col-md-12 col-sm-12" style="margin-bottom: 30px;">
                     <div class="box">
                         <h1 class="box-title">Dernières alarmes</h1>
                         <div class="box-content">
@@ -50,31 +50,35 @@
                     </div>
                 </div>
 
-                <div class="col-lg-4 col-md-12 col-sm-12" style="margin-bottom: 30px;">
-                    <div class="box">
-                        <h1 class="box-title">Indicateur IGP moyen (-)</h1>
-                        <div class="box-content row indicators">
-                            <div class="col-lg-6 col-md-3 col-sm-12"><span class="title">Dernières 24h</span> <span class="value">{{ $avg_igp_last_24h }}</span></div>
-                            <div class="col-lg-6 col-md-3 col-sm-12"><span class="title">Derniers 7 jours</span> <span class="value">{{ $avg_igp_last_7_days }}</span></div>
-                            <div class="col-lg-6 col-md-3 col-sm-12"><span class="title">Dernier mois</span> <span class="value">{{ $avg_igp_last_month }}</span></div>
-                            <div class="col-lg-6 col-md-3 col-sm-12"><span class="title">Année en cours</span> <span class="value">{{ $avg_igp_current_year }}</span></div>
+                @if ($current_facility->id != '6dc0272e-be4e-4d94-bccd-7f6f3b78289c')
+                    <div class="col-lg-4 col-md-12 col-sm-12" style="margin-bottom: 30px;">
+                        <div class="box">
+                            <h1 class="box-title">Indicateur IGP moyen (-)</h1>
+                            <div class="box-content row indicators">
+                                <div class="col-lg-6 col-md-3 col-sm-12"><span class="title">Dernières 24h</span> <span class="value">{{ $avg_igp_last_24h }}</span></div>
+                                <div class="col-lg-6 col-md-3 col-sm-12"><span class="title">Derniers 7 jours</span> <span class="value">{{ $avg_igp_last_7_days }}</span></div>
+                                <div class="col-lg-6 col-md-3 col-sm-12"><span class="title">Dernier mois</span> <span class="value">{{ $avg_igp_last_month }}</span></div>
+                                <div class="col-lg-6 col-md-3 col-sm-12"><span class="title">Année en cours</span> <span class="value">{{ $avg_igp_current_year }}</span></div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endif
             </div>
 
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12" style="margin-bottom: 30px;">
-                    <div class="box">
-                        <h1 class="box-title">Concentration H<sub>2</sub>S moyenne des dernières 24h (ppm)</h1>
-                        <div class="box-content row indicators">
-                            <div class="col-lg-4 col-md-4 col-sm-12"><span class="title">AP0201</span> <span class="value">{{ $avg_ap0201_last_24h }}</span></div>
-                            <div class="col-lg-4 col-md-4 col-sm-12"><span class="title">AP0202</span> <span class="value">{{ $avg_ap0202_last_24h }}</span></div>
-                            <div class="col-lg-4 col-md-4 col-sm-12"><span class="title">AP0203</span> <span class="value">{{ $avg_ap0203_last_24h }}</span></div>
+            @if ($current_facility->id != '6dc0272e-be4e-4d94-bccd-7f6f3b78289c')
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12" style="margin-bottom: 30px;">
+                        <div class="box">
+                            <h1 class="box-title">Concentration H<sub>2</sub>S moyenne des dernières 24h (ppm)</h1>
+                            <div class="box-content row indicators">
+                                <div class="col-lg-4 col-md-4 col-sm-12"><span class="title">AP0201</span> <span class="value">{{ $avg_ap0201_last_24h }}</span></div>
+                                <div class="col-lg-4 col-md-4 col-sm-12"><span class="title">AP0202</span> <span class="value">{{ $avg_ap0202_last_24h }}</span></div>
+                                <div class="col-lg-4 col-md-4 col-sm-12"><span class="title">AP0203</span> <span class="value">{{ $avg_ap0203_last_24h }}</span></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            @endif
 
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12" style="margin-bottom: 30px;">
@@ -94,18 +98,33 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12" style="margin-bottom: 30px;">
-                    <div class="box">
-                        <h1 class="box-title">CH<sub>4</sub> et CO<sub>2</sub> du biogaz brut et biométhane (%)</h1>
-                        <div class="box-content">
-                            @include('biomet::pages.facility.includes.date_filters')
-                            <div class="graph" id="container3" data-title="CH<sub>4</sub> et CO<sub>2</sub> du biogaz brut et biométhane" data-keys="AP0201_CH4,AP0201_CO2,AP0101_CH4,AP0101_CO2" data-legend="AP0201 CH<sub>4</sub> (%),AP0201 CO<sub>2</sub> (%),AP0101 CH<sub>4</sub> (%),AP0101 CO<sub>2</sub> (%)"></div>
-                            <div class="entrypoint"></div>
+            @if ($current_facility->id == 'a054b4ef-64d9-4c46-a6ab-99de9d4c3d11')
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12" style="margin-bottom: 30px;">
+                        <div class="box">
+                            <h1 class="box-title">CH<sub>4</sub> et CO<sub>2</sub> du biogaz brut et biométhane (%)</h1>
+                            <div class="box-content">
+                                @include('biomet::pages.facility.includes.date_filters')
+                                <div class="graph" id="container3" data-title="CH<sub>4</sub> et CO<sub>2</sub> du biogaz brut et biométhane" data-keys="AP0201_CH4,AP0201_CO2,AP0101_CH4,AP0101_CO2" data-legend="AP0201 CH<sub>4</sub> (%),AP0201 CO<sub>2</sub> (%),AP0101 CH<sub>4</sub> (%),AP0101 CO<sub>2</sub> (%)"></div>
+                                <div class="entrypoint"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            @elseif ($current_facility->id == '6dc0272e-be4e-4d94-bccd-7f6f3b78289c')
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12" style="margin-bottom: 30px;">
+                        <div class="box">
+                            <h1 class="box-title">CH<sub>4</sub> et CO<sub>2</sub> du biométhane (%)</h1>
+                            <div class="box-content">
+                                @include('biomet::pages.facility.includes.date_filters')
+                                <div class="graph" id="container3" data-title="CH<sub>4</sub> et CO<sub>2</sub> du biométhane" data-keys="COMPO_CH4_GRDF,COMPO_CO2_GRDF" data-legend="CH<sub>4</sub> (%),CO<sub>2</sub> (%)"></div>
+                                <div class="entrypoint"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 

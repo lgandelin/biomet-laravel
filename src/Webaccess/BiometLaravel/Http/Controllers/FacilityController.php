@@ -63,6 +63,36 @@ class FacilityController extends BaseController
 
         switch ($tab) {
 
+            //Débit
+            case 1:
+                switch ($this->request->id) {
+                    case 'a054b4ef-64d9-4c46-a6ab-99de9d4c3d11':
+                        $data['keys'] = 'FT0101F,FT0102F,FT0201F,QV_BIO_EA';
+                        $data['legends'] = 'Biogaz brut (Nm<sup>3</sup>/h),Biométhane (Nm<sup>3</sup>/h),Chaudière (Nm<sup>3</sup>/h),Section amines (Nm<sup>3</sup>/h)';
+                    break;
+
+                    case '6dc0272e-be4e-4d94-bccd-7f6f3b78289c':
+                        $data['keys'] = 'FT0101F,FT0102F,FT0201F';
+                        $data['legends'] = 'Biogaz brut (Nm<sup>3</sup>/h),Biométhane (Nm<sup>3</sup>/h),Biogaz membranes (Nm<sup>3</sup>/h)';
+                    break;
+                }
+            break;
+
+            //Volume
+            case 2:
+                switch ($this->request->id) {
+                    case 'a054b4ef-64d9-4c46-a6ab-99de9d4c3d11':
+                        $data['keys'] = 'FT0101F_VOLUME,FT0102F_VOLUME,FT0201F_VOLUME,QV_BIO_EA_VOLUME';
+                        $data['legends'] = 'Biogaz brut (Nm<sup>3</sup>),Biométhane (Nm<sup>3</sup>),Chaudière (Nm<sup>3</sup>),Section amines (Nm<sup>3</sup>)';
+                    break;
+
+                    case '6dc0272e-be4e-4d94-bccd-7f6f3b78289c':
+                        $data['keys'] = 'FT0101F_VOLUME,FT0102F_VOLUME,FT0201F_VOLUME';
+                        $data['legends'] = 'Biogaz brut (Nm<sup>3</sup>),Biométhane (Nm<sup>3</sup>),Biogaz membranes (Nm<sup>3</sup>)';
+                    break;
+                }
+            break;
+
             //Fetch equipments list
             case 8:
                 $data['equipments'] = EquipmentManager::getAllByFacilityID($this->request->id);
@@ -116,30 +146,43 @@ class FacilityController extends BaseController
 
                     $consommation_electrique = $this->getPowerConsumptionAverageValue($this->request->id, $startOfMonth, $endOfMonth);
 
-                    $months[]= [
+                    $month = [
                         'name' => strftime("%B", $startOfMonth->getTimestamp()),
                         'biogaz' => isset($totals['FT0101F_VOLUME']) ? $totals['FT0101F_VOLUME'] : 0,
                         'biomethane' => isset($totals['FT0102F_VOLUME']) ? $totals['FT0102F_VOLUME'] : 0,
-                        'chaudiere' => isset($totals['FT0201F_VOLUME']) ? $totals['FT0201F_VOLUME'] : 0,
-                        'amines' => isset($totals['QV_BIO_EA_VOLUME']) ? $totals['QV_BIO_EA_VOLUME'] : 0,
                         'consommation_electrique' => $consommation_electrique
                     ];
+
+                    if ($this->request->id == 'a054b4ef-64d9-4c46-a6ab-99de9d4c3d11') {
+                        $month['amines'] = isset($totals['QV_BIO_EA_VOLUME']) ? $totals['QV_BIO_EA_VOLUME'] : 0;
+                        $month['chaudiere'] = isset($totals['FT0201F_VOLUME']) ? $totals['FT0201F_VOLUME'] : 0;
+                    } elseif ($this->request->id == '6dc0272e-be4e-4d94-bccd-7f6f3b78289c') {
+                        $month['membranes'] = isset($totals['FT0201F_VOLUME']) ? $totals['FT0201F_VOLUME'] : 0;
+                    }
+
+                    $months[]= $month;
 
                     $series[0]['data'][]= [$startOfMonth->getTimestamp() * 1000, isset($totals['FT0101F_VOLUME']) ? $totals['FT0101F_VOLUME'] : 0];
                     $series[1]['data'][]= [$startOfMonth->getTimestamp() * 1000, isset($totals['FT0102F_VOLUME']) ? $totals['FT0102F_VOLUME'] : 0];
                     $series[2]['data'][]= [$startOfMonth->getTimestamp() * 1000, isset($totals['FT0201F_VOLUME']) ? $totals['FT0201F_VOLUME'] : 0];
-                    $series[3]['data'][]= [$startOfMonth->getTimestamp() * 1000, isset($totals['QV_BIO_EA_VOLUME']) ? $totals['QV_BIO_EA_VOLUME'] : 0];
+                    if ($this->request->id == 'a054b4ef-64d9-4c46-a6ab-99de9d4c3d11') {
+                        $series[3]['data'][] = [$startOfMonth->getTimestamp() * 1000, isset($totals['QV_BIO_EA_VOLUME']) ? $totals['QV_BIO_EA_VOLUME'] : 0];
+                    }
                     $series[4]['data'][]= [$startOfMonth->getTimestamp() * 1000, $consommation_electrique];
                 }
 
                 $series[0]['name'] = 'Biogaz brut (Nm<sup>3</sup>)';
                 $series[1]['name'] = 'Biométhane (Nm<sup>3</sup>)';
-                $series[2]['name'] = 'Chaudière (Nm<sup>3</sup>)';
-                $series[3]['name'] = 'Section amines (Nm<sup>3</sup>)';
+                if ($this->request->id == 'a054b4ef-64d9-4c46-a6ab-99de9d4c3d11') {
+                    $series[2]['name'] = 'Chaudière (Nm<sup>3</sup>)';
+                    $series[3]['name'] = 'Section amines (Nm<sup>3</sup>)';
+                } elseif ($this->request->id == '6dc0272e-be4e-4d94-bccd-7f6f3b78289c') {
+                    $series[2]['name'] = 'Biogaz Membranes (Nm<sup>3</sup>)';
+                }
                 $series[4]['name'] = 'Consommation électrique (kWh)';
 
                 $data['months'] = $months;
-                $data['series'] = json_encode($series);
+                $data['series'] = json_encode(array_values($series));
             break;
 
             default:

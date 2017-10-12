@@ -20,8 +20,12 @@
                         <th>Mois</th>
                         <th>Biogaz brut (Nm<sup>3</sup>)</th>
                         <th>Biométhane (Nm<sup>3</sup>)</th>
-                        <th>Chaudière (Nm<sup>3</sup>)</th>
-                        <th>Section amines (Nm<sup>3</sup>)</th>
+                        @if ($current_facility->id == 'a054b4ef-64d9-4c46-a6ab-99de9d4c3d11')
+                            <th>Chaudière (Nm<sup>3</sup>)</th>
+                            <th>Section amines (Nm<sup>3</sup>)</th>
+                        @elseif ($current_facility->id == '6dc0272e-be4e-4d94-bccd-7f6f3b78289c')
+                            <th>Biogaz membranes(Nm<sup>3</sup>)</th>
+                        @endif
                         <th>Consommation électrique (kWh)</th>
                     </tr>
                 </thead>
@@ -32,8 +36,12 @@
                             <td><strong>{{ ucfirst($month['name']) }}</strong></td>
                             <td>{{ number_format($month['biogaz'], 0, '.', ' ') }}</td>
                             <td>{{ number_format($month['biomethane'], 0, '.', ' ') }}</td>
-                            <td>{{ number_format($month['chaudiere'], 0, '.', ' ') }}</td>
-                            <td>{{ number_format($month['amines'], 0, '.', ' ') }}</td>
+                            @if ($current_facility->id == 'a054b4ef-64d9-4c46-a6ab-99de9d4c3d11')
+                                <td>{{ number_format($month['chaudiere'], 0, '.', ' ') }}</td>
+                                <td>{{ number_format($month['amines'], 0, '.', ' ') }}</td>
+                            @elseif ($current_facility->id == '6dc0272e-be4e-4d94-bccd-7f6f3b78289c')
+                                <td>{{ number_format($month['membranes'], 0, '.', ' ') }}</td>
+                            @endif
                             <td>{{ number_format($month['consommation_electrique'], 0, '.', ' ') }}</td>
                         </tr>
                     @endforeach

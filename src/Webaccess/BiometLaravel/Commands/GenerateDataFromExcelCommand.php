@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use PHPExcel_Cell;
 use PHPExcel_Reader_Excel2007;
+use Webaccess\BiometLaravel\Models\Facility;
 use Webaccess\BiometLaravel\Services\AlarmManager;
 use Webaccess\BiometLaravel\Services\EquipmentManager;
 use Webaccess\BiometLaravel\Services\FacilityManager;
@@ -55,155 +56,14 @@ class GenerateDataFromExcelCommand extends Command
             $objReader->setReadDataOnly(true);
             $objPHPExcel = $objReader->load($folder . '/data.xlsx');
 
-            //Alimentation
-            $objWorksheet = $objPHPExcel->getSheet(0);
-            foreach ($objWorksheet->getRowIterator() as $i => $row) {
-                if ($i > 2) {
-                    $cellIterator = $row->getCellIterator();
-                    $cellIterator->setIterateOnlyExistingCells(FALSE);
-                    $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A' . $i)->getValue())->getTimestamp();
-
-                    foreach ($cellIterator as $j => $cell) {
-                        $data[$timestamp]['timestamp'] = $timestamp;
-                        if ($j == 'D') $data[$timestamp]['FT0101F'] = $cell->getValue();
-                        if ($j == 'G') $data[$timestamp]['FT0102F'] = $cell->getValue();
-                    }
-                }
+            switch ($facility->id) {
+                case 'a054b4ef-64d9-4c46-a6ab-99de9d4c3d11' :
+                    $data = $this->processXLSBiomet($objPHPExcel, $facility);
+                break;
+                case '6dc0272e-be4e-4d94-bccd-7f6f3b78289c' :
+                    $data = $this->processXLSVienne($objPHPExcel, $facility);
+                break;
             }
-
-            //Analyse
-            $objWorksheet = $objPHPExcel->getSheet(2);
-            foreach ($objWorksheet->getRowIterator() as $i => $row) {
-                if ($i > 2) {
-                    $cellIterator = $row->getCellIterator();
-                    $cellIterator->setIterateOnlyExistingCells(FALSE);
-                    $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A' . $i)->getValue())->getTimestamp();
-
-                    foreach ($cellIterator as $j => $cell) {
-                        if ($j == 'B') $data[$timestamp]['AP0101_CH4'] = $cell->getValue();
-                        if ($j == 'C') $data[$timestamp]['AP0101_CO2'] = $cell->getValue();
-                        if ($j == 'D') $data[$timestamp]['AP0101_H2O'] = $cell->getValue();
-                        if ($j == 'E') $data[$timestamp]['AP0101_H2S'] = $cell->getValue();
-                        if ($j == 'F') $data[$timestamp]['AP0101_O2'] = $cell->getValue();
-
-                        if ($j == 'G') $data[$timestamp]['AP0201_CH4'] = $cell->getValue();
-                        if ($j == 'H') $data[$timestamp]['AP0201_CO2'] = $cell->getValue();
-                        if ($j == 'I') $data[$timestamp]['AP0201_H2O'] = $cell->getValue();
-                        if ($j == 'J') $data[$timestamp]['AP0201_H2S'] = $cell->getValue();
-                        if ($j == 'K') $data[$timestamp]['AP0201_O2'] = $cell->getValue();
-
-                        if ($j == 'L') $data[$timestamp]['AP0202_CH4'] = $cell->getValue();
-                        if ($j == 'M') $data[$timestamp]['AP0202_CO2'] = $cell->getValue();
-                        if ($j == 'N') $data[$timestamp]['AP0202_H2O'] = $cell->getValue();
-                        if ($j == 'O') $data[$timestamp]['AP0202_H2S'] = $cell->getValue();
-                        if ($j == 'P') $data[$timestamp]['AP0202_O2'] = $cell->getValue();
-
-                        if ($j == 'Q') $data[$timestamp]['AP0203_CH4'] = $cell->getValue();
-                        if ($j == 'R') $data[$timestamp]['AP0203_CO2'] = $cell->getValue();
-                        if ($j == 'S') $data[$timestamp]['AP0203_H2O'] = $cell->getValue();
-                        if ($j == 'T') $data[$timestamp]['AP0203_H2S'] = $cell->getValue();
-                        if ($j == 'U') $data[$timestamp]['AP0203_O2'] = $cell->getValue();
-                    }
-                }
-            }
-
-            //Calcul
-            $objWorksheet = $objPHPExcel->getSheet(3);
-            foreach ($objWorksheet->getRowIterator() as $i => $row) {
-                if ($i > 2) {
-                    $cellIterator = $row->getCellIterator();
-                    $cellIterator->setIterateOnlyExistingCells(FALSE);
-                    $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A' . $i)->getValue())->getTimestamp();
-
-                    foreach ($cellIterator as $j => $cell) {
-                        if ($j == 'G') $data[$timestamp]['IGP'] = $cell->getValue();
-                        if ($j == 'M') $data[$timestamp]['Q_DIGEST'] = $cell->getValue();
-                        if ($j == 'U') $data[$timestamp]['QV_BIO_EA'] = $cell->getValue();
-                    }
-                }
-            }
-
-            //Consommation électrique
-            $total_conso_elec_instal = 0;
-            $count_conso_elec_instal = 0;
-            $objWorksheet = $objPHPExcel->getSheet(3);
-            foreach ($objWorksheet->getRowIterator() as $i => $row) {
-                if ($i > 2) {
-                    $cellIterator = $row->getCellIterator();
-                    $cellIterator->setIterateOnlyExistingCells(FALSE);
-                    $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A' . $i)->getValue())->getTimestamp();
-
-                    foreach ($cellIterator as $j => $cell) {
-                        $data[$timestamp]['timestamp'] = $timestamp;
-                        if ($j == 'B') $data[$timestamp]['CONSO_ELEC_CHAUD'] = $cell->getValue();
-                        if ($j == 'C') {
-                            $data[$timestamp]['CONSO_ELEC_INSTAL'] = $cell->getValue();
-                            if (is_numeric($cell->getValue())) {
-                                $total_conso_elec_instal += $cell->getValue();
-                                $count_conso_elec_instal++;
-                            }
-                        }
-                        if ($j == 'D') $data[$timestamp]['CONSO_ELEC_PEC'] = $cell->getValue();
-                    }
-                }
-            }
-
-            //Consommation électrique moyenne journalière
-            $date = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A3')->getValue());
-            $date->setTime(0, 0, 0);
-            $data[$date->getTimestamp()]['CONSO_ELEC_INSTAL_AVG_DAILY_INDICATOR'] = ($count_conso_elec_instal > 0) ? $total_conso_elec_instal / $count_conso_elec_instal : 0;
-
-            //Prétraitement
-            $objWorksheet = $objPHPExcel->getSheet(6);
-            foreach ($objWorksheet->getRowIterator() as $i => $row) {
-                if ($i > 2) {
-                    $cellIterator = $row->getCellIterator();
-                    $cellIterator->setIterateOnlyExistingCells(FALSE);
-                    $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A' . $i)->getValue())->getTimestamp();
-
-                    foreach ($cellIterator as $j => $cell) {
-                        $data[$timestamp]['timestamp'] = $timestamp;
-                        if ($j == 'B') $data[$timestamp]['FT0201F'] = $cell->getValue();
-                    }
-                }
-            }
-
-            //Volume (onglet Calcul)
-            $objWorksheet = $objPHPExcel->getSheet(3);
-            $date = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A3')->getValue());
-            $date->setTime(0, 0, 0);
-            $data[$date->getTimestamp()]['timestamp'] = $date->getTimestamp();
-            $data[$date->getTimestamp()]['FT0101F_VOLUME'] = $this->calculateSum($data, 'FT0101F') / 60;
-            $data[$date->getTimestamp()]['FT0102F_VOLUME'] = $this->calculateSum($data, 'FT0102F') / 60;
-            $data[$date->getTimestamp()]['FT0201F_VOLUME'] = $this->calculateSum($data, 'FT0201F') / 60;
-            $data[$date->getTimestamp()]['QV_BIO_EA_VOLUME'] = $this->calculateSum($data, 'QV_BIO_EA') / 60;
-
-            //Quantités biométhane
-            $objWorksheet = $objPHPExcel->getSheet(10);
-            $lastRow = $objWorksheet->getHighestRow();
-            $date = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A3')->getValue());
-            $date->setTime(0, 0, 0);
-            $data[$date->getTimestamp()]['timestamp'] = $date->getTimestamp();
-            $data[$date->getTimestamp()]['QTE_BIOMETHANE_INJECTE'] = $objWorksheet->getCell('Y' . $lastRow)->getValue();
-            $data[$date->getTimestamp()]['QTE_BIOMETHANE_NON_CONFORME'] = $objWorksheet->getCell('Z' . $lastRow)->getValue();
-
-            //Heures en fonctionnement depuis le début de l'année
-            $objWorksheet = $objPHPExcel->getSheet(11);
-            $lastRow = $objWorksheet->getHighestRow();
-
-            //@TODO : ne pas prendre le compteur total d'heures, mais bien depuis le début de l'année en cours !
-            $data[$date->getTimestamp()]['HEURES_EN_FONCTIONNEMENT_CURRENT_YEAR'] = $objWorksheet->getCell('C' . $lastRow)->getValue();
-
-            //Valeurs depuis le début de l'année (tableau bord)
-            $dateFirstDayOfYear = new DateTime();
-            $dateFirstDayOfYear->setDate($dateFirstDayOfYear->format('Y'), 1, 1)->setTime(0, 0, 0);
-
-            $data[$date->getTimestamp()]['AVG_IGP_CURRENT_YEAR'] = $this->getAverageValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('IGP'));
-
-            $data[$date->getTimestamp()]['SUM_FT0101F_CURRENT_YEAR'] = $this->getSumValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('FT0101F')) / 60;
-            $data[$date->getTimestamp()]['SUM_FT0102F_CURRENT_YEAR'] = $this->getSumValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('FT0102F')) / 60;
-
-            $data[$date->getTimestamp()]['SUM_CONSO_ELEC_INSTALL_CURRENT_YEAR'] = $this->getPowerConsumptionAverageValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))));
 
             //JSON generation
             $data = array_values($data);
@@ -233,7 +93,17 @@ class GenerateDataFromExcelCommand extends Command
             }
 
             //Heures en fonctionnement
-            $objWorksheet = $objPHPExcel->getSheet(11);
+            $maintenanceTab = null;
+            switch ($facility->id) {
+                case 'a054b4ef-64d9-4c46-a6ab-99de9d4c3d11' :
+                    $maintenanceTab = 11;
+                    break;
+                case '6dc0272e-be4e-4d94-bccd-7f6f3b78289c' :
+                    $maintenanceTab = 4;
+                    break;
+            }
+
+            $objWorksheet = $objPHPExcel->getSheet($maintenanceTab);
             $lastRow = $objWorksheet->getHighestRow();
 
             foreach ($objWorksheet->getRowIterator() as $i => $row) {
@@ -346,5 +216,253 @@ class GenerateDataFromExcelCommand extends Command
         }
 
         return ($count > 0) ? round($total / $count, 1) : 0;
+    }
+
+    private function processXLSBiomet($objPHPExcel, Facility $facility)
+    {
+        //Alimentation
+        $objWorksheet = $objPHPExcel->getSheet(0);
+        foreach ($objWorksheet->getRowIterator() as $i => $row) {
+            if ($i > 2) {
+                $cellIterator = $row->getCellIterator();
+                $cellIterator->setIterateOnlyExistingCells(FALSE);
+                $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A' . $i)->getValue())->getTimestamp();
+
+                foreach ($cellIterator as $j => $cell) {
+                    $data[$timestamp]['timestamp'] = $timestamp;
+                    if ($j == 'D') $data[$timestamp]['FT0101F'] = $cell->getValue();
+                    if ($j == 'G') $data[$timestamp]['FT0102F'] = $cell->getValue();
+                }
+            }
+        }
+
+        //Analyse
+        $objWorksheet = $objPHPExcel->getSheet(2);
+        foreach ($objWorksheet->getRowIterator() as $i => $row) {
+            if ($i > 2) {
+                $cellIterator = $row->getCellIterator();
+                $cellIterator->setIterateOnlyExistingCells(FALSE);
+                $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A' . $i)->getValue())->getTimestamp();
+
+                foreach ($cellIterator as $j => $cell) {
+                    if ($j == 'B') $data[$timestamp]['AP0101_CH4'] = $cell->getValue();
+                    if ($j == 'C') $data[$timestamp]['AP0101_CO2'] = $cell->getValue();
+                    if ($j == 'D') $data[$timestamp]['AP0101_H2O'] = $cell->getValue();
+                    if ($j == 'E') $data[$timestamp]['AP0101_H2S'] = $cell->getValue();
+                    if ($j == 'F') $data[$timestamp]['AP0101_O2'] = $cell->getValue();
+
+                    if ($j == 'G') $data[$timestamp]['AP0201_CH4'] = $cell->getValue();
+                    if ($j == 'H') $data[$timestamp]['AP0201_CO2'] = $cell->getValue();
+                    if ($j == 'I') $data[$timestamp]['AP0201_H2O'] = $cell->getValue();
+                    if ($j == 'J') $data[$timestamp]['AP0201_H2S'] = $cell->getValue();
+                    if ($j == 'K') $data[$timestamp]['AP0201_O2'] = $cell->getValue();
+
+                    if ($j == 'L') $data[$timestamp]['AP0202_CH4'] = $cell->getValue();
+                    if ($j == 'M') $data[$timestamp]['AP0202_CO2'] = $cell->getValue();
+                    if ($j == 'N') $data[$timestamp]['AP0202_H2O'] = $cell->getValue();
+                    if ($j == 'O') $data[$timestamp]['AP0202_H2S'] = $cell->getValue();
+                    if ($j == 'P') $data[$timestamp]['AP0202_O2'] = $cell->getValue();
+
+                    if ($j == 'Q') $data[$timestamp]['AP0203_CH4'] = $cell->getValue();
+                    if ($j == 'R') $data[$timestamp]['AP0203_CO2'] = $cell->getValue();
+                    if ($j == 'S') $data[$timestamp]['AP0203_H2O'] = $cell->getValue();
+                    if ($j == 'T') $data[$timestamp]['AP0203_H2S'] = $cell->getValue();
+                    if ($j == 'U') $data[$timestamp]['AP0203_O2'] = $cell->getValue();
+                }
+            }
+        }
+
+        //Calcul
+        $objWorksheet = $objPHPExcel->getSheet(3);
+        foreach ($objWorksheet->getRowIterator() as $i => $row) {
+            if ($i > 2) {
+                $cellIterator = $row->getCellIterator();
+                $cellIterator->setIterateOnlyExistingCells(FALSE);
+                $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A' . $i)->getValue())->getTimestamp();
+
+                foreach ($cellIterator as $j => $cell) {
+                    if ($j == 'G') $data[$timestamp]['IGP'] = $cell->getValue();
+                    if ($j == 'M') $data[$timestamp]['Q_DIGEST'] = $cell->getValue();
+                    if ($j == 'U') $data[$timestamp]['QV_BIO_EA'] = $cell->getValue();
+                }
+            }
+        }
+
+        //Consommation électrique
+        $total_conso_elec_instal = 0;
+        $count_conso_elec_instal = 0;
+        $objWorksheet = $objPHPExcel->getSheet(3);
+        foreach ($objWorksheet->getRowIterator() as $i => $row) {
+            if ($i > 2) {
+                $cellIterator = $row->getCellIterator();
+                $cellIterator->setIterateOnlyExistingCells(FALSE);
+                $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A' . $i)->getValue())->getTimestamp();
+
+                foreach ($cellIterator as $j => $cell) {
+                    $data[$timestamp]['timestamp'] = $timestamp;
+                    if ($j == 'B') $data[$timestamp]['CONSO_ELEC_CHAUD'] = $cell->getValue();
+                    if ($j == 'C') {
+                        $data[$timestamp]['CONSO_ELEC_INSTAL'] = $cell->getValue();
+                        if (is_numeric($cell->getValue())) {
+                            $total_conso_elec_instal += $cell->getValue();
+                            $count_conso_elec_instal++;
+                        }
+                    }
+                    if ($j == 'D') $data[$timestamp]['CONSO_ELEC_PEC'] = $cell->getValue();
+                }
+            }
+        }
+
+        //Consommation électrique moyenne journalière
+        $date = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A3')->getValue());
+        $date->setTime(0, 0, 0);
+        $data[$date->getTimestamp()]['CONSO_ELEC_INSTAL_AVG_DAILY_INDICATOR'] = ($count_conso_elec_instal > 0) ? $total_conso_elec_instal / $count_conso_elec_instal : 0;
+
+        //Prétraitement
+        $objWorksheet = $objPHPExcel->getSheet(6);
+        foreach ($objWorksheet->getRowIterator() as $i => $row) {
+            if ($i > 2) {
+                $cellIterator = $row->getCellIterator();
+                $cellIterator->setIterateOnlyExistingCells(FALSE);
+                $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A' . $i)->getValue())->getTimestamp();
+
+                foreach ($cellIterator as $j => $cell) {
+                    $data[$timestamp]['timestamp'] = $timestamp;
+                    if ($j == 'B') $data[$timestamp]['FT0201F'] = $cell->getValue();
+                }
+            }
+        }
+
+        //Volume (onglet Calcul)
+        $objWorksheet = $objPHPExcel->getSheet(3);
+        $date = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A3')->getValue());
+        $date->setTime(0, 0, 0);
+        $data[$date->getTimestamp()]['timestamp'] = $date->getTimestamp();
+        $data[$date->getTimestamp()]['FT0101F_VOLUME'] = $this->calculateSum($data, 'FT0101F') / 60;
+        $data[$date->getTimestamp()]['FT0102F_VOLUME'] = $this->calculateSum($data, 'FT0102F') / 60;
+        $data[$date->getTimestamp()]['FT0201F_VOLUME'] = $this->calculateSum($data, 'FT0201F') / 60;
+        $data[$date->getTimestamp()]['QV_BIO_EA_VOLUME'] = $this->calculateSum($data, 'QV_BIO_EA') / 60;
+
+        //Quantités biométhane
+        $objWorksheet = $objPHPExcel->getSheet(10);
+        $lastRow = $objWorksheet->getHighestRow();
+        $date = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A3')->getValue());
+        $date->setTime(0, 0, 0);
+        $data[$date->getTimestamp()]['timestamp'] = $date->getTimestamp();
+        $data[$date->getTimestamp()]['QTE_BIOMETHANE_INJECTE'] = $objWorksheet->getCell('Y' . $lastRow)->getValue();
+        $data[$date->getTimestamp()]['QTE_BIOMETHANE_NON_CONFORME'] = $objWorksheet->getCell('Z' . $lastRow)->getValue();
+
+        //Heures en fonctionnement depuis le début de l'année
+        $objWorksheet = $objPHPExcel->getSheet(11);
+        $lastRow = $objWorksheet->getHighestRow();
+
+        //@TODO : ne pas prendre le compteur total d'heures, mais bien depuis le début de l'année en cours !
+        $data[$date->getTimestamp()]['HEURES_EN_FONCTIONNEMENT_CURRENT_YEAR'] = $objWorksheet->getCell('C' . $lastRow)->getValue();
+
+        //Valeurs depuis le début de l'année (tableau bord)
+        $dateFirstDayOfYear = new DateTime();
+        $dateFirstDayOfYear->setDate($dateFirstDayOfYear->format('Y'), 1, 1)->setTime(0, 0, 0);
+
+        $data[$date->getTimestamp()]['AVG_IGP_CURRENT_YEAR'] = $this->getAverageValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('IGP'));
+
+        $data[$date->getTimestamp()]['SUM_FT0101F_CURRENT_YEAR'] = $this->getSumValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('FT0101F')) / 60;
+        $data[$date->getTimestamp()]['SUM_FT0102F_CURRENT_YEAR'] = $this->getSumValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('FT0102F')) / 60;
+
+        $data[$date->getTimestamp()]['SUM_CONSO_ELEC_INSTALL_CURRENT_YEAR'] = $this->getPowerConsumptionAverageValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))));
+
+        return $data;
+    }
+
+    private function processXLSVienne($objPHPExcel, $facility)
+    {
+        //Alimentation
+        $objWorksheet = $objPHPExcel->getSheet(0);
+        foreach ($objWorksheet->getRowIterator() as $i => $row) {
+            if ($i > 2) {
+                $cellIterator = $row->getCellIterator();
+                $cellIterator->setIterateOnlyExistingCells(FALSE);
+                $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A' . $i)->getValue())->getTimestamp();
+
+                foreach ($cellIterator as $j => $cell) {
+                    $data[$timestamp]['timestamp'] = $timestamp;
+                    if ($j == 'B') $data[$timestamp]['FT0101F'] = $cell->getValue();
+                    if ($j == 'E') $data[$timestamp]['FT0102F'] = $cell->getValue();
+                }
+            }
+        }
+
+        //Volume (onglet Calcul)
+        $objWorksheet = $objPHPExcel->getSheet(0);
+        $date = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A3')->getValue());
+        $date->setTime(0, 0, 0);
+        $data[$date->getTimestamp()]['timestamp'] = $date->getTimestamp();
+        $data[$date->getTimestamp()]['FT0101F_VOLUME'] = $this->calculateSum($data, 'FT0101F') / 60;
+        $data[$date->getTimestamp()]['FT0102F_VOLUME'] = $this->calculateSum($data, 'FT0102F') / 60;
+
+        //Composition (onglet Client)
+        $objWorksheet = $objPHPExcel->getSheet(3);
+        foreach ($objWorksheet->getRowIterator() as $i => $row) {
+            if ($i > 2) {
+                $cellIterator = $row->getCellIterator();
+                $cellIterator->setIterateOnlyExistingCells(FALSE);
+                $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A' . $i)->getValue())->getTimestamp();
+
+                foreach ($cellIterator as $j => $cell) {
+                    if ($j == 'B') $data[$timestamp]['COMPO_CH4_GRDF'] = $cell->getValue();
+                    if ($j == 'C') $data[$timestamp]['COMPO_CO2_GRDF'] = $cell->getValue();
+                    if ($j == 'D') $data[$timestamp]['COMPO_H2_GRDF'] = $cell->getValue();
+                    if ($j == 'E') $data[$timestamp]['COMPO_H2S_GRDF'] = $cell->getValue();
+                    if ($j == 'F') $data[$timestamp]['COMPO_N2_GRDF'] = $cell->getValue();
+                    if ($j == 'G') $data[$timestamp]['COMPO_O2_GRDF'] = $cell->getValue();
+                }
+            }
+        }
+
+        //Membranes
+        $objWorksheet = $objPHPExcel->getSheet(5);
+        foreach ($objWorksheet->getRowIterator() as $i => $row) {
+            if ($i > 2) {
+                $cellIterator = $row->getCellIterator();
+                $cellIterator->setIterateOnlyExistingCells(FALSE);
+                $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A' . $i)->getValue())->getTimestamp();
+
+                foreach ($cellIterator as $j => $cell) {
+                    $data[$timestamp]['timestamp'] = $timestamp;
+                    if ($j == 'B') $data[$timestamp]['FT0201F'] = $cell->getValue();
+                }
+            }
+        }
+
+        $data[$date->getTimestamp()]['FT0201F_VOLUME'] = $this->calculateSum($data, 'FT0201F') / 60;
+
+        //Consommation électrique (onglet Calcul)
+        $total_conso_elec_instal = 0;
+        $count_conso_elec_instal = 0;
+        $objWorksheet = $objPHPExcel->getSheet(2);
+        foreach ($objWorksheet->getRowIterator() as $i => $row) {
+            if ($i > 2) {
+                $cellIterator = $row->getCellIterator();
+                $cellIterator->setIterateOnlyExistingCells(FALSE);
+                $timestamp = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A' . $i)->getValue())->getTimestamp();
+
+                foreach ($cellIterator as $j => $cell) {
+                    $data[$timestamp]['timestamp'] = $timestamp;
+                    if ($j == 'B') {
+                        $data[$timestamp]['CONSO_ELEC_INSTAL'] = $cell->getValue();
+                        if (is_numeric($cell->getValue())) {
+                            $total_conso_elec_instal += $cell->getValue();
+                            $count_conso_elec_instal++;
+                        }
+                    }
+                }
+            }
+        }
+
+        //Consommation électrique moyenne journalière
+        $date = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A3')->getValue());
+        $date->setTime(0, 0, 0);
+        $data[$date->getTimestamp()]['CONSO_ELEC_INSTAL_AVG_DAILY_INDICATOR'] = ($count_conso_elec_instal > 0) ? $total_conso_elec_instal / $count_conso_elec_instal : 0;
+
+        return $data;
     }
 }
