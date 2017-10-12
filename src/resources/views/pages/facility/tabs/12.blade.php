@@ -46,7 +46,7 @@
         <div id="monthly-report"></div>
     </div>
 
-    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.highcharts.com/stock/5.0.14/highstock.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script>
 

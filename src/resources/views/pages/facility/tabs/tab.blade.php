@@ -22,7 +22,7 @@
         </form>
     </div>
 
-    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.highcharts.com/stock/5.0.14/highstock.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script>
         var get_graph_route = "{{ route('facility_get_graph') }}";
