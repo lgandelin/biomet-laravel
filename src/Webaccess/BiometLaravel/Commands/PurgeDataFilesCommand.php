@@ -30,11 +30,13 @@ class PurgeDataFilesCommand extends Command
             $files = glob($folder . '/*.xlsx');
             foreach ($files as $file) {
                 $data = preg_match('/(.*)([0-9]{8})/', $file, $matches);
-                $date = $matches[2];
+                if (isset($matches[2])) {
+                    $date = $matches[2];
 
-                if (DateTime::createFromFormat('Ymd', $date) < (new DateTime())->sub(new DateInterval('P7D'))) {
-                    $i++;
-                    unlink($file);
+                    if (DateTime::createFromFormat('Ymd', $date) < (new DateTime())->sub(new DateInterval('P7D'))) {
+                        $i++;
+                        unlink($file);
+                    }
                 }
             }
 
