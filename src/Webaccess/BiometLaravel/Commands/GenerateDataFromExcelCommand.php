@@ -463,6 +463,31 @@ class GenerateDataFromExcelCommand extends Command
         $date->setTime(0, 0, 0);
         $data[$date->getTimestamp()]['CONSO_ELEC_INSTAL_AVG_DAILY_INDICATOR'] = ($count_conso_elec_instal > 0) ? $total_conso_elec_instal / $count_conso_elec_instal : 0;
 
+        //Quantités biométhane
+        $objWorksheet = $objPHPExcel->getSheet(3);
+        $lastRow = $objWorksheet->getHighestRow();
+        $date = DateTime::createFromFormat('d/m/Y H:i:s', $objWorksheet->getCell('A3')->getValue());
+        $date->setTime(0, 0, 0);
+        $data[$date->getTimestamp()]['timestamp'] = $date->getTimestamp();
+        $data[$date->getTimestamp()]['QTE_BIOMETHANE_INJECTE'] = $objWorksheet->getCell('AE' . $lastRow)->getValue();
+        $data[$date->getTimestamp()]['QTE_BIOMETHANE_NON_CONFORME'] = $objWorksheet->getCell('AF' . $lastRow)->getValue();
+
+        //Heures en fonctionnement depuis le début de l'année
+        $objWorksheet = $objPHPExcel->getSheet(4);
+        $lastRow = $objWorksheet->getHighestRow();
+
+        //@TODO : ne pas prendre le compteur total d'heures, mais bien depuis le début de l'année en cours !
+        $data[$date->getTimestamp()]['HEURES_EN_FONCTIONNEMENT_CURRENT_YEAR'] = $objWorksheet->getCell('E' . $lastRow)->getValue();
+
+        //Valeurs depuis le début de l'année (tableau bord)
+        $dateFirstDayOfYear = new DateTime();
+        $dateFirstDayOfYear->setDate($dateFirstDayOfYear->format('Y'), 1, 1)->setTime(0, 0, 0);
+
+        $data[$date->getTimestamp()]['SUM_FT0101F_CURRENT_YEAR'] = $this->getSumValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('FT0101F')) / 60;
+        $data[$date->getTimestamp()]['SUM_FT0102F_CURRENT_YEAR'] = $this->getSumValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('FT0102F')) / 60;
+
+        $data[$date->getTimestamp()]['SUM_CONSO_ELEC_INSTALL_CURRENT_YEAR'] = $this->getPowerConsumptionAverageValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))));
+
         return $data;
     }
 }
