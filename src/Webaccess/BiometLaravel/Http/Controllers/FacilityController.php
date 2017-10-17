@@ -251,7 +251,7 @@ class FacilityController extends BaseController
             return redirect()->route('facility', ['id' => $this->request->id]);
         }
 
-        $filePath = env('DATA_FOLDER_PATH') . '/xls/' . implode([$this->request->id, $this->request->year, $this->request->month, $this->request->day, 'data_client.xlsx'], '/');
+        $filePath = env('DATA_FOLDER_PATH') . '/xls/' . implode([$this->request->id, $this->request->year, $this->request->month, $this->request->day, 'data_client-'. $this->request->year . '-' . $this->request->month . '-' . $this->request->day . '.xlsx'], '/');
         $fileName = 'data-' . $this->request->year . $this->request->month . $this->request->day . '_client.xlsx';
 
         if (!file_exists($filePath)) {
@@ -293,7 +293,7 @@ class FacilityController extends BaseController
             }
 
             //Files
-            if (preg_match('/data_client\.xls/', $entry->getPathname())) {
+            if (preg_match('/data_client/', $entry->getPathname())) {
                 $entries[] = [
                     'type' => 'file',
                     'name' => preg_replace('#' . $path . '/#', '', $entry->getPathname()),

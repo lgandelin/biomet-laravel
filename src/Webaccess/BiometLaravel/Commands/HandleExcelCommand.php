@@ -91,7 +91,7 @@ class HandleExcelCommand extends Command
                 }
 
                 $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel1);
-                $objWriter->save($dayFolder . '/data.xlsx');
+                $objWriter->save($dayFolder . '/data-' . $yesterdayDate->format('Y-m-d') . '.xlsx');
 
                 $this->info('Fichier de données déplacé avec succès pour le site ' . $facility->id . ' à la date du ' . $yesterdayDate->format('d/m/Y'));
 
@@ -99,7 +99,7 @@ class HandleExcelCommand extends Command
                 //Traitement fichier client
                 $files = glob($folder . '/EXP_CLIENT*' . $todayDate->format('Ymd') . '.xlsx', GLOB_NOSORT);
                 if (is_array($files) && sizeof($files) > 0) {
-                    if (copy($files[0], $dayFolder . '/data_client.xlsx')) {
+                    if (copy($files[0], $dayFolder . '/data_client-' . $yesterdayDate->format('Y-m-d') . '.xlsx')) {
                         $this->info('Fichier client déplacé avec succès pour le site ' . $facility->id . ' à la date du ' . $yesterdayDate->format('d/m/Y'));
                     } else {
                         $this->error('Une erreur est survenue lors du traitement du fichier client pour le site ' . $facility->id . ' à la date du ' . $yesterdayDate->format('d/m/Y'));

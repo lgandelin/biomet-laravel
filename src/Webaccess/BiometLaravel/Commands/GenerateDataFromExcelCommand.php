@@ -37,15 +37,17 @@ class GenerateDataFromExcelCommand extends Command
                 mkdir($folder, 0777, true);
             }
 
-            $yesterdayDate = DateTime::createFromFormat('Y-m-d', $this->argument('date'))->sub(new DateInterval('P1D'))->format('Y/m/d');
+            $yesterdayDateObject = DateTime::createFromFormat('Y-m-d', $this->argument('date'))->sub(new DateInterval('P1D'));
+            $yesterdayDate = $yesterdayDateObject->format('Y/m/d');
 
             $folder = env('DATA_FOLDER_PATH') . '/xls/' . $facility->id . '/' . $yesterdayDate;
             if (!is_dir($folder)) {
                 mkdir($folder, 0777, true);
             }
 
-            if (!file_exists($folder . '/data.xlsx')) {
-                $errorMessage = 'Data file not existing : ' . $folder . '/data.xlsx';
+            $dataFile = $folder . '/data-' . $yesterdayDateObject->format('Y-m-d') . '.xlsx';
+            if (!file_exists($dataFile)) {
+                $errorMessage = 'Data file not existing : ' . $dataFile;
                 Log::error($errorMessage);
                 $this->error($errorMessage);
 
@@ -54,7 +56,7 @@ class GenerateDataFromExcelCommand extends Command
 
             $objReader = new PHPExcel_Reader_Excel2007();
             $objReader->setReadDataOnly(true);
-            $objPHPExcel = $objReader->load($folder . '/data.xlsx');
+            $objPHPExcel = $objReader->load($dataFile);
 
             switch ($facility->id) {
                 case 'a054b4ef-64d9-4c46-a6ab-99de9d4c3d11' :

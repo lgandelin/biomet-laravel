@@ -34,8 +34,9 @@ class StoreExcelDataToCloudCommand extends Command
             $containerName = $facility->id;
 
             //Updload data file
-            $fileName = $dayFolder . '/data.xlsx';
-            $fileNameInContainer = 'data-' . $yesterdayDate->format('Y-m-d') . '.xlsx';
+            $dataFile = 'data-' . $yesterdayDate->format('Y-m-d') . '.xlsx';
+            $fileName = $dayFolder . '/' . $dataFile;
+            $fileNameInContainer = $dataFile;
 
             if (file_exists($fileName)) {
                 (new OVHObjectStorage())->uploadFileToContainer($containerName, $fileName, $fileNameInContainer);
