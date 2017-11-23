@@ -46,9 +46,10 @@ class StoreExcelDataToCloudCommand extends Command
                 $this->error('Data file not existing : ' . $fileName);
             }
 
-            //Uploat client file
-            $fileName = $dayFolder . '/data_client.xlsx';
-            $fileNameInContainer = 'data_client-' . $yesterdayDate->format('Y-m-d') . '.xlsx';
+            //Upload client file
+            $dataFile = 'data_client-' . $yesterdayDate->format('Y-m-d') . '.xlsx';
+            $fileName = $dayFolder . '/' . $dataFile;
+            $fileNameInContainer = $dataFile;
 
             if (file_exists($fileName)) {
                 (new OVHObjectStorage())->uploadFileToContainer($containerName, $fileName, $fileNameInContainer);
