@@ -59,10 +59,10 @@ class GenerateDataFromExcelCommand extends Command
             $objPHPExcel = $objReader->load($dataFile);
 
             switch ($facility->id) {
-                case 'a054b4ef-64d9-4c46-a6ab-99de9d4c3d11' :
+                case env('TERRAGREAU_FACILITY_ID'):
                     $data = $this->processXLSBiomet($objPHPExcel, $facility);
                 break;
-                case '6dc0272e-be4e-4d94-bccd-7f6f3b78289c' :
+                case env('VIENNE_FACILITY_ID'):
                     $data = $this->processXLSVienne($objPHPExcel, $facility);
                 break;
             }
@@ -97,10 +97,10 @@ class GenerateDataFromExcelCommand extends Command
             //Heures en fonctionnement
             $maintenanceTab = null;
             switch ($facility->id) {
-                case 'a054b4ef-64d9-4c46-a6ab-99de9d4c3d11' :
+                case env('TERRAGREAU_FACILITY_ID'):
                     $maintenanceTab = 11;
                     break;
-                case '6dc0272e-be4e-4d94-bccd-7f6f3b78289c' :
+                case env('VIENNE_FACILITY_ID'):
                     $maintenanceTab = 4;
                     break;
             }

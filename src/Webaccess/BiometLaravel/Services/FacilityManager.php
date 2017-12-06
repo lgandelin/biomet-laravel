@@ -342,10 +342,10 @@ class FacilityManager
     public static function getDataFilePattern($facilityID)
     {
         switch ($facilityID) {
-            case 'a054b4ef-64d9-4c46-a6ab-99de9d4c3d11' :
+            case env('TERRAGREAU_FACILITY_ID'):
                 $fileNamePattern = 'data_client';
                 break;
-            case '6dc0272e-be4e-4d94-bccd-7f6f3b78289c' :
+            case env('VIENNE_FACILITY_ID') :
                 $fileNamePattern = 'data';
                 break;
             default:

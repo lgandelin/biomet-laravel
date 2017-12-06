@@ -19,7 +19,7 @@
             @endif
 
             <div class="row">
-                <div class="@if ($current_facility->id != '6dc0272e-be4e-4d94-bccd-7f6f3b78289c') col-lg-8 @else col-lg-12 @endif col-md-12 col-sm-12" style="margin-bottom: 30px;">
+                <div class="@if ($current_facility->id != env('VIENNE_FACILITY_ID')) col-lg-8 @else col-lg-12 @endif col-md-12 col-sm-12" style="margin-bottom: 30px;">
                     <div class="box">
                         <h1 class="box-title">Dernières alarmes</h1>
                         <div class="box-content">
@@ -50,7 +50,7 @@
                     </div>
                 </div>
 
-                @if ($current_facility->id != '6dc0272e-be4e-4d94-bccd-7f6f3b78289c')
+                @if ($current_facility->id != env('VIENNE_FACILITY_ID'))
                     <div class="col-lg-4 col-md-12 col-sm-12" style="margin-bottom: 30px;">
                         <div class="box">
                             <h1 class="box-title">Indicateur IGP moyen (-)</h1>
@@ -65,7 +65,7 @@
                 @endif
             </div>
 
-            @if ($current_facility->id != '6dc0272e-be4e-4d94-bccd-7f6f3b78289c')
+            @if ($current_facility->id != env('VIENNE_FACILITY_ID'))
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12" style="margin-bottom: 30px;">
                         <div class="box">
@@ -98,7 +98,7 @@
                 </div>
             </div>
 
-            @if ($current_facility->id == 'a054b4ef-64d9-4c46-a6ab-99de9d4c3d11')
+            @if ($current_facility->id == env('TERRAGREAU_FACILITY_ID'))
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12" style="margin-bottom: 30px;">
                         <div class="box">
@@ -111,7 +111,7 @@
                         </div>
                     </div>
                 </div>
-            @elseif ($current_facility->id == '6dc0272e-be4e-4d94-bccd-7f6f3b78289c')
+            @elseif ($current_facility->id == env('VIENNE_FACILITY_ID'))
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12" style="margin-bottom: 30px;">
                         <div class="box">
