@@ -293,7 +293,7 @@ class FacilityManager
 
         $xlsFiles = [];
         while ($date <= $endDate) {
-            $xlsFile = env('DATA_FOLDER_PATH') . '/xls/' . $facilityID . '/' . $date->format('Y/m/d') . '/data_client-' . $date->format('Y-m-d') . '.xlsx';
+            $xlsFile = env('DATA_FOLDER_PATH') . '/xls/' . $facilityID . '/' . $date->format('Y/m/d') . '/' . self::getDataFilePattern($facilityID) . '-' . $date->format('Y-m-d') . '.xlsx';
             if (file_exists($xlsFile)) {
                 $xlsFiles[] = $xlsFile;
             }
@@ -333,5 +333,26 @@ class FacilityManager
         }
 
         return false;
+    }
+
+    /**
+     * @param $facilityID
+     * @return string
+     */
+    public static function getDataFilePattern($facilityID)
+    {
+        switch ($facilityID) {
+            case 'a054b4ef-64d9-4c46-a6ab-99de9d4c3d11' :
+                $fileNamePattern = 'data_client';
+                break;
+            case '6dc0272e-be4e-4d94-bccd-7f6f3b78289c' :
+                $fileNamePattern = 'data';
+                break;
+            default:
+                $fileNamePattern = 'data_client';
+                break;
+        }
+
+        return $fileNamePattern;
     }
 }

@@ -245,19 +245,21 @@ class FacilityController extends BaseController
     {
         parent::__construct($this->request);
 
-        if (!$this->canViewFacilityTab($this->request->id, 11)) {
+        $facilityID = $this->request->id;
+
+        if (!$this->canViewFacilityTab($facilityID, 11)) {
             $this->request->session()->flash('error', trans('biomet::generic.no_permission_error'));
 
-            return redirect()->route('facility', ['id' => $this->request->id]);
+            return redirect()->route('facility', ['id' => $facilityID]);
         }
 
-        $filePath = env('DATA_FOLDER_PATH') . '/xls/' . implode([$this->request->id, $this->request->year, $this->request->month, $this->request->day, 'data_client-'. $this->request->year . '-' . $this->request->month . '-' . $this->request->day . '.xlsx'], '/');
-        $fileName = 'data-' . $this->request->year . $this->request->month . $this->request->day . '_client.xlsx';
+        $filePath = env('DATA_FOLDER_PATH') . '/xls/' . implode([$facilityID, $this->request->year, $this->request->month, $this->request->day, FacilityManager::getDataFilePattern($facilityID) . '-'. $this->request->year . '-' . $this->request->month . '-' . $this->request->day . '.xlsx'], '/');
+        $fileName = FacilityManager::getDataFilePattern($facilityID) . '-' . $this->request->year . $this->request->month . $this->request->day . '.xlsx';
 
         if (!file_exists($filePath)) {
             $this->request->session()->flash('error', trans('biomet::generic.file_doesnt_exists'));
 
-            return redirect()->route('facility_tab', ['id' => $this->request->id, 'tab' => 11]);
+            return redirect()->route('facility_tab', ['id' => $facilityID, 'tab' => 11]);
         }
 
         return response()->download($filePath, $fileName);
@@ -293,7 +295,7 @@ class FacilityController extends BaseController
             }
 
             //Files
-            if (preg_match('/data_client/', $entry->getPathname())) {
+            if (preg_match('/' . FacilityManager::getDataFilePattern($facilityID) . '([0-9\-]*)\.xlsx' . '/', $entry->getPathname())) {
                 $entries[] = [
                     'type' => 'file',
                     'name' => preg_replace('#' . $path . '/#', '', $entry->getPathname()),
