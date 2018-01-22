@@ -195,6 +195,24 @@ class GenerateDataFromExcelCommand extends Command
 
     /**
      * @param $facilityID
+     * @param $date
+     * @param $keys
+     * @return int
+     */
+    private function getValue($facilityID, $date, $keys)
+    {
+        $data = FacilityManager::getData($date, $date, $facilityID, $keys, false);
+        foreach ($data as $file) {
+            foreach ($file['data'] as $value) {
+                return $value[1];
+            }
+        }
+
+        return 0;
+    }
+
+    /**
+     * @param $facilityID
      * @param $startDate
      * @param $endDate
      * @param $keys
@@ -358,12 +376,14 @@ class GenerateDataFromExcelCommand extends Command
         $objWorksheet = $objPHPExcel->getSheet(11);
         $lastRow = $objWorksheet->getHighestRow();
 
-        //@TODO : ne pas prendre le compteur total d'heures, mais bien depuis le début de l'année en cours !
-        $data[$date->getTimestamp()]['HEURES_EN_FONCTIONNEMENT_CURRENT_YEAR'] = $objWorksheet->getCell('C' . $lastRow)->getValue();
-
         //Valeurs depuis le début de l'année (tableau bord)
         $dateFirstDayOfYear = new DateTime();
         $dateFirstDayOfYear->setDate($dateFirstDayOfYear->format('Y'), 1, 1)->setTime(0, 0, 0);
+
+        $lastDayOfLastyear = $dateFirstDayOfYear->sub(new DateInterval('P1D'));
+        $lastYearHoursCount = $this->getValue($facility->id, $lastDayOfLastyear, array('HEURES_EN_FONCTIONNEMENT_CURRENT_YEAR'));
+        $currentHoursCount = $objWorksheet->getCell('C' . $lastRow)->getValue();
+        $data[$date->getTimestamp()]['HEURES_EN_FONCTIONNEMENT_CURRENT_YEAR'] = $currentHoursCount - $lastYearHoursCount;
 
         $data[$date->getTimestamp()]['AVG_IGP_CURRENT_YEAR'] = $this->getAverageValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('IGP'));
 
@@ -478,12 +498,14 @@ class GenerateDataFromExcelCommand extends Command
         $objWorksheet = $objPHPExcel->getSheet(4);
         $lastRow = $objWorksheet->getHighestRow();
 
-        //@TODO : ne pas prendre le compteur total d'heures, mais bien depuis le début de l'année en cours !
-        $data[$date->getTimestamp()]['HEURES_EN_FONCTIONNEMENT_CURRENT_YEAR'] = $objWorksheet->getCell('E' . $lastRow)->getValue();
-
         //Valeurs depuis le début de l'année (tableau bord)
         $dateFirstDayOfYear = new DateTime();
         $dateFirstDayOfYear->setDate($dateFirstDayOfYear->format('Y'), 1, 1)->setTime(0, 0, 0);
+
+        $lastDayOfLastyear = $dateFirstDayOfYear->sub(new DateInterval('P1D'));
+        $lastYearHoursCount = $this->getValue($facility->id, $lastDayOfLastyear, array('HEURES_EN_FONCTIONNEMENT_CURRENT_YEAR'));
+        $currentHoursCount = $objWorksheet->getCell('E' . $lastRow)->getValue();
+        $data[$date->getTimestamp()]['HEURES_EN_FONCTIONNEMENT_CURRENT_YEAR'] = $currentHoursCount - $lastYearHoursCount;
 
         $data[$date->getTimestamp()]['SUM_FT0101F_CURRENT_YEAR'] = $this->getSumValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('FT0101F')) / 60;
         $data[$date->getTimestamp()]['SUM_FT0102F_CURRENT_YEAR'] = $this->getSumValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('FT0102F')) / 60;
