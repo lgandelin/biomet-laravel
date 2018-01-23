@@ -39,8 +39,8 @@ class FacilityController extends BaseController
 
             'sum_conso_elec_install_current_year' => $this->getValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('SUM_CONSO_ELEC_INSTALL_CURRENT_YEAR')),
 
-            'qte_biomethane_injecte_current_year' => $this->getValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('QTE_BIOMETHANE_INJECTE')),
-            'qte_biomethane_non_conforme_current_year' => $this->getValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('QTE_BIOMETHANE_NON_CONFORME')),
+            'qte_biomethane_injecte_current_year' => $this->getValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('QTE_BIOMETHANE_INJECTE_CURRENT_YEAR')),
+            'qte_biomethane_non_conforme_current_year' => $this->getValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('QTE_BIOMETHANE_NON_CONFORME_CURRENT_YEAR')),
 
             'heures_en_fonctionnement_current_year' => $this->getValue($this->request->id, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('HEURES_EN_FONCTIONNEMENT_CURRENT_YEAR')),
         ]);

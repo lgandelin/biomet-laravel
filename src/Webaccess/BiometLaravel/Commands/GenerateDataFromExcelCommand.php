@@ -391,6 +391,11 @@ class GenerateDataFromExcelCommand extends Command
         $data[$date->getTimestamp()]['SUM_FT0102F_CURRENT_YEAR'] = $this->getSumValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))), array('FT0102F')) / 60;
 
         $data[$date->getTimestamp()]['SUM_CONSO_ELEC_INSTALL_CURRENT_YEAR'] = $this->getPowerConsumptionAverageValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))));
+        
+        $qteBiomethaneInjecteFirstDayOfYear = $this->getValue($facility->id, $lastDayOfLastyear, array('QTE_BIOMETHANE_INJECTE'));
+        $qteBiomethaneNonConformeFirstDayOfYear = $this->getValue($facility->id, $lastDayOfLastyear, array('QTE_BIOMETHANE_NON_CONFORME'));
+        $data[$date->getTimestamp()]['QTE_BIOMETHANE_INJECTE_CURRENT_YEAR'] = $data[$date->getTimestamp()]['QTE_BIOMETHANE_INJECTE'] - $qteBiomethaneInjecteFirstDayOfYear;
+        $data[$date->getTimestamp()]['QTE_BIOMETHANE_NON_CONFORME_CURRENT_YEAR'] = $data[$date->getTimestamp()]['QTE_BIOMETHANE_NON_CONFORME'] - $qteBiomethaneNonConformeFirstDayOfYear;
 
         return $data;
     }
@@ -512,6 +517,11 @@ class GenerateDataFromExcelCommand extends Command
 
         $data[$date->getTimestamp()]['SUM_CONSO_ELEC_INSTALL_CURRENT_YEAR'] = $this->getPowerConsumptionAverageValue($facility->id, $dateFirstDayOfYear, new DateTime(date('Y-m-d', strtotime( '-1 days' ))));
 
+        $qteBiomethaneInjecteFirstDayOfYear = $this->getValue($facility->id, $lastDayOfLastyear, array('QTE_BIOMETHANE_INJECTE'));
+        $qteBiomethaneNonConformeFirstDayOfYear = $this->getValue($facility->id, $lastDayOfLastyear, array('QTE_BIOMETHANE_NON_CONFORME'));
+        $data[$date->getTimestamp()]['QTE_BIOMETHANE_INJECTE_CURRENT_YEAR'] = $data[$date->getTimestamp()]['QTE_BIOMETHANE_INJECTE'] - $qteBiomethaneInjecteFirstDayOfYear;
+        $data[$date->getTimestamp()]['QTE_BIOMETHANE_NON_CONFORME_CURRENT_YEAR'] = $data[$date->getTimestamp()]['QTE_BIOMETHANE_NON_CONFORME'] - $qteBiomethaneNonConformeFirstDayOfYear;
+        
         return $data;
     }
 }
