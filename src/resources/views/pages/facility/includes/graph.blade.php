@@ -4,7 +4,7 @@
 
     Highcharts.setOptions({
         global: {
-            useUTC: true
+            useUTC: false
         },
         lang: {
             months: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',  'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],

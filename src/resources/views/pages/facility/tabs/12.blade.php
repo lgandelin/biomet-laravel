@@ -45,6 +45,21 @@
                             <td>{{ number_format($month['consommation_electrique'], 0, '.', ' ') }}</td>
                         </tr>
                     @endforeach
+
+                    @if ($data['total_year'])
+                        <tr>
+                            <td><strong>Total</strong></th>
+                            <td><strong>{{ number_format($data['total_year']['biogaz'], 0, '.', ' ') }}</strong></td>
+                            <td><strong>{{ number_format($data['total_year']['biomethane'], 0, '.', ' ') }}</strong></td>
+                            @if ($current_facility->id == env('TERRAGREAU_FACILITY_ID'))
+                                <td><strong>{{ number_format($data['total_year']['chaudiere'], 0, '.', ' ') }}</strong></td>
+                                <td><strong>{{ number_format($data['total_year']['amines'], 0, '.', ' ') }}</strong></td>
+                            @elseif ($current_facility->id == env('VIENNE_FACILITY_ID'))
+                                <td><strong>{{ number_format($data['total_year']['membranes'], 0, '.', ' ') }}</strong></td>
+                            @endif
+                            <td><strong>{{ number_format($data['total_year']['consommation_electrique'], 0, '.', ' ') }}</strong></td>
+                        </tr>
+                    @endif
                 @else
                     Aucune données pour cette année
                 @endif
@@ -62,7 +77,7 @@
 
         Highcharts.setOptions({
             global: {
-                useUTC: true
+                useUTC: false
             },
             lang: {
                 months: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',  'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],

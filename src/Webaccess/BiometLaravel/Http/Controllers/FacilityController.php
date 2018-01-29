@@ -138,27 +138,45 @@ class FacilityController extends BaseController
 
                 $series = [];
                 $months = [];
+                $totalYear = [
+                    'biogaz' => 0,
+                    'biomethane' => 0,
+                    'consommation_electrique' => 0,
+                    'amines' => 0,
+                    'chaudiere' => 0,
+                    'membranes' => 0,
+                ];
+
                 for ($m = 1; $m <= 12; $m++) {
                     $startOfMonth = new DateTime($year . '-' . $m . '-01');
                     $endOfMonth = clone $startOfMonth;
                     $endOfMonth = $endOfMonth->setDate($year, $m, $startOfMonth->format('t'));
                     $totals = $this->getMonthlySum($this->request->id, $startOfMonth, $endOfMonth, array('FT0101F_VOLUME', 'FT0102F_VOLUME', 'FT0201F_VOLUME', 'QV_BIO_EA_VOLUME'));
 
+                    $biogaz = isset($totals['FT0101F_VOLUME']) ? $totals['FT0101F_VOLUME'] : 0;
+                    $biomethane = isset($totals['FT0102F_VOLUME']) ? $totals['FT0102F_VOLUME'] : 0;
                     $consommation_electrique = $this->getPowerConsumptionAverageValue($this->request->id, $startOfMonth, $endOfMonth);
+                    $amines = isset($totals['QV_BIO_EA_VOLUME']) ? $totals['QV_BIO_EA_VOLUME'] : 0;
+                    $chaudiere = isset($totals['FT0201F_VOLUME']) ? $totals['FT0201F_VOLUME'] : 0;
+                    $membranes = isset($totals['FT0201F_VOLUME']) ? $totals['FT0201F_VOLUME'] : 0;
+
+                    //Calcul de la somme annuelle
+                    $totalYear['biogaz'] += $biogaz;
+                    $totalYear['biomethane'] += $biomethane;
+                    $totalYear['consommation_electrique'] += $consommation_electrique;
+                    $totalYear['amines'] += $amines;
+                    $totalYear['chaudiere'] += $chaudiere;
+                    $totalYear['membranes'] += $membranes;
 
                     $month = [
                         'name' => strftime("%B", $startOfMonth->getTimestamp()),
-                        'biogaz' => isset($totals['FT0101F_VOLUME']) ? $totals['FT0101F_VOLUME'] : 0,
-                        'biomethane' => isset($totals['FT0102F_VOLUME']) ? $totals['FT0102F_VOLUME'] : 0,
-                        'consommation_electrique' => $consommation_electrique
+                        'biogaz' => $biogaz,
+                        'biomethane' => $biomethane,
+                        'consommation_electrique' => $consommation_electrique,
+                        'amines' => $amines,
+                        'chaudiere' => $chaudiere,
+                        'membranes' => $membranes,
                     ];
-
-                    if ($this->request->id == env('TERRAGREAU_FACILITY_ID')) {
-                        $month['amines'] = isset($totals['QV_BIO_EA_VOLUME']) ? $totals['QV_BIO_EA_VOLUME'] : 0;
-                        $month['chaudiere'] = isset($totals['FT0201F_VOLUME']) ? $totals['FT0201F_VOLUME'] : 0;
-                    } elseif ($this->request->id == env('VIENNE_FACILITY_ID')) {
-                        $month['membranes'] = isset($totals['FT0201F_VOLUME']) ? $totals['FT0201F_VOLUME'] : 0;
-                    }
 
                     $months[]= $month;
 
@@ -182,6 +200,7 @@ class FacilityController extends BaseController
                 $series[4]['name'] = 'Consommation électrique (kWh)';
 
                 $data['months'] = $months;
+                $data['total_year'] = $totalYear;
                 $data['series'] = json_encode(array_values($series));
             break;
 
